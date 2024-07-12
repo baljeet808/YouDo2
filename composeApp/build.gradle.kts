@@ -7,9 +7,17 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
+
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
+    }
+
+
     tasks.create("testClasses")
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -37,6 +45,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.room.runtime.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -46,6 +55,10 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.firebase.auth)
+
+            //Room
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -101,3 +114,19 @@ compose.desktop {
         }
     }
 }
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+dependencies{
+    add("kspCommonMainMetadata", libs.room.compiler)
+}
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata" ) {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+
+
