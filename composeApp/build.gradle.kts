@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    //Room
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
 }
@@ -46,7 +47,6 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.room.runtime.android)
 
             //Room
             implementation(libs.androidx.room.paging)
@@ -61,7 +61,7 @@ kotlin {
             implementation(libs.firebase.auth)
 
             //Room
-            implementation(libs.room.runtime)
+            implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.paging.common)
             implementation(libs.sqlite.bundled)
         }
@@ -125,7 +125,7 @@ room {
 }
 
 dependencies{
-    add("kspCommonMainMetadata", libs.room.compiler)
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
 }
 tasks.withType<KotlinJvmCompile>().configureEach {
     if (name != "kspCommonMainKotlinMetadata" ) {

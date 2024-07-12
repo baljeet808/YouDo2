@@ -3,6 +3,7 @@ package data.local.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import data.local.entities.ProjectEntity
 import data.local.relations.ProjectWithDoToos
@@ -17,6 +18,7 @@ interface ProjectDao {
 
     @Query("SELECT * FROM projects")
     fun getAllProjectsAsFlow() : Flow<List<ProjectEntity>>
+
     @Query("SELECT * FROM projects")
     suspend fun getAllProjects() : List<ProjectEntity>
 
@@ -26,6 +28,7 @@ interface ProjectDao {
     @Query("SELECT * FROM projects where id = :projectId")
     fun getProjectByIdAsFlow(projectId : String) : Flow<ProjectEntity>
 
+    @Transaction
     @Query("SELECT * FROM projects")
     fun getAllProjectsAndTasksAsFlow() : Flow<List<ProjectWithDoToos>>
 

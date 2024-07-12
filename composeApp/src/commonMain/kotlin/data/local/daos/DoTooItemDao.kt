@@ -3,6 +3,7 @@ package data.local.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import data.local.entities.TaskEntity
 import data.local.relations.TaskWithProject
@@ -24,9 +25,11 @@ interface DoTooItemDao {
     @Query("SELECT * FROM todos")
     fun getAllDoTooItems(): Flow<List<TaskEntity>>
 
+    @Transaction
     @Query("SELECT * FROM todos")
     fun getAllTasksWithProjectAsFlow(): Flow<List<TaskWithProject>>
 
+    @Transaction
     @Query("SELECT * FROM todos")
     suspend fun getAllTasksWithProject(): List<TaskWithProject>
 
@@ -37,10 +40,10 @@ interface DoTooItemDao {
     fun getTaskByIdAsAFlow(taskId: String): Flow<TaskEntity>
 
     @Delete
-    fun delete(doTooItem: TaskEntity)
+    suspend fun delete(doTooItem: TaskEntity)
 
     @Query("DELETE FROM todos where projectId = :projectId")
-    fun deleteAllByProjectId(projectId: String)
+    suspend fun deleteAllByProjectId(projectId: String)
 
     @Query("SELECT * FROM todos WHERE dueDate = :yesterdayDateInLong")
     fun getYesterdayTasks(yesterdayDateInLong: Long): Flow<List<TaskEntity>>

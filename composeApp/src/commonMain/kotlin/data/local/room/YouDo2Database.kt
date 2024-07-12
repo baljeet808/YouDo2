@@ -32,12 +32,20 @@ import data.local.entities.UserEntity
     version = 1
 )
 @TypeConverters(NotificationTypeConverter::class)
-abstract class YouDo2Database : RoomDatabase() {
-    abstract val projectDao : ProjectDao
-    abstract val userDao : UserDao
-    abstract val doTooItemDao : DoTooItemDao
-    abstract val invitationDao : InvitationDao
-    abstract val notificationDao : NotificationDao
-    abstract val colorPaletteDao : ColorPaletteDao
-    abstract val messageDao : MessageDao
+abstract class YouDo2Database : RoomDatabase(), ClearAllTableFix {
+    abstract fun projectDao() : ProjectDao
+    abstract fun userDao() : UserDao
+    abstract fun doTooItemDao() : DoTooItemDao
+    abstract fun invitationDao() : InvitationDao
+    abstract fun notificationDao() : NotificationDao
+    abstract fun colorPaletteDao() : ColorPaletteDao
+    abstract fun messageDao() : MessageDao
+
+    override fun clearAllTables() {
+        clearAllTables()
+    }
+}
+
+interface ClearAllTableFix {
+    fun clearAllTables()
 }

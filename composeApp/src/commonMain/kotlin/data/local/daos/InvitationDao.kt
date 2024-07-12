@@ -27,8 +27,8 @@ interface InvitationDao {
     fun getInvitationByIdAsFlow(id : String) : Flow<InvitationEntity?>
 
     @Delete
-    fun delete(invitation : InvitationEntity)
+    suspend fun delete(invitation : InvitationEntity)
 
     @Query("DELETE FROM invitations where projectId = :projectId")
-    fun deleteAllByProjectId(projectId : String)
+    suspend fun deleteAllByProjectId(projectId : String)
 }
