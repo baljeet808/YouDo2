@@ -19,6 +19,7 @@ interface UserDao {
 
     @Query("SELECT * FROM users where id = :userId ")
     suspend fun getUserById(userId : String) : UserEntity?
+
     @Query("SELECT * FROM users where id = :userId ")
     fun getUserByIdAsAFlow(userId : String) : Flow<UserEntity?>
 
