@@ -47,6 +47,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.room.runtime.android)
+
+            //Room
+            implementation(libs.androidx.room.paging)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,6 +62,7 @@ kotlin {
 
             //Room
             implementation(libs.room.runtime)
+            implementation(libs.androidx.paging.common)
             implementation(libs.sqlite.bundled)
         }
         desktopMain.dependencies {
