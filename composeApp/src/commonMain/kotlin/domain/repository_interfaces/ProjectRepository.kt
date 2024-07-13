@@ -1,7 +1,7 @@
 package domain.repository_interfaces
 
 import data.local.entities.ProjectEntity
-import data.local.relations.ProjectWithDoToos
+import data.local.relations.ProjectWithTasks
 import kotlinx.coroutines.flow.Flow
 
 
@@ -11,7 +11,7 @@ interface ProjectRepository {
      suspend fun getAllProjects(): List<ProjectEntity>
      suspend fun getProjectById(projectId : String): ProjectEntity
      fun getProjectByIdAsFlow(projectId : String): Flow<ProjectEntity>
-     fun getAllProjectsAndTasksAsFlow(): Flow<List<ProjectWithDoToos>>
+     fun getAllProjectsAndTasksAsFlow(): Flow<List<ProjectWithTasks>>
      suspend fun delete(project : ProjectEntity)
      suspend fun search(searchQuery : String) : List<ProjectEntity>
 }

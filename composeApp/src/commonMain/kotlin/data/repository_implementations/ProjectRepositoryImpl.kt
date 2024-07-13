@@ -1,7 +1,7 @@
 package data.repository_implementations
 
 import data.local.entities.ProjectEntity
-import data.local.relations.ProjectWithDoToos
+import data.local.relations.ProjectWithTasks
 import data.local.room.YouDo2Database
 import domain.repository_interfaces.ProjectRepository
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ class ProjectRepositoryImpl(localDB: YouDo2Database) : ProjectRepository {
         return projectDao.getProjectByIdAsFlow(projectId)
     }
 
-    override fun getAllProjectsAndTasksAsFlow(): Flow<List<ProjectWithDoToos>> {
+    override fun getAllProjectsAndTasksAsFlow(): Flow<List<ProjectWithTasks>> {
         return projectDao.getAllProjectsAndTasksAsFlow()
     }
 

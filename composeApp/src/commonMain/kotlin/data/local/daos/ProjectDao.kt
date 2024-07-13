@@ -6,7 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import data.local.entities.ProjectEntity
-import data.local.relations.ProjectWithDoToos
+import data.local.relations.ProjectWithTasks
 import kotlinx.coroutines.flow.Flow
 
 
@@ -30,7 +30,7 @@ interface ProjectDao {
 
     @Transaction
     @Query("SELECT * FROM projects")
-    fun getAllProjectsAndTasksAsFlow() : Flow<List<ProjectWithDoToos>>
+    fun getAllProjectsAndTasksAsFlow() : Flow<List<ProjectWithTasks>>
 
     @Delete
     suspend fun delete(project : ProjectEntity)

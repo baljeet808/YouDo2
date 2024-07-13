@@ -20,13 +20,13 @@ fun getRandomAvatar(): String {
 
 fun getRandomColor(): String {
     val randomInt = Random.nextInt(from = 0, 9)
-    return EnumProjectColors.values()[randomInt].name
+    return EnumProjectColors.entries[randomInt].name
 }
 
 
 fun getRandomColorEnum(): EnumProjectColors {
     val randomInt = Random.nextInt(from = 0, 9)
-    return EnumProjectColors.values()[randomInt]
+    return EnumProjectColors.entries[randomInt]
 }
 
 fun getSampleColorPalette(): ColorPaletteEntity {
