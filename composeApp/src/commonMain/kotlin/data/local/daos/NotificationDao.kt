@@ -20,7 +20,6 @@ interface NotificationDao {
     @Query("SELECT * FROM notifications")
     fun getAllNotificationsAsFlow() : Flow<List<NotificationEntity>>
 
-
     @Query("SELECT * FROM notifications where id = :notificationId")
     suspend fun getNotificationById(notificationId : String) : NotificationEntity
 
