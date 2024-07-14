@@ -11,6 +11,8 @@ plugins {
     //Room
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    //firebase
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -75,6 +77,9 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.navigation.compose)
+
+            //firebase-auth
+            implementation(libs.firebase.auth)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "32059354200",
+    "project_id": "youdo2",
+    "storage_bucket": "youdo2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32059354200:android:b9ffac50429f779ddfae2d",
+        "android_client_info": {
+          "package_name": "com.baljeet.youdo2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUHsl86-ZQlKkQcYz7Mh8Er_BYIxt6sWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
