@@ -9,7 +9,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "YouDo2",
         ) {
-            App()
+
         }
     }
 }
