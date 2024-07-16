@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.room)
     //firebase
     alias(libs.plugins.googleServices)
+    //navigation
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -56,6 +58,9 @@ kotlin {
             //Koin
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+
+            //navigation
+            implementation(libs.decompose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -80,6 +85,11 @@ kotlin {
 
             //firebase-auth
             implementation(libs.firebase.auth)
+
+            //navigation
+            implementation(libs.decompose)
+            implementation(libs.decompose.jetbrains)
+            implementation(libs.kotlinx.serialization.json)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

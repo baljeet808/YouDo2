@@ -16,6 +16,11 @@ junit = "4.13.2"
 kotlin = "2.0.0"
 gservices = "4.4.2"
 
+#Navigation
+extensionsComposeJetbrains = "2.1.4-compose-experimental"
+decompose = "2.2.0-alpha03"
+kotlinxSerializationJson = "1.6.3"
+
 #Room
 androidx-room = "2.7.0-alpha05"
 pagingComposeAndroid = "3.3.0"
@@ -27,7 +32,7 @@ sqlite = "2.5.0-alpha05"
 koin = "3.6.0-Beta4"
 koinComposeMultiplatform = "1.2.0-Beta4"
 navigationCompose = "2.8.0-alpha02"
-lifecycleViewModel = "2.8.2"
+lifecycleViewModel = "2.8.3"
 
 [libraries]
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebaseAuth" }
@@ -59,6 +64,12 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinComp
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeMultiplatform" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
+#Navigation
+decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+decompose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "extensionsComposeJetbrains" }
+
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -72,3 +83,6 @@ room = { id = "androidx.room", version.ref = "androidx-room" }
 
 #Firebase-Auth
 googleServices = {id = "com.google.gms.google-services", version.ref ="gservices"}
+
+#Navigation
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
