@@ -90,6 +90,10 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.jetbrains)
             implementation(libs.kotlinx.serialization.json)
+
+            //DataStore
+            api(libs.datastore.preferences)
+            api(libs.datastore)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
