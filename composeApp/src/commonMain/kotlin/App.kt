@@ -1,6 +1,8 @@
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
@@ -13,7 +15,10 @@ import presentation.login.LoginScreen
 
 @Composable
 @Preview
-fun App(root : RootComponent) {
+fun App(
+    root : RootComponent,
+    prefs : DataStore<Preferences>
+) {
     MaterialTheme {
         val childStack by root.childStack.subscribeAsState()
         Children(

@@ -2,6 +2,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import common.createDatastore
 import di.initKoin
 import navigation.RootComponent
 
@@ -10,8 +11,15 @@ fun MainViewController() = ComposeUIViewController(
         initKoin()
     }
 ) {
+    val preferences = createDatastore()
     val root = remember {
-        RootComponent(DefaultComponentContext(LifecycleRegistry()))
+        RootComponent(
+            componentContext = DefaultComponentContext(LifecycleRegistry()),
+            preferences = preferences
+        )
     }
-    App(root)
+    App(
+        root = root,
+        prefs = preferences
+    )
 }

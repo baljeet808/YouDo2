@@ -1,5 +1,7 @@
 package navigation
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -14,7 +16,8 @@ import presentation.login.LoginComponent
  * This class live as long as application lives
  * **/
 class RootComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    preferences: DataStore<Preferences>
 ) : ComponentContext by componentContext{
 
     private val navigation = StackNavigation<Configuration>()
