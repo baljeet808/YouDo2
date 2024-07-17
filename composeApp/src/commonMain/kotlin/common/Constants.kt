@@ -4,7 +4,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Settings
 import domain.models.MenuItem
-
+import org.jetbrains.compose.resources.DrawableResource
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.app_icon
+import youdo2.composeapp.generated.resources.chat_illustration
+import youdo2.composeapp.generated.resources.set_reminders
+import youdo2.composeapp.generated.resources.todo_illustration
 
 
 const val DestinationSettingsRoute = "settings"
@@ -46,3 +51,32 @@ val menuItems = arrayListOf(
         contentDescription = "Menu item to show settings"
     )
 )
+
+
+
+data class OnBoardPagerContent(
+    val title: String,
+    val res: DrawableResource,
+    val description: String
+)
+
+
+fun getOnBoardPagerContentList () : List<OnBoardPagerContent>{
+    return listOf(
+        OnBoardPagerContent(
+            title = "Tag Tasks Directly into Your Chat!",
+            res = Res.drawable.chat_illustration,
+            description = ConstSecScreenDescription
+        ),
+        OnBoardPagerContent(
+            title = "Organize Tasks Easily!",
+            res = Res.drawable.set_reminders,
+            description = ConstThirdScreenDescription
+        ),
+        OnBoardPagerContent(
+            title = "To it together!",
+            res = Res.drawable.todo_illustration,
+            description = ConstFirstScreenDescription
+        )
+    )
+}
