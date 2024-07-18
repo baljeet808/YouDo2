@@ -1,5 +1,6 @@
 package di
 
+import data.repository_implementations.AuthRepositoryImpl
 import data.repository_implementations.ColorPaletteRepositoryImpl
 import data.repository_implementations.DatabaseOperationsRepositoryImpl
 import data.repository_implementations.TaskRepositoryImpl
@@ -8,6 +9,7 @@ import data.repository_implementations.MessageRepositoryImpl
 import data.repository_implementations.NotificationRepositoryImpl
 import data.repository_implementations.ProjectRepositoryImpl
 import data.repository_implementations.UserRepositoryImpl
+import domain.repository_interfaces.AuthRepository
 import domain.repository_interfaces.ColorPaletteRepository
 import domain.repository_interfaces.DatabaseOperationsRepository
 import domain.repository_interfaces.TaskRepository
@@ -16,6 +18,12 @@ import domain.repository_interfaces.MessageRepository
 import domain.repository_interfaces.NotificationRepository
 import domain.repository_interfaces.ProjectRepository
 import domain.repository_interfaces.UserRepository
+import domain.use_cases.auth_use_cases.GetCurrentUserIdUseCase
+import domain.use_cases.auth_use_cases.GetCurrentUserUseCase
+import domain.use_cases.auth_use_cases.IsUserAuthenticatedUseCase
+import domain.use_cases.auth_use_cases.LoginUseCase
+import domain.use_cases.auth_use_cases.SignOutUseCase
+import domain.use_cases.auth_use_cases.SignupUseCase
 import domain.use_cases.database_operations_use_cases.DeleteAllTablesUseCase
 import domain.use_cases.task_use_cases.DeleteTaskUseCase
 import domain.use_cases.task_use_cases.DeleteTasksByProjectIdUseCase
@@ -88,6 +96,16 @@ val repositoriesModule = module {
     single<TaskRepository>{ TaskRepositoryImpl(get())}
     single<DatabaseOperationsRepository>{ DatabaseOperationsRepositoryImpl(get())}
     single<ColorPaletteRepository>{ ColorPaletteRepositoryImpl(get())}
+    single<AuthRepository>{ AuthRepositoryImpl()}
+}
+
+val authUseCasesModule = module {
+    single<GetCurrentUserUseCase>{ GetCurrentUserUseCase(get()) }
+    single<GetCurrentUserIdUseCase>{ GetCurrentUserIdUseCase(get())}
+    single<IsUserAuthenticatedUseCase>{ IsUserAuthenticatedUseCase(get())}
+    single<LoginUseCase>{ LoginUseCase(get())}
+    single<SignOutUseCase>{ SignOutUseCase(get())}
+    single<SignupUseCase>{ SignupUseCase(get())}
 }
 
 val projectUseCasesModule = module {
@@ -185,7 +203,8 @@ fun initKoin(config: KoinAppDeclaration? = null) =
             messagesUseCasesModule,
             invitationsUseCasesModule,
             tasksUseCasesModule,
-            databaseOperationsCasesModule
+            databaseOperationsCasesModule,
+            authUseCasesModule
         )
     }
 
