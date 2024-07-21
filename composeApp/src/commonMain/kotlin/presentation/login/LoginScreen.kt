@@ -26,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +36,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import common.getOnBoardPagerContentList
 import org.jetbrains.compose.resources.stringResource
 import presentation.shared.fonts.CantarellFontFamily
@@ -48,14 +46,16 @@ import youdo2.composeapp.generated.resources.app_name
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LoginScreen(component: LoginComponent) {
-
-    val email by component.email.subscribeAsState()
-    val password by component.password.subscribeAsState()
-
+fun LoginScreen(
+    navigateToDashboard : ()-> Unit,
+    uiState : LoginUIState,
+    onEvents : (LoginScreenEvents) -> Unit
+) {
     val list = getOnBoardPagerContentList()
 
     val pagerState = rememberPagerState(pageCount = { list.count() })
+
+    onEvents(LoginScreenEvents.OnOnboardingPageNumberChanged(pageNumber = pagerState.currentPage))
 
     Box(
         modifier = Modifier
@@ -101,7 +101,7 @@ fun LoginScreen(component: LoginComponent) {
 
 
             AnimatedVisibility(
-                pagerState.currentPage == 2,
+                uiState.showLoginForm
                 ) {
                 /**
                  * Login and policy button
@@ -113,9 +113,9 @@ fun LoginScreen(component: LoginComponent) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     OutlinedTextField(
-                        value = email,
+                        value = uiState.email,
                         onValueChange = {
-                            component.onEvent(LoginEvents.UpdateEmail(it))
+                            onEvents(LoginScreenEvents.OnEmailChange(email = it))
                         },
                         label = {
                             Text(text = "Email")
@@ -133,12 +133,13 @@ fun LoginScreen(component: LoginComponent) {
                                 imageVector = Icons.Default.Email,
                                 contentDescription = ""
                             )
-                        }
+                        },
+                        isError = uiState.emailInValid
                     )
                     OutlinedTextField(
-                        value = password,
+                        value = uiState.password,
                         onValueChange = {
-                            component.onEvent(LoginEvents.UpdatePassword(it))
+                            onEvents(LoginScreenEvents.OnPasswordChange(password = it))
                         },
                         label = {
                             Text(text = "Password")
@@ -153,7 +154,14 @@ fun LoginScreen(component: LoginComponent) {
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                component.onEvent(LoginEvents.NavigateToDashboard)
+                                if(uiState.enableLoginButton) {
+                                    onEvents(
+                                        LoginScreenEvents.OnAttemptToLogin(
+                                            email = uiState.email,
+                                            password = uiState.password
+                                        )
+                                    )
+                                }
                             }
                         ),
                         leadingIcon = {
@@ -161,7 +169,8 @@ fun LoginScreen(component: LoginComponent) {
                                 imageVector = Icons.Default.Lock,
                                 contentDescription = "password icon"
                             )
-                        }
+                        },
+                        isError = uiState.passwordInValid
                     )
                     Row(
                         modifier = Modifier
@@ -175,7 +184,7 @@ fun LoginScreen(component: LoginComponent) {
                             )
                             .clickable(
                                 onClick = {
-                                    component.onEvent(LoginEvents.NavigateToDashboard)
+
                                 }
                             ),
                         horizontalArrangement = Arrangement.spacedBy(
