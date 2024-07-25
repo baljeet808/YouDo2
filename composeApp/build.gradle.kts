@@ -59,8 +59,11 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
 
-            //navigation
+            //Navigation
             implementation(libs.decompose)
+
+            //Splashscreen
+            implementation(libs.core.splashscreen)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
