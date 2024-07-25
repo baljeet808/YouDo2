@@ -8,6 +8,7 @@ data class LoginUIState(
     val showLoginForm : Boolean = false,
     val enableLoginButton : Boolean = false,
     val error: String? = null,
+    val loginSuccessful : Boolean = false,
     val email : String = "",
     val password : String = "",
 )

@@ -19,12 +19,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +42,7 @@ import common.getOnBoardPagerContentList
 import org.jetbrains.compose.resources.stringResource
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.ReenieBeanieFontFamily
+import presentation.shared.fonts.RobotoFontFamily
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_name
 
@@ -47,7 +50,7 @@ import youdo2.composeapp.generated.resources.app_name
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(
-    navigateToDashboard : ()-> Unit,
+    navigateToDashboard : () -> Unit,
     uiState : LoginUIState,
     onEvents : (LoginScreenEvents) -> Unit
 ) {
@@ -56,6 +59,9 @@ fun LoginScreen(
     val pagerState = rememberPagerState(pageCount = { list.count() })
 
     onEvents(LoginScreenEvents.OnOnboardingPageNumberChanged(pageNumber = pagerState.currentPage))
+    if(uiState.loginSuccessful){
+        navigateToDashboard()
+    }
 
     Box(
         modifier = Modifier
@@ -103,6 +109,16 @@ fun LoginScreen(
             AnimatedVisibility(
                 uiState.showLoginForm
                 ) {
+                if(!uiState.error.isNullOrEmpty()){
+                    Text(
+                        text = uiState.error,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
+                        color = Color.Red,
+                        fontSize = 10.sp,
+                        minLines = 1,
+                        fontFamily = RobotoFontFamily(),
+                    )
+                }
                 /**
                  * Login and policy button
                  * **/
@@ -134,7 +150,12 @@ fun LoginScreen(
                                 contentDescription = ""
                             )
                         },
-                        isError = uiState.emailInValid
+                        isError = uiState.emailInValid,
+                        supportingText = {
+                            if(uiState.emailInValid){
+                                Text("Invalid email.")
+                            }
+                        }
                     )
                     OutlinedTextField(
                         value = uiState.password,
@@ -152,6 +173,7 @@ fun LoginScreen(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done
                         ),
+                        visualTransformation = PasswordVisualTransformation(),
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 if(uiState.enableLoginButton) {
@@ -170,9 +192,18 @@ fun LoginScreen(
                                 contentDescription = "password icon"
                             )
                         },
-                        isError = uiState.passwordInValid
+                        isError = uiState.passwordInValid,
+                        supportingText = {
+                            if(uiState.passwordInValid){
+                                Text("Invalid password format. Please include at least one uppercase letter, number and special symbol.")
+                            }
+                        }
                     )
-                    Row(
+
+                    Button(
+                        onClick = {
+                            onEvents(LoginScreenEvents.OnAttemptToLogin(email = uiState.email, password = uiState.password))
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -181,18 +212,9 @@ fun LoginScreen(
                                 width = 1.dp,
                                 shape = RoundedCornerShape(30.dp),
                                 color = Color.Gray
-                            )
-                            .clickable(
-                                onClick = {
-
-                                }
                             ),
-                        horizontalArrangement = Arrangement.spacedBy(
-                            10.dp,
-                            alignment = Alignment.CenterHorizontally
-                        ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                        enabled = uiState.enableLoginButton
+                    ){
                         Text(
                             text = "Login",
                             fontFamily = CantarellFontFamily(),

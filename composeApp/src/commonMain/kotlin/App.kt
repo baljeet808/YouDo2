@@ -41,7 +41,9 @@ fun App(
             when(val instance = child.instance){
                 is RootComponent.Child.Login -> {
                     LoginScreen(
-                        navigateToDashboard = { instance.component.onEvent(LoginNavigationEvents.NavigateToDashboard) },
+                        navigateToDashboard = {
+                            instance.component.onEvent(LoginNavigationEvents.NavigateToDashboard)
+                                              },
                         onEvents = { event -> loginViewModel.onEvent(event) },
                         uiState = loginViewModel.uiState
                     )

@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.auth
 import domain.use_cases.auth_use_cases.LoginUseCase
 import domain.use_cases.auth_use_cases.SignupUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -16,7 +18,7 @@ import org.koin.core.component.KoinComponent
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    private val signupUseCase: SignupUseCase
+    private val signupUseCase: SignupUseCase,
 ) : ViewModel(), KoinComponent{
 
     var uiState by mutableStateOf(LoginUIState())
@@ -24,7 +26,7 @@ class LoginViewModel(
 
     private val coroutineContext = SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
         println("LoginViewModel: Error ${throwable.message}")
-        uiState = uiState.copy(error = throwable.message)
+        uiState = uiState.copy(error = "Invalid credentials. Please try again!")
     }
 
     private var job: Job? = null
@@ -43,7 +45,7 @@ class LoginViewModel(
 
     private fun onLogin(email: String, password: String){
         launchWithCatchingException {
-            signupUseCase(email, password)
+            //signupUseCase(email, password)
             loginUseCase(email, password)
         }
     }
@@ -57,12 +59,13 @@ class LoginViewModel(
                     return
                 }
                 if(isPasswordValid(event.password).not()){
-                    uiState = uiState.copy(emailInValid = true, enableLoginButton = false)
+                    uiState = uiState.copy(passwordInValid = true, enableLoginButton = false)
                     return
                 }
                 uiState = uiState.copy(isAuthenticating = true)
                 onLogin(email = event.email, password = event.password)
                 uiState = uiState.copy(isAuthenticating = false)
+                validateLogin()
             }
             is LoginScreenEvents.OnEmailChange -> {
                 uiState = uiState.copy(email = event.email, emailInValid = false, enableLoginButton = ( isEmailValid(event.email) && isPasswordValid(uiState.email) ))
@@ -73,6 +76,14 @@ class LoginViewModel(
             is LoginScreenEvents.OnOnboardingPageNumberChanged -> {
                 uiState = uiState.copy(showLoginForm = (event.pageNumber == 2))
             }
+        }
+    }
+
+    private fun validateLogin () {
+        Firebase.auth.currentUser?.let {
+            uiState = uiState.copy(error = null, loginSuccessful = true)
+        }?: {
+            uiState = uiState.copy(error = "Invalid credentials. Please try again!")
         }
     }
 
