@@ -3,11 +3,9 @@ package presentation.login
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,6 +49,7 @@ import youdo2.composeapp.generated.resources.app_name
 @Composable
 fun LoginScreen(
     navigateToDashboard : () -> Unit,
+    navigateToSignup : () -> Unit,
     uiState : LoginUIState,
     onEvents : (LoginScreenEvents) -> Unit
 ) {
@@ -100,7 +99,7 @@ fun LoginScreen(
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(.56F)
+                    .weight(.50F)
             ) {
                 OnboardingPager(pagerContent = list[it])
             }
@@ -222,6 +221,10 @@ fun LoginScreen(
                             fontWeight = FontWeight.ExtraBold
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    SignupLineView( navigateToSignup = navigateToSignup )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
