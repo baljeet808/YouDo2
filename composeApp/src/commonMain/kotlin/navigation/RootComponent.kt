@@ -11,6 +11,7 @@ import com.arkivanov.decompose.router.stack.pushNew
 import kotlinx.serialization.Serializable
 import presentation.dashboard.DashboardComponent
 import presentation.login.LoginComponent
+import presentation.signup.SignupComponent
 
 /**
  * This class live as long as application lives
@@ -48,7 +49,19 @@ class RootComponent(
                 LoginComponent(
                     componentContext = context,
                     onNavigateToDesktop = {
+                        navigation.pop()
                         navigation.pushNew(Configuration.Dashboard)
+                    },
+                    onNavigateToSignup = {
+                        navigation.pushNew(Configuration.SignUp)
+                    }
+                )
+            )
+            Configuration.SignUp -> Child.Signup(
+                SignupComponent(
+                    componentContext = context,
+                    onNavigateLogin = {
+                        navigation.pop()
                     }
                 )
             )
@@ -59,6 +72,7 @@ class RootComponent(
     sealed class Child{
         class Dashboard(val component: DashboardComponent) : Child()
         class Login(val component: LoginComponent) : Child()
+        class Signup(val component: SignupComponent) : Child()
     }
 
     //configurations
@@ -68,5 +82,7 @@ class RootComponent(
         data object Dashboard: Configuration()
         @Serializable
         data object Login: Configuration()
+
+        data object SignUp: Configuration()
     }
 }

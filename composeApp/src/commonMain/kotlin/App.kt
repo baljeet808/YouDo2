@@ -20,6 +20,9 @@ import presentation.login.LoginNavigationEvents
 import presentation.login.LoginScreen
 import presentation.login.LoginScreenEvents
 import presentation.login.LoginViewModel
+import presentation.signup.SignupNavigationEvents
+import presentation.signup.SignupScreen
+import presentation.signup.SignupViewModel
 
 
 @OptIn(KoinExperimentalAPI::class)
@@ -30,9 +33,6 @@ fun App(
     prefs : DataStore<Preferences>
 ) {
     MaterialTheme {
-
-        val loginViewModel = koinViewModel<LoginViewModel>()
-
         val childStack by root.childStack.subscribeAsState()
         Children(
             stack = childStack,
@@ -40,6 +40,7 @@ fun App(
         ){ child ->
             when(val instance = child.instance){
                 is RootComponent.Child.Login -> {
+                    val loginViewModel = koinViewModel<LoginViewModel>()
                     LoginScreen(
                         navigateToDashboard = {
                             instance.component.onEvent(LoginNavigationEvents.NavigateToDashboard)
@@ -49,6 +50,16 @@ fun App(
                     )
                 }
                 is RootComponent.Child.Dashboard -> DashboardScreen(instance.component)
+                is RootComponent.Child.Signup -> {
+                    val signupViewModel = koinViewModel<SignupViewModel>()
+                    SignupScreen(
+                        onEvents = { event -> signupViewModel.onEvent(event)},
+                        uiState = signupViewModel.uiState,
+                        navigateToLogin = {
+                            instance.component.onEvent(SignupNavigationEvents.NavigateToLogin)
+                        }
+                    )
+                }
             }
         }
     }

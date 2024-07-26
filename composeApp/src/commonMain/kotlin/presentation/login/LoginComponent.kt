@@ -11,12 +11,14 @@ import kotlinx.coroutines.flow.asStateFlow
  * **/
 class LoginComponent(
     componentContext: ComponentContext,
-    private val onNavigateToDesktop: () -> Unit
+    private val onNavigateToDesktop: () -> Unit,
+    private val onNavigateToSignup: () -> Unit
 ): ComponentContext by componentContext {
 
     fun onEvent(event: LoginNavigationEvents) {
         when (event) {
             LoginNavigationEvents.NavigateToDashboard -> onNavigateToDesktop()
+            LoginNavigationEvents.NavigateToSignup -> onNavigateToSignup()
         }
     }
 }
@@ -24,4 +26,5 @@ class LoginComponent(
 
 sealed interface LoginNavigationEvents {
     data object NavigateToDashboard : LoginNavigationEvents
+    data object NavigateToSignup : LoginNavigationEvents
 }

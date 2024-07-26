@@ -1,4 +1,4 @@
-package presentation.login
+package presentation.signup
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
-import domain.use_cases.auth_use_cases.LoginUseCase
+import domain.use_cases.auth_use_cases.SignupUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -15,15 +15,15 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
-class LoginViewModel(
-    private val loginUseCase: LoginUseCase,
+class SignupViewModel(
+    private val signupUseCase: SignupUseCase,
 ) : ViewModel(), KoinComponent{
 
-    var uiState by mutableStateOf(LoginUIState())
+    var uiState by mutableStateOf(SignupUIState())
         private set
 
     private val coroutineContext = SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
-        println("LoginViewModel: Error ${throwable.message}")
+        println("SignupViewModel: Error ${throwable.message}")
         uiState = uiState.copy(error = "Invalid credentials. Please try again!")
     }
 
@@ -41,44 +41,42 @@ class LoginViewModel(
         job?.cancel()
     }
 
-    private fun onLogin(email: String, password: String){
+    private fun onSignup(email: String, password: String){
         launchWithCatchingException {
-            loginUseCase(email, password)
+            signupUseCase(email, password)
         }
     }
 
 
-    fun onEvent(event : LoginScreenEvents){
+    fun onEvent(event : SignupScreenEvents){
         when(event){
-            is LoginScreenEvents.OnAttemptToLogin -> {
+            is SignupScreenEvents.OnEmailChange -> {
+                uiState = uiState.copy(email = event.email, emailInValid = false, enableSignupButton = ( isEmailValid(event.email) && isPasswordValid(uiState.email) ))
+            }
+            is SignupScreenEvents.OnPasswordChange -> {
+                uiState = uiState.copy(password = event.password, passwordInValid = false, enableSignupButton = ( isPasswordValid(event.password) && isEmailValid(uiState.email) ))
+            }
+
+            is SignupScreenEvents.OnAttemptToSignup -> {
                 if(isEmailValid(event.email).not()){
-                    uiState = uiState.copy(emailInValid = true, enableLoginButton = false)
+                    uiState = uiState.copy(emailInValid = true, enableSignupButton = false)
                     return
                 }
                 if(isPasswordValid(event.password).not()){
-                    uiState = uiState.copy(passwordInValid = true, enableLoginButton = false)
+                    uiState = uiState.copy(passwordInValid = true, enableSignupButton = false)
                     return
                 }
                 uiState = uiState.copy(isAuthenticating = true)
-                onLogin(email = event.email, password = event.password)
+                onSignup(email = event.email, password = event.password)
                 uiState = uiState.copy(isAuthenticating = false)
-                validateLogin()
-            }
-            is LoginScreenEvents.OnEmailChange -> {
-                uiState = uiState.copy(email = event.email, emailInValid = false, enableLoginButton = ( isEmailValid(event.email) && isPasswordValid(uiState.email) ))
-            }
-            is LoginScreenEvents.OnPasswordChange -> {
-                uiState = uiState.copy(password = event.password, passwordInValid = false, enableLoginButton = ( isPasswordValid(event.password) && isEmailValid(uiState.email) ))
-            }
-            is LoginScreenEvents.OnOnboardingPageNumberChanged -> {
-                uiState = uiState.copy(showLoginForm = (event.pageNumber == 2))
+                validateSignup()
             }
         }
     }
 
-    private fun validateLogin () {
+    private fun validateSignup () {
         Firebase.auth.currentUser?.let {
-            uiState = uiState.copy(error = null, loginSuccessful = true)
+            uiState = uiState.copy(error = null, signupSuccessful = true)
         }?: {
             uiState = uiState.copy(error = "Invalid credentials. Please try again!")
         }
