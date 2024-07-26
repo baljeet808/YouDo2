@@ -1,14 +1,19 @@
 package presentation.signup
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,10 +36,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import presentation.login.PolicyLineView
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.app_icon
 import youdo2.composeapp.generated.resources.signup_label
 
 @Composable
@@ -59,13 +67,30 @@ fun SignupScreen(
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
 
-            Text(
-                text = stringResource(Res.string.signup_label),
+            Row (
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = RobotoFontFamily(),
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.ExtraBold
-            )
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.Bottom
+            ){
+                Text(
+                    text = stringResource(Res.string.signup_label),
+                    modifier = Modifier,
+                    fontFamily = RobotoFontFamily(),
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 38.sp
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Image(
+                    painterResource(Res.drawable.app_icon),
+                    contentDescription = "app logo",
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp)
+                        .background(color = Color.Transparent)
+                )
+            }
+
 
             if(!uiState.error.isNullOrEmpty()){
                 androidx.compose.material.Text(
@@ -180,6 +205,16 @@ fun SignupScreen(
                         fontWeight = FontWeight.ExtraBold
                     )
                 }
+                Spacer(modifier = Modifier.height(20.dp))
+
+                PolicyLineView(
+                    navigateToPolicy = {
+                        //TODO navigate to policy
+                    },
+                    navigateToTermOfUse = {
+                        //TODO navigate to term of use
+                    }
+                )
 
             }
         }
