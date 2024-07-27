@@ -3,6 +3,7 @@ package common
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import okio.Path.Companion.toPath
 
 
@@ -13,3 +14,5 @@ fun createDatastore(producePath : () -> String): DataStore<Preferences> {
 }
 
 internal const val DATASTORE_FILE_NAME = "prefs.preferences_pb"
+
+val isUserLoggedInKey = booleanPreferencesKey("isUserLoggedIn")

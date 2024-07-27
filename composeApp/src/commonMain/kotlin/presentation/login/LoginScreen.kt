@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +38,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import common.getOnBoardPagerContentList
+import common.isUserLoggedInKey
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.ReenieBeanieFontFamily
@@ -51,17 +59,30 @@ fun LoginScreen(
     navigateToDashboard : () -> Unit,
     navigateToSignup : () -> Unit,
     uiState : LoginUIState,
-    onEvents : (LoginScreenEvents) -> Unit
+    onEvents : (LoginScreenEvents) -> Unit,
+    prefs: DataStore<Preferences>
 ) {
-    val list = getOnBoardPagerContentList()
 
-    val pagerState = rememberPagerState(pageCount = { list.count() })
-
-    onEvents(LoginScreenEvents.OnOnboardingPageNumberChanged(pageNumber = pagerState.currentPage))
-    if(uiState.loginSuccessful){
+    //code to automatically navigate to dashboard when user is logged in
+    val userLoggedIn = prefs.data.map { it[isUserLoggedInKey]?:false }.collectAsState(initial = false)
+    if(userLoggedIn.value){
         navigateToDashboard()
     }
+    val scope = rememberCoroutineScope()
+    if(uiState.loginSuccessful){
+        scope.launch {
+            prefs.edit { dataStore ->
+                dataStore[isUserLoggedInKey] = true
+            }
+        }
+    }
 
+    //pager related setup
+    val list = getOnBoardPagerContentList()
+    val pagerState = rememberPagerState(pageCount = { list.count() })
+    onEvents(LoginScreenEvents.OnOnboardingPageNumberChanged(pageNumber = pagerState.currentPage))
+
+    //login ui
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +95,6 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-
             /**
              * Fixed App name
              * **/
@@ -105,9 +125,14 @@ fun LoginScreen(
             }
 
 
+            /**
+             * Login form
+             * **/
             AnimatedVisibility(
                 uiState.showLoginForm
                 ) {
+
+                //error text
                 if(!uiState.error.isNullOrEmpty()){
                     Text(
                         text = uiState.error,
@@ -118,15 +143,15 @@ fun LoginScreen(
                         fontFamily = RobotoFontFamily(),
                     )
                 }
-                /**
-                 * Login and policy button
-                 * **/
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 200.dp),
                     verticalArrangement = Arrangement.Center
                 ) {
+
+                    //email field
                     OutlinedTextField(
                         value = uiState.email,
                         onValueChange = {
@@ -156,6 +181,8 @@ fun LoginScreen(
                             }
                         }
                     )
+
+                    //password field
                     OutlinedTextField(
                         value = uiState.password,
                         onValueChange = {
@@ -199,6 +226,7 @@ fun LoginScreen(
                         }
                     )
 
+                    //login button
                     Button(
                         onClick = {
                             onEvents(LoginScreenEvents.OnAttemptToLogin(email = uiState.email, password = uiState.password))
@@ -224,10 +252,12 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    //signup text button
                     SignupLineView( navigateToSignup = navigateToSignup )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    //policy text buttons
                     PolicyLineView(
                         navigateToPolicy = {
                             //TODO navigate to policy

@@ -14,8 +14,7 @@ fun MainViewController() = ComposeUIViewController(
     val preferences = createDatastore()
     val root = remember {
         RootComponent(
-            componentContext = DefaultComponentContext(LifecycleRegistry()),
-            preferences = preferences
+            componentContext = DefaultComponentContext(LifecycleRegistry())
         )
     }
     App(

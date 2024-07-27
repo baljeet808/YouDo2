@@ -1,5 +1,7 @@
 package navigation
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.arkivanov.decompose.ComponentContext
@@ -8,6 +10,10 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
+import common.isUserLoggedInKey
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.Serializable
 import presentation.dashboard.DashboardComponent
 import presentation.login.LoginComponent
@@ -17,8 +23,7 @@ import presentation.signup.SignupComponent
  * This class live as long as application lives
  * **/
 class RootComponent(
-    componentContext: ComponentContext,
-    preferences: DataStore<Preferences>
+    componentContext: ComponentContext
 ) : ComponentContext by componentContext{
 
     private val navigation = StackNavigation<Configuration>()
@@ -26,7 +31,7 @@ class RootComponent(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = Configuration.Login,
+        initialConfiguration = if(true) { Configuration.Dashboard } else Configuration.Login,
         handleBackButton = true,
         childFactory = ::createChild
     )

@@ -22,8 +22,7 @@ class MainActivity : ComponentActivity() {
             }
             val root = retainedComponent {
                 RootComponent(
-                    componentContext = it,
-                    preferences = preferences
+                    componentContext = it
                 )
             }
             App(
