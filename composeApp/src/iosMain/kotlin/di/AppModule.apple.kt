@@ -6,10 +6,12 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import presentation.login.LoginViewModel
 import presentation.signup.SignupViewModel
+import presentation.dashboard.DashboardViewModel
 
 
 actual val platformModule= module {
     single<YouDo2Database> { getYouDo2Database() }
     singleOf(::LoginViewModel)
     singleOf(::SignupViewModel)
+    singleOf(::DashboardViewModel)
 }

@@ -1,19 +1,12 @@
 package navigation
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
-import common.isUserLoggedInKey
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import kotlinx.serialization.Serializable
 import presentation.dashboard.DashboardComponent
 import presentation.login.LoginComponent
@@ -31,7 +24,7 @@ class RootComponent(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = if(true) { Configuration.Dashboard } else Configuration.Login,
+        initialConfiguration = Configuration.Login,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -46,7 +39,7 @@ class RootComponent(
                 DashboardComponent(
                     componentContext = context,
                     onLogout = {
-                        navigation.pop()
+                        navigation.replaceCurrent(Configuration.Login)
                     }
                 )
             )
@@ -54,8 +47,7 @@ class RootComponent(
                 LoginComponent(
                     componentContext = context,
                     onNavigateToDesktop = {
-                        navigation.pop()
-                        navigation.pushNew(Configuration.Dashboard)
+                        navigation.replaceCurrent(Configuration.Dashboard)
                     },
                     onNavigateToSignup = {
                         navigation.pushNew(Configuration.SignUp)

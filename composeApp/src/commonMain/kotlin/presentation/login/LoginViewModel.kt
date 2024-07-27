@@ -39,6 +39,7 @@ class LoginViewModel(
     override fun onCleared() {
         super.onCleared()
         job?.cancel()
+        uiState = LoginUIState()
     }
 
     private fun onLogin(email: String, password: String){
@@ -72,6 +73,9 @@ class LoginViewModel(
             }
             is LoginScreenEvents.OnOnboardingPageNumberChanged -> {
                 uiState = uiState.copy(showLoginForm = (event.pageNumber == 2))
+            }
+            is LoginScreenEvents.OnRefreshUIState -> {
+                uiState = LoginUIState()
             }
         }
     }

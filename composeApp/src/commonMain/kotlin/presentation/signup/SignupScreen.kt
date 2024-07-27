@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.login.PolicyLineView
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.RobotoFontFamily
@@ -45,15 +47,17 @@ import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_icon
 import youdo2.composeapp.generated.resources.signup_label
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SignupScreen(
-    onEvents: (SignupScreenEvents) -> Unit,
-    uiState : SignupUIState,
     navigateToLogin: () -> Unit
 ) {
+    val signupViewModel = koinViewModel<SignupViewModel>()
+    val uiState = signupViewModel.uiState
 
     if(uiState.signupSuccessful){
         navigateToLogin()
+        signupViewModel.onEvent(SignupScreenEvents.OnRefreshUIState)
     }
 
     Box(
@@ -114,7 +118,7 @@ fun SignupScreen(
                 OutlinedTextField(
                     value = uiState.email,
                     onValueChange = {
-                        onEvents(SignupScreenEvents.OnEmailChange(email = it))
+                        signupViewModel.onEvent(SignupScreenEvents.OnEmailChange(email = it))
                     },
                     label = {
                         androidx.compose.material.Text(text = "Email")
@@ -143,7 +147,7 @@ fun SignupScreen(
                 OutlinedTextField(
                     value = uiState.password,
                     onValueChange = {
-                        onEvents(SignupScreenEvents.OnPasswordChange(password = it))
+                        signupViewModel.onEvent(SignupScreenEvents.OnPasswordChange(password = it))
                     },
                     label = {
                         androidx.compose.material.Text(text = "Password")
@@ -160,7 +164,7 @@ fun SignupScreen(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             if(uiState.enableSignupButton) {
-                                onEvents(
+                                signupViewModel.onEvent(
                                     SignupScreenEvents.OnAttemptToSignup(
                                         email = uiState.email,
                                         password = uiState.password
@@ -185,7 +189,7 @@ fun SignupScreen(
 
                 Button(
                     onClick = {
-                        onEvents(SignupScreenEvents.OnAttemptToSignup(email = uiState.email, password = uiState.password))
+                        signupViewModel.onEvent(SignupScreenEvents.OnAttemptToSignup(email = uiState.email, password = uiState.password))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
