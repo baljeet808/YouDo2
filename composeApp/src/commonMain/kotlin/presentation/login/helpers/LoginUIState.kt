@@ -1,5 +1,7 @@
 package presentation.login.helpers
 
+import domain.dto_helpers.DataError
+
 
 data class LoginUIState(
     val isLoading : Boolean = false,
@@ -7,6 +9,6 @@ data class LoginUIState(
     val emailInValid : Boolean = false,
     val showLoginForm : Boolean = false,
     val enableLoginButton : Boolean = false,
-    val error: String? = null,
+    val error: DataError.Network? = null,
     val loginSuccessful : Boolean = false,
 )

@@ -45,6 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 import presentation.login.components.PolicyLineView
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.RobotoFontFamily
+import presentation.signup.helpers.SignupUIState
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_icon
 import youdo2.composeapp.generated.resources.signup_label
@@ -94,17 +95,6 @@ fun SignupScreen(
                 )
             }
 
-
-            if(!uiState.error.isNullOrEmpty()){
-                androidx.compose.material.Text(
-                    text = uiState.error,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
-                    color = Color.Red,
-                    fontSize = 10.sp,
-                    minLines = 1,
-                    fontFamily = RobotoFontFamily(),
-                )
-            }
             /**
              * Login and policy button
              * **/

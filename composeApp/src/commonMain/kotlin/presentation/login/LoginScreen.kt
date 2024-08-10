@@ -48,7 +48,6 @@ import presentation.login.components.SignupLineView
 import presentation.login.helpers.LoginUIState
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.ReenieBeanieFontFamily
-import presentation.shared.fonts.RobotoFontFamily
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_name
 
@@ -118,18 +117,6 @@ fun LoginScreen(
             AnimatedVisibility(
                 uiState.showLoginForm
                 ) {
-
-                //error text
-                if(!uiState.error.isNullOrEmpty()){
-                    Text(
-                        text = uiState.error,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
-                        color = Color.Red,
-                        fontSize = 10.sp,
-                        minLines = 1,
-                        fontFamily = RobotoFontFamily(),
-                    )
-                }
 
                 Column(
                     modifier = Modifier

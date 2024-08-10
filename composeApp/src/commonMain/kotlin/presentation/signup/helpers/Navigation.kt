@@ -1,4 +1,4 @@
-package presentation.login.helpers
+package presentation.signup.helpers
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -12,21 +12,20 @@ import androidx.navigation.compose.composable
 import domain.dto_helpers.DataError
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-import presentation.login.LoginScreen
-import presentation.signup.helpers.DESTINATION_SIGNUP_ROUTE
+import presentation.signup.SignupScreen
 
-const val DESTINATION_LOGIN_ROUTE = "login"
+const val DESTINATION_SIGNUP_ROUTE = "signup"
 
 @OptIn(KoinExperimentalAPI::class)
-fun NavGraphBuilder.addLoginDestination(
+fun NavGraphBuilder.addSignupDestination(
     navController: NavController,
     showErrorAlertDialog : (error : DataError.Network?) -> Unit = {},
     retryApiCall : MutableState<Boolean> = mutableStateOf(false)
 ){
     composable(
-        route = DESTINATION_LOGIN_ROUTE
+        route = DESTINATION_SIGNUP_ROUTE
     ){
-        val viewModel = koinViewModel<LoginViewModel>()
+        val viewModel = koinViewModel<SignupViewModel>()
         val uiState = viewModel.uiState
 
         var emailBackup by remember { mutableStateOf("") }
@@ -35,7 +34,7 @@ fun NavGraphBuilder.addLoginDestination(
         //retry api call triggers when user clicks retry button in error dialog
         LaunchedEffect (key1 = retryApiCall.value) {
             if(retryApiCall.value){
-                viewModel.attemptLogin(email = emailBackup,password = passwordBackup)
+                viewModel.attemptSignup(email = emailBackup, password =  passwordBackup)
             }
         }
 
@@ -46,19 +45,17 @@ fun NavGraphBuilder.addLoginDestination(
             }
         }
 
-        LoginScreen(
+        SignupScreen(
             uiState = uiState,
-            login = { email, password ->
+            signUp = { email, password ->
                 emailBackup = email
                 passwordBackup  = password
-                viewModel.attemptLogin(email = email,password = password)
+                viewModel.attemptSignup(email = email,password = password)
             },
-            navigateToSignup = {
-                navController.navigate(DESTINATION_SIGNUP_ROUTE)
-            },
-            navigateToPolicy = {
-                //TODO: navigate to policy
+            navigateToLogin = {
+                navController.popBackStack()
             }
         )
+
     }
 }
