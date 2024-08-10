@@ -1,4 +1,4 @@
-package presentation.login
+package presentation.login.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -17,11 +17,14 @@ import presentation.shared.fonts.CantarellFontFamily
 
 
 @Composable
-fun SignupLineView(
-    navigateToSignup : () -> Unit,
+fun PolicyLineView(
+    navigateToPolicy : () -> Unit,
+    navigateToTermOfUse : () -> Unit
 ) {
-    val initialText = "Do not have an account? "
-    val signupText = "Signup here"
+    val initialText = "By signing up, you agree to the "
+    val termOfService = "Term of Service"
+    val and = " and "
+    val privacyPolicy = "Privacy Policy"
     val dot = "."
 
     val normalStyle = SpanStyle(
@@ -40,8 +43,15 @@ fun SignupLineView(
             append(initialText)
         }
         withStyle(style = clickableStyle){
-            pushStringAnnotation(tag = signupText, annotation = signupText)
-            append(signupText)
+            pushStringAnnotation(tag = termOfService, annotation = termOfService)
+            append(termOfService)
+        }
+        withStyle(style = normalStyle){
+            append(and)
+        }
+        withStyle(style = clickableStyle){
+            pushStringAnnotation(tag = privacyPolicy, annotation = privacyPolicy)
+            append(privacyPolicy)
         }
         withStyle(style = normalStyle){
             append(dot)
@@ -59,8 +69,11 @@ fun SignupLineView(
             annotatedString.getStringAnnotations(start = offset, end = offset)
                 .firstOrNull()?.also { span ->
                         when(span.item){
-                            signupText ->{
-                                navigateToSignup()
+                            privacyPolicy ->{
+                                navigateToPolicy()
+                            }
+                            termOfService ->{
+                                navigateToTermOfUse()
                             }
                         }
                 }

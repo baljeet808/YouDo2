@@ -9,13 +9,10 @@ import domain.repository_interfaces.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-/**
- * Updated by Baljeet singh.
- * **/
+
 class AuthRepositoryImpl(
     private val auth : FirebaseAuth = Firebase.auth,
     private val scope : CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -39,31 +36,26 @@ class AuthRepositoryImpl(
     override val isAuthenticated: Boolean
         get() = auth.currentUser != null && auth.currentUser?.isAnonymous == false
 
-    private suspend fun launchWithAwait(block: suspend () -> Unit) {
-        scope.async {
-            block()
-        }.await()
+
+
+    override suspend fun authenticate(email: String, password: String) : FirebaseUser? {
+        val results = auth.signInWithEmailAndPassword(
+            email = email,
+            password = password
+        )
+        return results.user
     }
 
-    override suspend fun authenticate(email: String, password: String) {
-        launchWithAwait {
-            auth.signInWithEmailAndPassword(
-                email = email,
-                password = password
-            )
-        }
+    override suspend fun createUser(email: String, password: String): FirebaseUser? {
+        val results = auth.createUserWithEmailAndPassword(
+            email = email,
+            password = password
+        )
+        return results.user
     }
 
-    override suspend fun createUser(email: String, password: String) {
-        launchWithAwait {
-            auth.createUserWithEmailAndPassword(
-                email = email,
-                password = password
-            )
-        }
-    }
-
-    override suspend fun signOut() {
+    override suspend fun signOut() : Boolean {
         auth.signOut()
+        return auth.currentUser == null
     }
 }

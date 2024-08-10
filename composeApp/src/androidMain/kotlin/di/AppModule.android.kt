@@ -4,7 +4,7 @@ import data.local.room.YouDo2Database
 import data.local.room.getYouDo2Database
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import presentation.login.LoginViewModel
+import presentation.login.helpers.LoginViewModel
 import presentation.signup.SignupViewModel
 import presentation.dashboard.DashboardViewModel
 

@@ -25,6 +25,10 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,27 +42,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
-import presentation.login.PolicyLineView
+import presentation.login.components.PolicyLineView
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_icon
 import youdo2.composeapp.generated.resources.signup_label
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SignupScreen(
-    navigateToLogin: () -> Unit
+    uiState: SignupUIState = SignupUIState(),
+    navigateToLogin: () -> Unit,
+    signUp : (email: String, password: String) -> Unit = {_,_->}
 ) {
-    val signupViewModel = koinViewModel<SignupViewModel>()
-    val uiState = signupViewModel.uiState
 
-    if(uiState.signupSuccessful){
-        navigateToLogin()
-        signupViewModel.onEvent(SignupScreenEvents.OnRefreshUIState)
-    }
+    var emailText by remember {mutableStateOf("")}
+    var passwordText by remember {mutableStateOf("")}
 
     Box(
       modifier = Modifier.fillMaxSize()
@@ -116,9 +115,9 @@ fun SignupScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 OutlinedTextField(
-                    value = uiState.email,
+                    value = emailText,
                     onValueChange = {
-                        signupViewModel.onEvent(SignupScreenEvents.OnEmailChange(email = it))
+                        emailText = it
                     },
                     label = {
                         androidx.compose.material.Text(text = "Email")
@@ -145,9 +144,9 @@ fun SignupScreen(
                     }
                 )
                 OutlinedTextField(
-                    value = uiState.password,
+                    value = passwordText,
                     onValueChange = {
-                        signupViewModel.onEvent(SignupScreenEvents.OnPasswordChange(password = it))
+                        passwordText = it
                     },
                     label = {
                         androidx.compose.material.Text(text = "Password")
@@ -164,12 +163,7 @@ fun SignupScreen(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             if(uiState.enableSignupButton) {
-                                signupViewModel.onEvent(
-                                    SignupScreenEvents.OnAttemptToSignup(
-                                        email = uiState.email,
-                                        password = uiState.password
-                                    )
-                                )
+                                signUp(emailText, passwordText)
                             }
                         }
                     ),
@@ -189,7 +183,7 @@ fun SignupScreen(
 
                 Button(
                     onClick = {
-                        signupViewModel.onEvent(SignupScreenEvents.OnAttemptToSignup(email = uiState.email, password = uiState.password))
+                        signUp(emailText, passwordText)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

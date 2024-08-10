@@ -59,9 +59,6 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
 
-            //Navigation
-            implementation(libs.decompose)
-
             //Splashscreen
             implementation(libs.core.splashscreen)
         }
@@ -74,6 +71,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.firebase.auth)
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.analytics)
 
             //Room
             implementation(libs.androidx.room.runtime)
@@ -89,11 +88,6 @@ kotlin {
 
             //firebase-auth
             implementation(libs.firebase.auth)
-
-            //navigation
-            implementation(libs.decompose)
-            implementation(libs.decompose.jetbrains)
-            implementation(libs.kotlinx.serialization.json)
 
             //DataStore
             api(libs.datastore.preferences)
@@ -159,6 +153,7 @@ room {
 }
 
 dependencies{
+    implementation(libs.firebase.crashlytics.buildtools)
     add("kspCommonMainMetadata", libs.androidx.room.compiler)
 }
 tasks.withType<KotlinJvmCompile>().configureEach {

@@ -8,6 +8,4 @@ data class SignupUIState(
     val enableSignupButton : Boolean = false,
     val error: String? = null,
     val signupSuccessful : Boolean = false,
-    val email : String = "",
-    val password : String = "",
 )

@@ -1,29 +1,46 @@
-package presentation.signup
+package presentation.login.helpers
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
-import domain.use_cases.auth_use_cases.SignupUseCase
+import domain.use_cases.auth_use_cases.LoginUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
-class SignupViewModel(
-    private val signupUseCase: SignupUseCase,
+class LoginViewModel(
+    private val loginUseCase: LoginUseCase,
 ) : ViewModel(), KoinComponent{
 
-    var uiState by mutableStateOf(SignupUIState())
+    var uiState by mutableStateOf(LoginUIState())
         private set
 
-    private fun onSignup(email: String, password: String){
+    fun attemptLogin(email : String, password : String){
+        if(!isEmailValid(email)){
+            uiState = uiState.copy(emailInValid = true, enableLoginButton = false)
+            return
+        }
+        if(!isPasswordValid(password)){
+            uiState = uiState.copy(passwordInValid = true, enableLoginButton = false)
+            return
+        }
+        uiState = uiState.copy(emailInValid = false, passwordInValid = false, isLoading = true)
+
+    }
+
+    private fun login() = viewModelScope.launch(Dispatchers.IO){
 
     }
 
 
-    private fun validateSignup () {
+    private fun validateLogin () {
         Firebase.auth.currentUser?.let {
-            uiState = uiState.copy(error = null, signupSuccessful = true)
+            uiState = uiState.copy(error = null, loginSuccessful = true)
         }?: {
             uiState = uiState.copy(error = "Invalid credentials. Please try again!")
         }

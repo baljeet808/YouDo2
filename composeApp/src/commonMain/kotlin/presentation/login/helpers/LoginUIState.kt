@@ -1,14 +1,12 @@
-package presentation.login
+package presentation.login.helpers
 
 
 data class LoginUIState(
-    val isAuthenticating : Boolean = false,
+    val isLoading : Boolean = false,
     val passwordInValid : Boolean = false,
     val emailInValid : Boolean = false,
     val showLoginForm : Boolean = false,
     val enableLoginButton : Boolean = false,
     val error: String? = null,
     val loginSuccessful : Boolean = false,
-    val email : String = "",
-    val password : String = "",
 )

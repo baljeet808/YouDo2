@@ -25,8 +25,10 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,16 +40,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import common.getOnBoardPagerContentList
-import common.isUserLoggedInKey
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
+import presentation.login.components.OnboardingPager
+import presentation.login.components.PolicyLineView
+import presentation.login.components.SignupLineView
+import presentation.login.helpers.LoginUIState
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.shared.fonts.ReenieBeanieFontFamily
 import presentation.shared.fonts.RobotoFontFamily
@@ -55,37 +53,21 @@ import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_name
 
 
-@OptIn(ExperimentalFoundationApi::class, KoinExperimentalAPI::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(
-    navigateToDashboard : () -> Unit,
-    navigateToSignup : () -> Unit,
-    prefs: DataStore<Preferences>
+    navigateToPolicy: () -> Unit = {},
+    navigateToSignup: () -> Unit = {},
+    uiState: LoginUIState = LoginUIState(),
+    login: (email : String, password : String) -> Unit = {_,_ ->},
 ) {
 
-    val loginViewModel = koinViewModel<LoginViewModel>()
-    val uiState = loginViewModel.uiState
-
-    //code to automatically navigate to dashboard when user is logged in
-    val userLoggedIn = prefs.data.map { it[isUserLoggedInKey]?:false }.collectAsState(initial = false)
-    if(userLoggedIn.value){
-        navigateToDashboard()
-    }
-    val scope = rememberCoroutineScope()
-    if(uiState.loginSuccessful){
-        scope.launch {
-            prefs.edit { dataStore ->
-                dataStore[isUserLoggedInKey] = true
-            }
-        }
-        navigateToDashboard()
-        loginViewModel.onEvent(LoginScreenEvents.OnRefreshUIState)
-    }
+    var emailText by remember { mutableStateOf("") }
+    var passwordText by remember { mutableStateOf("") }
 
     //pager related setup
     val list = getOnBoardPagerContentList()
     val pagerState = rememberPagerState(pageCount = { list.count() })
-    loginViewModel.onEvent(LoginScreenEvents.OnOnboardingPageNumberChanged(pageNumber = pagerState.currentPage))
 
     //login ui
     Box(
@@ -158,9 +140,9 @@ fun LoginScreen(
 
                     //email field
                     OutlinedTextField(
-                        value = uiState.email,
+                        value = emailText,
                         onValueChange = {
-                            loginViewModel.onEvent(LoginScreenEvents.OnEmailChange(email = it))
+                            emailText = it
                         },
                         label = {
                             Text(text = "Email")
@@ -189,9 +171,9 @@ fun LoginScreen(
 
                     //password field
                     OutlinedTextField(
-                        value = uiState.password,
+                        value = passwordText,
                         onValueChange = {
-                            loginViewModel.onEvent(LoginScreenEvents.OnPasswordChange(password = it))
+                            passwordText = it
                         },
                         label = {
                             Text(text = "Password")
@@ -208,12 +190,7 @@ fun LoginScreen(
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 if(uiState.enableLoginButton) {
-                                    loginViewModel.onEvent(
-                                        LoginScreenEvents.OnAttemptToLogin(
-                                            email = uiState.email,
-                                            password = uiState.password
-                                        )
-                                    )
+                                    login(emailText, passwordText)
                                 }
                             }
                         ),
@@ -234,7 +211,7 @@ fun LoginScreen(
                     //login button
                     Button(
                         onClick = {
-                            loginViewModel.onEvent(LoginScreenEvents.OnAttemptToLogin(email = uiState.email, password = uiState.password))
+                            login(emailText, passwordText)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -265,10 +242,10 @@ fun LoginScreen(
                     //policy text buttons
                     PolicyLineView(
                         navigateToPolicy = {
-                            //TODO navigate to policy
+                            navigateToPolicy()
                         },
                         navigateToTermOfUse = {
-                            //TODO navigate to term of use
+                            navigateToPolicy()
                         }
                     )
                 }

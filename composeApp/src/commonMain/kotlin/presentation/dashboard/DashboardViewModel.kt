@@ -60,20 +60,6 @@ class DashboardViewModel(
         }
     }
 
-    fun onEvent(event : DashboardScreenEvents){
-        when(event){
-            is DashboardScreenEvents.OnAttemptToLogout -> {
-                uiState = uiState.copy(isLoggingOut = true)
-                onLogout()
-                uiState = uiState.copy(isLoggingOut = false)
-                validateLogout()
-            }
-
-            DashboardScreenEvents.OnRefreshUIState ->{
-                uiState = DashboardUIState()
-            }
-        }
-    }
 
     private fun validateLogout() {
         Firebase.auth.currentUser?.let {

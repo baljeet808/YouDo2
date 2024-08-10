@@ -13,9 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import common.isUserLoggedInKey
-import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.shared.fonts.ReenieBeanieFontFamily
@@ -31,15 +28,7 @@ fun DashboardScreen(
     val uiState = dashboardViewModel.uiState
 
     val scope = rememberCoroutineScope()
-    if(uiState.isLoggedOut){
-        scope.launch {
-            prefs.edit { dataStore ->
-                dataStore[isUserLoggedInKey] = false
-            }
-        }
-        navigateToLogin()
-        dashboardViewModel.onEvent(DashboardScreenEvents.OnRefreshUIState)
-    }
+
 
     Column (
         modifier = Modifier
@@ -57,7 +46,7 @@ fun DashboardScreen(
 
         Button(
             onClick = {
-                dashboardViewModel.onEvent(DashboardScreenEvents.OnAttemptToLogout)
+
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ){
