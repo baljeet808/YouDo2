@@ -71,6 +71,9 @@ class SignupViewModel(
                 uiState = uiState.copy(isAuthenticating = false)
                 validateSignup()
             }
+            is SignupScreenEvents.OnRefreshUIState -> {
+                uiState = SignupUIState()
+            }
         }
     }
 
