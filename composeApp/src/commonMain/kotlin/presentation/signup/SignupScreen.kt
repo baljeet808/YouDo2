@@ -53,7 +53,7 @@ import youdo2.composeapp.generated.resources.signup_label
 @Composable
 fun SignupScreen(
     uiState: SignupUIState = SignupUIState(),
-    navigateToLogin: () -> Unit,
+    onCredentialsUpdated: (email : String, password : String) -> Unit = {_,_ ->},
     signUp : (email: String, password: String) -> Unit = {_,_->}
 ) {
 
@@ -108,6 +108,7 @@ fun SignupScreen(
                     value = emailText,
                     onValueChange = {
                         emailText = it
+                        onCredentialsUpdated(it, passwordText)
                     },
                     label = {
                         androidx.compose.material.Text(text = "Email")
@@ -137,6 +138,7 @@ fun SignupScreen(
                     value = passwordText,
                     onValueChange = {
                         passwordText = it
+                        onCredentialsUpdated(emailText, it)
                     },
                     label = {
                         androidx.compose.material.Text(text = "Password")

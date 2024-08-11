@@ -5,7 +5,8 @@ import dev.gitlive.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    val currentUser: Flow<UserEntity?>
+    val currentUser: UserEntity?
+    val currentUserInFlow: Flow<UserEntity?>
     val currentUserId: String
     val isAuthenticated: Boolean
 

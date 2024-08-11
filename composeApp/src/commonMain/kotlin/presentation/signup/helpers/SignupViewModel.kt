@@ -22,6 +22,14 @@ class SignupViewModel(
     var uiState by mutableStateOf(SignupUIState())
         private set
 
+
+    fun updateCredentials(email : String, password: String){
+        uiState = uiState.copy(emailInValid = false, passwordInValid = false)
+        if(email.isEmailValid() && password.isPasswordValid()){
+            uiState = uiState.copy(enableSignupButton = true)
+        }
+    }
+
     fun attemptSignup(email: String, password: String){
         if(!email.isEmailValid()){
             uiState = uiState.copy(emailInValid = true, enableSignupButton = false)
@@ -40,12 +48,12 @@ class SignupViewModel(
             when (it) {
                 is Result.Error -> {
                     withContext(Dispatchers.Main){
-                        uiState.copy(isLoading = false, error = it.error, signupSuccessful = false)
+                       uiState = uiState.copy(isLoading = false, error = it.error, signupSuccessful = false)
                     }
                 }
                 is Result.Success -> {
                     withContext(Dispatchers.Main){
-                        uiState.copy(isLoading = false, error = null, signupSuccessful = true)
+                       uiState = uiState.copy(isLoading = false, error = null, signupSuccessful = true)
                     }
                 }
             }

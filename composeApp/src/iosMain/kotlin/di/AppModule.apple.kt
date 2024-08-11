@@ -6,7 +6,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import presentation.login.helpers.LoginViewModel
 import presentation.signup.helpers.SignupViewModel
-import presentation.dashboard.DashboardViewModel
+import presentation.dashboard.helpers.DashboardViewModel
 
 
 actual val platformModule= module {

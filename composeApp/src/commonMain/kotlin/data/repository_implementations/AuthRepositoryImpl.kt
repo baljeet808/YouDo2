@@ -14,19 +14,32 @@ class AuthRepositoryImpl(
     private val auth : FirebaseAuth = Firebase.auth,
 ): AuthRepository {
 
-    override val currentUser: Flow<UserEntity?>
+    override val currentUser: UserEntity?
+        get() = auth.currentUser?.let {
+            UserEntity(
+                id = it.uid,
+                email = it.email.toString(),
+                name = it.displayName.toString(),
+                avatarUrl = it.photoURL.toString(),
+                firebaseToken = "",
+                joined = it.metaData?.creationTime?.toLong()?: 0L,
+            )
+        }
+
+    override val currentUserInFlow: Flow<UserEntity?>
         get() = auth.authStateChanged.map {
             it?.let {
-                 UserEntity(
-                     id = it.uid,
-                     email = it.email.toString(),
-                     name = it.displayName.toString(),
-                     avatarUrl = it.photoURL.toString(),
-                     firebaseToken = "",
-                     joined = it.metaData?.creationTime?.toLong()?: 0L,
-                 )
+                UserEntity(
+                    id = it.uid,
+                    email = it.email.toString(),
+                    name = it.displayName.toString(),
+                    avatarUrl = it.photoURL.toString(),
+                    firebaseToken = "",
+                    joined = it.metaData?.creationTime?.toLong()?: 0L,
+                )
             }
         }
+
     override val currentUserId: String
         get() = auth.currentUser?.uid.toString()
     override val isAuthenticated: Boolean

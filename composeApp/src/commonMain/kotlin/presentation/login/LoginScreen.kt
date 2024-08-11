@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -57,6 +58,7 @@ import youdo2.composeapp.generated.resources.app_name
 fun LoginScreen(
     navigateToPolicy: () -> Unit = {},
     navigateToSignup: () -> Unit = {},
+    onCredentialsUpdated: (email : String, password : String) -> Unit = {_,_ ->},
     uiState: LoginUIState = LoginUIState(),
     login: (email : String, password : String) -> Unit = {_,_ ->},
 ) {
@@ -114,10 +116,7 @@ fun LoginScreen(
             /**
              * Login form
              * **/
-            AnimatedVisibility(
-                uiState.showLoginForm
-                ) {
-
+            AnimatedVisibility( visible = pagerState.currentPage == 2) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,6 +129,7 @@ fun LoginScreen(
                         value = emailText,
                         onValueChange = {
                             emailText = it
+                            onCredentialsUpdated(it,passwordText)
                         },
                         label = {
                             Text(text = "Email")
@@ -161,6 +161,7 @@ fun LoginScreen(
                         value = passwordText,
                         onValueChange = {
                             passwordText = it
+                            onCredentialsUpdated(emailText,it)
                         },
                         label = {
                             Text(text = "Password")
@@ -211,12 +212,20 @@ fun LoginScreen(
                             ),
                         enabled = uiState.enableLoginButton
                     ){
-                        Text(
-                            text = "Login",
-                            fontFamily = CantarellFontFamily(),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
+                        if(uiState.isLoading){
+                            CircularProgressIndicator(
+                                modifier = Modifier,
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                        }else{
+                            Text(
+                                text = "Login",
+                                fontFamily = CantarellFontFamily(),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))

@@ -45,6 +45,13 @@ fun NavGraphBuilder.addSignupDestination(
             }
         }
 
+        //take user to login screen if signup is successful
+        LaunchedEffect(key1 = uiState.signupSuccessful){
+            if(uiState.signupSuccessful){
+                navController.popBackStack()
+            }
+        }
+
         SignupScreen(
             uiState = uiState,
             signUp = { email, password ->
@@ -52,8 +59,8 @@ fun NavGraphBuilder.addSignupDestination(
                 passwordBackup  = password
                 viewModel.attemptSignup(email = email,password = password)
             },
-            navigateToLogin = {
-                navController.popBackStack()
+            onCredentialsUpdated = { email, password ->
+                viewModel.updateCredentials(email = email, password = password)
             }
         )
 

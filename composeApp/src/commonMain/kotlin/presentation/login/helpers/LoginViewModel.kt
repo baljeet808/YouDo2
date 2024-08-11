@@ -22,6 +22,13 @@ class LoginViewModel(
     var uiState by mutableStateOf(LoginUIState())
         private set
 
+    fun updateCredentials(email : String, password: String){
+        uiState = uiState.copy(emailInValid = false, passwordInValid = false)
+        if(email.isEmailValid() && password.isPasswordValid()){
+            uiState = uiState.copy(enableLoginButton = true)
+        }
+    }
+
     fun attemptLogin(email : String, password : String){
         if(!email.isEmailValid()){
             uiState = uiState.copy(emailInValid = true, enableLoginButton = false)
@@ -39,13 +46,13 @@ class LoginViewModel(
         loginUseCase(email, password).collect {
             when (it) {
                 is Result.Error -> {
-                    withContext(Dispatchers.Main){
-                        uiState.copy(isLoading = false, error = it.error, loginSuccessful = false)
+                    withContext(Dispatchers.Main.immediate){
+                        uiState = uiState.copy(isLoading = false, error = it.error, loginSuccessful = false)
                     }
                 }
                 is Result.Success -> {
-                    withContext(Dispatchers.Main){
-                        uiState.copy(isLoading = false, error = null, loginSuccessful = true)
+                    withContext(Dispatchers.Main.immediate){
+                        uiState =uiState.copy(isLoading = false, error = null, loginSuccessful = true)
                     }
                 }
             }

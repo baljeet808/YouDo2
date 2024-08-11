@@ -1,9 +1,11 @@
-package presentation.dashboard
+package presentation.dashboard.helpers
+
+import domain.dto_helpers.DataError
 
 
 data class DashboardUIState(
-    val isLoggingOut : Boolean = false,
-    val error: String? = null,
+    val isLoading : Boolean = false,
+    val error: DataError.Network? = null,
     val userName : String = "",
     val userId : String = "",
     val userEmail : String = "",
