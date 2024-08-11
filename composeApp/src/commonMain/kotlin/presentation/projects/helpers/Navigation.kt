@@ -25,10 +25,10 @@ fun NavGraphBuilder.addProjectsViewDestination(
             navigateToDoToos = {
 
             },
-            projects = uiState.projects,
             onToggleTask = {
 
-            }
+            },
+            uiState = uiState
         )
 
     }

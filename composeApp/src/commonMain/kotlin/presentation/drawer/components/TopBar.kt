@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import common.formatNicelyWithoutYear
+import common.getCurrentDateTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.LightAppBarIconsColor
@@ -72,7 +74,7 @@ fun TopBar(
             }
 
             Text(
-                text = "01/01/2023",
+                text = getCurrentDateTime().formatNicelyWithoutYear(),
                 color = LightAppBarIconsColor,
                 fontFamily = RobotoFontFamily(),
                 fontSize = 16.sp,

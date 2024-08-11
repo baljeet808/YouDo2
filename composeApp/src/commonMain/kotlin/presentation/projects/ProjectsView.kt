@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,11 +38,12 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.local.entities.ProjectEntity
-import data.local.relations.ProjectWithTasks
 import data.local.relations.TaskWithProject
+import presentation.projects.components.DialogState
 import presentation.projects.components.ProjectsLazyRow
+import presentation.projects.helpers.ProjectsUIState
 import presentation.shared.AppCustomDialog
-import presentation.shared.fonts.ReenieBeanieFontFamily
+import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.getDarkThemeColor
 import presentation.theme.getLightThemeColor
@@ -52,7 +52,7 @@ import presentation.theme.getTextColor
 @Composable
 fun ProjectsView(
     navigateToDoToos: (project: ProjectEntity) -> Unit = {},
-    projects: List<ProjectWithTasks>,
+    uiState : ProjectsUIState,
     onToggleTask: (TaskWithProject) -> Unit= {},
     navigateToTask: (TaskWithProject) -> Unit= {},
     navigateToCreateTask: () -> Unit= {},
@@ -62,77 +62,59 @@ fun ProjectsView(
     hideProjectTasksFromDashboard : (project : ProjectEntity) -> Unit= {}
 ) {
 
-    //SharedPref.showCalendarViewInitially
-    var showScheduleTasksView by remember {
-        mutableStateOf(true)
-    }
+    val dialogState by remember { mutableStateOf<DialogState>(DialogState.None) }
 
-    val showViewerPermissionDialog = remember {
-        mutableStateOf(false)
-    }
-    val showDeleteConfirmationDialog = remember {
-        mutableStateOf(false)
-    }
-    var showBlur by remember {
-        mutableStateOf(false)
-    }
+    var showBlur by remember { mutableStateOf(false) }
 
+    showBlur = dialogState != DialogState.None
 
-    val taskToDelete = remember {
-        mutableStateOf<TaskWithProject?>(null)
-    }
-
-
-    if (showViewerPermissionDialog.value){
-        AppCustomDialog(
-            onDismiss = {
-                showBlur = false
-                showViewerPermissionDialog.value = false
-            },
-            onConfirm = {
-                showBlur = false
-                showViewerPermissionDialog.value = false
-            },
-            title = "Permission Issue! 😣",
-            description = "Sorry, you are a viewer in this project. And viewer can not create, edit, update or delete tasks. Ask Project Admin for permission upgrade.",
-            topRowIcon = Icons.Default.Lock,
-            onChecked = {  },
-            showCheckbox = false,
-            modifier = Modifier
-        )
-    }
-
-    if (showDeleteConfirmationDialog.value){
-        AppCustomDialog(
-            onDismiss = {
-                taskToDelete.value = null
-                showDeleteConfirmationDialog.value = false
-                showBlur = false
-            },
-            onConfirm = {
-                taskToDelete.value?.let(deleteTask)
-                showDeleteConfirmationDialog.value = false
-                showBlur = false
-            },
-            title = "Delete this task?",
-            description = "Are you sure, you want to permanently delete Following task? \n \"${taskToDelete.value?.task?.title?:""}\"",
-            topRowIcon = Icons.Default.Delete,
-            showDismissButton = true,
-            dismissButtonText = "Abort",
-            confirmButtonText = "Yes, proceed",
-            showCheckbox = false, //SharedPref.deleteTaskWithoutConfirmation.not(),
-            onChecked = {
-                //SharedPref.deleteTaskWithoutConfirmation = true
-            },
-            checkBoxText = "Delete without confirmation next time?",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        )
+    when (dialogState) {
+        is DialogState.ViewerPermission -> {
+            AppCustomDialog(
+                onDismiss = {
+                    showBlur = false
+                },
+                onConfirm = {
+                    showBlur = false
+                },
+                title = "Permission Issue! 😣",
+                description = "Sorry, you are a viewer in this project. And viewer can not create, edit, update or delete tasks. Ask Project Admin for permission upgrade.",
+                topRowIcon = Icons.Default.Lock,
+                onChecked = {  },
+                showCheckbox = false,
+                modifier = Modifier
+            )
+        }
+        is DialogState.DeleteConfirmation -> {
+            val taskToDelete = (dialogState as DialogState.DeleteConfirmation).task
+            AppCustomDialog(
+                onDismiss = {
+                    showBlur = false
+                },
+                onConfirm = {
+                    taskToDelete.let(deleteTask)
+                    showBlur = false
+                },
+                title = "Delete this task?",
+                description = "Are you sure, you want to permanently delete Following task? \n \"${taskToDelete.task.title}\"",
+                topRowIcon = Icons.Default.Delete,
+                showDismissButton = true,
+                dismissButtonText = "Abort",
+                confirmButtonText = "Yes, proceed",
+                showCheckbox = false, //SharedPref.deleteTaskWithoutConfirmation.not(),
+                onChecked = {
+                    //SharedPref.deleteTaskWithoutConfirmation = true
+                },
+                checkBoxText = "Delete without confirmation next time?",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            )
+        }
+        else -> {} // No dialog to show
     }
 
     val projectsListState = rememberLazyListState()
-    rememberCoroutineScope()
 
     //SharedPref.showProjectsInitially
     var showTopInfo by remember {
@@ -157,7 +139,7 @@ fun ProjectsView(
                     )
                     Text(
                         text = "Add Task",
-                        fontFamily = ReenieBeanieFontFamily(),
+                        fontFamily = RobotoFontFamily(),
                         color = getTextColor(),
                         fontSize = 14.sp
                     )
@@ -202,7 +184,7 @@ fun ProjectsView(
                          * Greeting text
                          * **/
                         Text(
-                            text = "Hello, there!" 
+                            text = "Hello, there!"
                             /*if (SharedPref.userName.length > 8) {
                                 "Hi, ${SharedPref.userName}!"
                             } else {
@@ -211,7 +193,7 @@ fun ProjectsView(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 20.dp, end = 20.dp, top = 10.dp),
-                            fontFamily = ReenieBeanieFontFamily(),
+                            fontFamily = RobotoFontFamily(),
                             fontSize = 38.sp,
                             color = getTextColor()
                         )
@@ -233,7 +215,7 @@ fun ProjectsView(
                             Text(
                                 text = "Projects".uppercase(),
                                 color = LightAppBarIconsColor,
-                                fontFamily = ReenieBeanieFontFamily(),
+                                fontFamily = RobotoFontFamily(),
                                 fontSize = 16.sp,
                                 modifier = Modifier
                                     .padding(5.dp),
@@ -263,7 +245,7 @@ fun ProjectsView(
                                 )
                                 Text(
                                     text = "Add Project",
-                                    fontFamily = ReenieBeanieFontFamily(),
+                                    fontFamily = RobotoFontFamily(),
                                     color = getTextColor(),
                                     fontSize = 13.sp
                                 )
@@ -276,7 +258,7 @@ fun ProjectsView(
                         ProjectsLazyRow(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            projects = projects.sortedBy { p -> p.project.updatedAt }.reversed(),
+                            projects = uiState.projects.sortedBy { p -> p.project.updatedAt }.reversed(),
                             navigateToDoToos = navigateToDoToos,
                             listState = projectsListState,
                             hideProjectTasksFromDashboard = { project ->
@@ -308,7 +290,7 @@ fun ProjectsView(
                             } else {
                                 "Show projects"
                             },
-                            fontFamily = ReenieBeanieFontFamily(),
+                            fontFamily = RobotoFontFamily(),
                             color = getTextColor()
                         )
                         Icon(
@@ -322,11 +304,13 @@ fun ProjectsView(
                         )
                     }
                     TextButton(
-                        onClick = { showScheduleTasksView = !showScheduleTasksView },
+                        onClick = {
+
+                        },
                         modifier = Modifier.padding(end = 10.dp)
                     ) {
                         Icon(
-                            if (showScheduleTasksView) {
+                            if (true) {
                                 Icons.AutoMirrored.Outlined.List
                             } else {
                                 Icons.AutoMirrored.Outlined.List
@@ -336,12 +320,12 @@ fun ProjectsView(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = if (showScheduleTasksView) {
+                            text = if (true) {
                                 "Calendar View"
                             } else {
                                 "Priorities View"
                             },
-                            fontFamily = ReenieBeanieFontFamily(),
+                            fontFamily = RobotoFontFamily(),
                             color = getTextColor()
                         )
 

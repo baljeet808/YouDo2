@@ -1,5 +1,9 @@
 package common
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toLocalDateTime
+
 
 fun String.isPasswordValid() : Boolean{
     if(this.isBlank()){
@@ -26,4 +30,12 @@ fun String.isEmailValid() : Boolean{
         return false
     }
     return true
+}
+
+fun LocalDateTime.formatNicelyWithoutYear(): String {
+    return dayOfMonth.toString().plus(" ").plus(month.name).plus(", ").plus(dayOfWeek.name)
+}
+
+fun getCurrentDateTime() : LocalDateTime {
+    return Clock.System.now().toLocalDateTime(getCurrentTimeZone())
 }
