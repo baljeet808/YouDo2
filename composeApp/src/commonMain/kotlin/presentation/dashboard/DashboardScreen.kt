@@ -54,14 +54,15 @@ fun DashboardScreen(
     val scaffoldState = rememberScaffoldState(drawerState = drawerState)
     val navController = rememberNavController()
 
+    val interactionSource = remember { MutableInteractionSource() }
     var offsetX by remember { mutableStateOf(0f) }
     val drawerWidth = 250.dp
 
     var screenState by remember { mutableStateOf(DashboardScreenState()) }
 
-    if(screenState.isDrawerOpen){
+    if (screenState.isDrawerOpen) {
         scope.launch { scaffoldState.drawerState.open() }
-    }else{
+    } else {
         scope.launch { scaffoldState.drawerState.close() }
     }
 
@@ -80,14 +81,13 @@ fun DashboardScreen(
             DashboardScreenState()
         },
         typeConverter = dashboardScreenStateConverter
-        // ... (animation spec if needed)
     )
 
     fun openDrawer() {
         screenState = screenState.copy(isDrawerOpen = true)
     }
 
-    fun closeDrawer(){
+    fun closeDrawer() {
         screenState = screenState.copy(isDrawerOpen = false)
     }
 
@@ -118,15 +118,35 @@ fun DashboardScreen(
                         closeDrawer()
                         logout()
                     },
-                    modifier = Modifier.fillMaxWidth(0.8f),
+                    modifier = Modifier.fillMaxWidth(0.85f),
                     openProfile = {
                         closeDrawer()
                     }
                 )
             }
-        }
+        },
+        modifier = Modifier
+            .draggable(
+                interactionSource = interactionSource,
+                orientation = Orientation.Horizontal,
+                state = rememberDraggableState { delta ->
+                    offsetX += delta
+                },
+                onDragStopped = { velocity ->
+                    scope.launch {
+                        if (velocity > 0 || offsetX > drawerWidth.value / 2) {
+                            drawerState.open()
+                            screenState = screenState.copy(isDrawerOpen = true)
+                            offsetX = drawerWidth.value
+                        } else {
+                            drawerState.close()
+                            screenState = screenState.copy(isDrawerOpen = false)
+                            offsetX = 0f
+                        }
+                    }
+                }
+            )
     ) { padding ->
-        val interactionSource = remember { MutableInteractionSource() }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -138,29 +158,7 @@ fun DashboardScreen(
                     }
                 )
                 .padding(padding)
-                .draggable(
-                    interactionSource = interactionSource,
-                    orientation = Orientation.Horizontal,
-                    state = rememberDraggableState { delta ->
-                        offsetX += delta
-                    },
-                    onDragStopped = { velocity ->
-                        scope.launch {
-                            if (velocity > 0 || offsetX > drawerWidth.value / 2) {
-                                drawerState.open()
-                                screenState = screenState.copy(isDrawerOpen = true)
-                                offsetX = drawerWidth.value
-                            } else {
-                                drawerState.close()
-                                screenState = screenState.copy(isDrawerOpen = false)
-                                offsetX = 0f
-                            }
-                        }
-                    }
-                )
         ) {
-
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -176,8 +174,6 @@ fun DashboardScreen(
                     .clip(shape = RoundedCornerShape(animatedState.roundness)),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-
-
                 /**
                  * Top app bar
                  * **/
@@ -192,15 +188,14 @@ fun DashboardScreen(
                     }
                 )
 
+                /* NavHost(
+                     navController = navController,
+                     startDestination = DestinationProjectsRoute,
+                     modifier = Modifier
+                         .fillMaxSize()
+                 ) {
 
-               /* NavHost(
-                    navController = navController,
-                    startDestination = DestinationProjectsRoute,
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-
-                }*/
+                 }*/
             }
         }
     }
