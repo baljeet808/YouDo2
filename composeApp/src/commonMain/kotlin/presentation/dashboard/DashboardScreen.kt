@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
@@ -45,7 +44,6 @@ import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DashboardScreen(
     uiState: DashboardUIState = DashboardUIState(),
@@ -108,8 +106,8 @@ fun DashboardScreen(
                     userEmail = uiState.userEmail,
                     userName = uiState.userName,
                     menuItems = menuItems,
-                    onMenuItemClick = { menuId ->
-                        when (menuId.id) {
+                    onMenuItemClick = { item ->
+                        when (item) {
 
                         }
                     },

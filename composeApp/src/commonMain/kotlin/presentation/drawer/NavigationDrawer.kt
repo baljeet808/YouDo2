@@ -2,6 +2,10 @@ package presentation.drawer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +26,11 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.models.MenuItem
+import kotlinx.coroutines.launch
 import presentation.drawer.components.IconButtonView
 import presentation.drawer.components.MenuItemRow
 import presentation.drawer.components.ProfilePictureView
@@ -50,7 +60,10 @@ fun NavigationDrawer(
     modifier: Modifier,
     openProfile : () -> Unit
 ) {
-
+    val scope = rememberCoroutineScope()
+    var offsetX by remember { mutableStateOf(0f) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val drawerWidth = 250.dp
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -62,6 +75,23 @@ fun NavigationDrawer(
                 }
             )
             .padding(20.dp)
+            .draggable(
+            interactionSource = interactionSource,
+            orientation = Orientation.Horizontal,
+            state = rememberDraggableState { delta ->
+                offsetX += delta
+            },
+            onDragStopped = { velocity ->
+                scope.launch {
+                    if (velocity > 0 || offsetX > drawerWidth.value / 2) {
+                        offsetX = drawerWidth.value
+                    } else {
+                        closeDrawer()
+                        offsetX = 0f
+                    }
+                }
+            }
+        )
     ) {
 
         Column(
