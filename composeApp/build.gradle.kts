@@ -158,6 +158,7 @@ room {
 
 dependencies{
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.places)
     add("kspCommonMainMetadata", libs.androidx.room.compiler)
 }
 tasks.withType<KotlinJvmCompile>().configureEach {

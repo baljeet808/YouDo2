@@ -36,6 +36,7 @@ datastore = "1.1.1"
 #Splashscreen
 core-splashscreen = "1.0.1"
 firebaseCrashlyticsBuildtools = "3.0.2"
+places = "3.5.0"
 
 [libraries]
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
@@ -73,6 +74,7 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 #Splashscreen
 core-splashscreen= { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
