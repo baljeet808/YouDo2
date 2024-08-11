@@ -10,5 +10,5 @@ data class DashboardUIState(
     val userId : String = "",
     val userEmail : String = "",
     val userAvatarUrl : String = "",
-    val isLoggedOut : Boolean = false
+    val isLoggedOut : Boolean = false,
 )

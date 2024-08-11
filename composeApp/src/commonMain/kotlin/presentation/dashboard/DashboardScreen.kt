@@ -1,22 +1,26 @@
 package presentation.dashboard
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DrawerValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,70 +33,66 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import common.menuItems
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import presentation.dashboard.helpers.DashboardScreenState
 import presentation.dashboard.helpers.DashboardUIState
+import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DashboardScreen(
     uiState: DashboardUIState = DashboardUIState(),
     logout: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scaffoldState = rememberScaffoldState(drawerState = drawerState)
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    var offsetX by remember { mutableStateOf(0f) }
+    val drawerWidth = 250.dp
+
+    var screenState by remember { mutableStateOf(DashboardScreenState()) }
+
+    if(screenState.isDrawerOpen){
+        scope.launch { scaffoldState.drawerState.open() }
+    }else{
+        scope.launch { scaffoldState.drawerState.close() }
+    }
 
     val darkTheme = isSystemInDarkTheme()
 
-    var maximizeCurrentScreen by remember {
-        mutableStateOf(true)
+    val animatedState by animateValueAsState(
+        targetValue = if (screenState.isDrawerOpen) {
+            DashboardScreenState(
+                isDrawerOpen = true,
+                statusBarColor = if (darkTheme) getNightDarkColor() else getNightLightColor(), // Or from your theme
+                scale = 0.8f,
+                roundness = 40.dp,
+                offsetX = 250.dp
+            )
+        } else {
+            DashboardScreenState()
+        },
+        typeConverter = dashboardScreenStateConverter
+        // ... (animation spec if needed)
+    )
+
+    fun openDrawer() {
+        screenState = screenState.copy(isDrawerOpen = true)
     }
 
-    val statusBarColor by animateColorAsState(
-        if (maximizeCurrentScreen) {
-            getLightThemeColor()
-        } else {
-            if (darkTheme) {
-                getNightDarkColor()
-            } else {
-                getNightLightColor()
-            }
-        }, label = ""
-    )
+    fun closeDrawer(){
+        screenState = screenState.copy(isDrawerOpen = false)
+    }
 
-
-    val scale = animateFloatAsState(
-        if (maximizeCurrentScreen) {
-            1f
-        } else {
-            0.8f
-        }, label = ""
-    )
-
-    val roundness = animateDpAsState(
-        if (maximizeCurrentScreen) {
-            0.dp
-        } else {
-            40.dp
-        }, label = ""
-    )
-
-    val offSetX = animateDpAsState(
-        if (maximizeCurrentScreen) {
-            0.dp
-        } else {
-            250.dp
-        }, label = ""
-    )
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -114,46 +114,21 @@ fun DashboardScreen(
                         }
                     },
                     closeDrawer = {
-                        scope.launch {
-                            scaffoldState.drawerState.close()
-                        }
-                        maximizeCurrentScreen = true
+                        closeDrawer()
                     },
                     logout = {
-                        scope.launch {
-                            scaffoldState.drawerState.close()
-                        }
-                        maximizeCurrentScreen = true
+                        closeDrawer()
                         logout()
                     },
-                    modifier = Modifier.width(250.dp),
+                    modifier = Modifier.fillMaxWidth(0.8f),
                     openProfile = {
-                        scope.launch {
-                            scaffoldState.drawerState.close()
-                            maximizeCurrentScreen = true
-                            delay(500)
-                        }
+                        closeDrawer()
                     }
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Transparent)
-                        .clickable(
-                            onClick = {
-                                if (scaffoldState.drawerState.isOpen) {
-                                    scope.launch {
-                                        scaffoldState.drawerState.close()
-                                    }
-                                    maximizeCurrentScreen = true
-                                }
-                            }
-                        )
                 )
             }
         }
     ) { padding ->
-
+        val interactionSource = remember { MutableInteractionSource() }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -165,6 +140,26 @@ fun DashboardScreen(
                     }
                 )
                 .padding(padding)
+                .draggable(
+                    interactionSource = interactionSource,
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        offsetX += delta
+                    },
+                    onDragStopped = { velocity ->
+                        scope.launch {
+                            if (velocity > 0 || offsetX > drawerWidth.value / 2) {
+                                drawerState.open()
+                                screenState = screenState.copy(isDrawerOpen = true)
+                                offsetX = drawerWidth.value
+                            } else {
+                                drawerState.close()
+                                screenState = screenState.copy(isDrawerOpen = false)
+                                offsetX = 0f
+                            }
+                        }
+                    }
+                )
         ) {
 
 
@@ -172,15 +167,15 @@ fun DashboardScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .offset(
-                        x = offSetX.value,
+                        x = animatedState.offsetX,
                         y = 0.dp
                     )
-                    .scale(scale.value)
+                    .scale(animatedState.scale)
                     .background(
                         color = getLightThemeColor(),
-                        shape = RoundedCornerShape(roundness.value)
+                        shape = RoundedCornerShape(animatedState.roundness)
                     )
-                    .clip(shape = RoundedCornerShape(roundness.value)),
+                    .clip(shape = RoundedCornerShape(animatedState.roundness)),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
 
@@ -192,10 +187,7 @@ fun DashboardScreen(
                     modifier = Modifier.height(60.dp),
                     notificationsState = true,
                     onMenuItemClick = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                        maximizeCurrentScreen = false
+                        openDrawer()
                     },
                     onNotificationsClicked = {
                         //TODO: Add notifications
