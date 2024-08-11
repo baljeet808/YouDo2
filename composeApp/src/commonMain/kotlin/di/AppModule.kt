@@ -11,6 +11,7 @@ import data.repository_implementations.ProjectRepositoryImpl
 import data.repository_implementations.UserRepositoryImpl
 import domain.repository_interfaces.AuthRepository
 import domain.repository_interfaces.ColorPaletteRepository
+import domain.repository_interfaces.DataStoreRepository
 import domain.repository_interfaces.DatabaseOperationsRepository
 import domain.repository_interfaces.TaskRepository
 import domain.repository_interfaces.InvitationsRepository
@@ -97,6 +98,7 @@ val repositoriesModule = module {
     single<DatabaseOperationsRepository>{ DatabaseOperationsRepositoryImpl(get())}
     single<ColorPaletteRepository>{ ColorPaletteRepositoryImpl(get())}
     single<AuthRepository>{ AuthRepositoryImpl()}
+    single<DataStoreRepository>{ DataStoreRepository(get())}
 }
 
 val authUseCasesModule = module {

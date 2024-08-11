@@ -5,15 +5,13 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Settings
 import domain.models.MenuItem
 import org.jetbrains.compose.resources.DrawableResource
+import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
 import youdo2.composeapp.generated.resources.Res
-import youdo2.composeapp.generated.resources.app_icon
 import youdo2.composeapp.generated.resources.chat_illustration
 import youdo2.composeapp.generated.resources.set_reminders
 import youdo2.composeapp.generated.resources.todo_illustration
 
 
-const val DestinationSettingsRoute = "settings"
-const val DestinationProjectsRoute = "projects"
 
 const val ConstFirstScreenDescription = "Work on tasks with family and friends. and finish them all together."
 const val ConstSecScreenDescription = "Chat about specific task. Manage permissions for collaborators."
@@ -39,13 +37,13 @@ const val AccessTypeViewer = 2
 
 val menuItems = arrayListOf(
     MenuItem(
-        id = DestinationProjectsRoute,
+        id = DESTINATION_PROJECTS_ROUTE,
         title = "Projects",
         icon = Icons.Outlined.MoreVert,
         contentDescription = "Menu item to show all Projects"
     ),
     MenuItem(
-        id = DestinationSettingsRoute,
+        id = "",
         title = "Settings",
         icon = Icons.Outlined.Settings,
         contentDescription = "Menu item to show settings"

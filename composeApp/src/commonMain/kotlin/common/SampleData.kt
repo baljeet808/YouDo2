@@ -2,6 +2,8 @@ package common
 
 import androidx.compose.ui.graphics.Color
 import data.local.entities.ColorPaletteEntity
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
 import kotlin.random.Random
 
 fun getRandomAvatar(): String {
@@ -58,3 +60,12 @@ fun String.getColor(): Color {
         }
     }
 }
+
+expect fun getCurrentTimeZone() : TimeZone
+
+fun getSampleDateInLong(): Long {
+    val currentDateTime = Clock.System.now()
+    return currentDateTime.toEpochMilliseconds()
+}
+
+

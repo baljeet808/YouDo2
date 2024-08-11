@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import domain.dto_helpers.Result
+import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.auth_use_cases.GetCurrentUserUseCase
 import domain.use_cases.auth_use_cases.SignOutUseCase
 import kotlinx.coroutines.Dispatchers
@@ -13,11 +14,14 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class DashboardViewModel(
     private val signOutUseCase: SignOutUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
 ) : ViewModel(), KoinComponent{
+
+    val dataStoreRepository : DataStoreRepository by inject()
 
     var uiState by mutableStateOf(DashboardUIState())
         private set
@@ -74,6 +78,7 @@ class DashboardViewModel(
                     }
                 }
                 is Result.Success -> {
+                    dataStoreRepository.saveIsUserLoggedIn(false)
                     withContext(Dispatchers.Main){
                        uiState = uiState.copy(isLoading = false, error = null, isLoggedOut = true)
                     }

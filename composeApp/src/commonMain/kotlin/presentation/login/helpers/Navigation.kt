@@ -7,17 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import common.isUserLoggedInKey
 import domain.dto_helpers.DataError
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
@@ -30,8 +23,7 @@ const val DESTINATION_LOGIN_ROUTE = "login"
 fun NavGraphBuilder.addLoginDestination(
     navController: NavController,
     showErrorAlertDialog : (error : DataError.Network?) -> Unit = {},
-    retryApiCall : MutableState<Boolean> = mutableStateOf(false),
-    prefs : DataStore<Preferences>
+    retryApiCall : MutableState<Boolean> = mutableStateOf(false)
 ){
     composable(
         route = DESTINATION_LOGIN_ROUTE
@@ -61,11 +53,6 @@ fun NavGraphBuilder.addLoginDestination(
         //take user to dashboard if login is successful
         LaunchedEffect(key1 = uiState.loginSuccessful) {
             if(uiState.loginSuccessful){
-                scope.launch(Dispatchers.IO) {
-                    prefs.edit { dataStore ->
-                        dataStore[isUserLoggedInKey] = true
-                    }
-                }
                 navController.navigate(DESTINATION_DASHBOARD_ROUTE){
                     popUpTo(DESTINATION_LOGIN_ROUTE){
                         inclusive = true

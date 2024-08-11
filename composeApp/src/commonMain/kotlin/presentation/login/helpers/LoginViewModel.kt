@@ -8,16 +8,20 @@ import androidx.lifecycle.viewModelScope
 import common.isEmailValid
 import common.isPasswordValid
 import domain.dto_helpers.Result
+import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.auth_use_cases.LoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel(), KoinComponent{
+
+    private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
 
     var uiState by mutableStateOf(LoginUIState())
         private set
@@ -46,12 +50,13 @@ class LoginViewModel(
         loginUseCase(email, password).collect {
             when (it) {
                 is Result.Error -> {
-                    withContext(Dispatchers.Main.immediate){
+                    withContext(Dispatchers.Main){
                         uiState = uiState.copy(isLoading = false, error = it.error, loginSuccessful = false)
                     }
                 }
                 is Result.Success -> {
-                    withContext(Dispatchers.Main.immediate){
+                    dataStoreRepository.saveIsUserLoggedIn(true)
+                    withContext(Dispatchers.Main){
                         uiState =uiState.copy(isLoading = false, error = null, loginSuccessful = true)
                     }
                 }

@@ -61,6 +61,9 @@ kotlin {
 
             //Splashscreen
             implementation(libs.core.splashscreen)
+
+            //firebase-bom
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -95,6 +98,9 @@ kotlin {
 
             //Icons
             implementation(libs.androidx.material.icons.core)
+
+            //datatime
+            implementation(libs.kotlinx.datetime)
 
         }
         desktopMain.dependencies {

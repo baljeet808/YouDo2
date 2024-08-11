@@ -6,19 +6,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import common.hasOnboardedKey
-import common.isUserLoggedInKey
 import domain.dto_helpers.DataError
-import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
 import presentation.dashboard.helpers.addDashboardDestination
 import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
@@ -29,10 +25,10 @@ import presentation.shared.AlertDialogView
 import presentation.signup.helpers.addSignupDestination
 
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 @Preview
 fun App(
-    prefs: DataStore<Preferences>
 ) {
     val retryApiCall = remember { mutableStateOf(false) }
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -55,11 +51,13 @@ fun App(
     val icon: ImageVector
 
     val navAnimationDuration = 500 //millis
-    val userLoggedIn = prefs.data.map { it[isUserLoggedInKey]?:false }.collectAsState(initial = false)
-    val hasOnboarded = prefs.data.map { it[hasOnboardedKey]?:false }.collectAsState(initial = false)
 
-    val startDestination = if (hasOnboarded.value) {
-        if (userLoggedIn.value) DESTINATION_DASHBOARD_ROUTE else DESTINATION_LOGIN_ROUTE
+    val viewModel = koinViewModel<AppViewModel>()
+
+    val userState = viewModel.userState
+
+    val startDestination = if (userState.hasOnboarded) {
+        if (userState.isUserLoggedIn) DESTINATION_DASHBOARD_ROUTE else DESTINATION_LOGIN_ROUTE
     } else DESTINATION_ONBOARDING_ROUTE
 
     MaterialTheme {
@@ -96,7 +94,7 @@ fun App(
                 )
             }
         ){
-            addOnboardingDestination(navController = navController , prefs = prefs)
+            addOnboardingDestination(navController = navController)
             addLoginDestination(
                 navController = navController,
                 showErrorAlertDialog = { error ->
@@ -108,8 +106,7 @@ fun App(
                         openAlertDialog.value = false
                     }
                 },
-                retryApiCall = retryApiCall,
-                prefs = prefs
+                retryApiCall = retryApiCall
             )
             addSignupDestination(
                 navController = navController,
@@ -135,8 +132,7 @@ fun App(
                         openAlertDialog.value = false
                     }
                 },
-                retryApiCall = retryApiCall,
-                prefs = prefs
+                retryApiCall = retryApiCall
             )
         }
     }

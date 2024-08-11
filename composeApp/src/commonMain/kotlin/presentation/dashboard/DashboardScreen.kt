@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import common.menuItems
 import kotlinx.coroutines.launch
@@ -40,6 +41,8 @@ import presentation.dashboard.helpers.DashboardUIState
 import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
+import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
+import presentation.projects.helpers.addProjectsViewDestination
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
@@ -187,15 +190,14 @@ fun DashboardScreen(
                         //TODO: Add notifications
                     }
                 )
-
-                /* NavHost(
+                 NavHost(
                      navController = navController,
-                     startDestination = DestinationProjectsRoute,
+                     startDestination = DESTINATION_PROJECTS_ROUTE,
                      modifier = Modifier
                          .fillMaxSize()
                  ) {
-
-                 }*/
+                     addProjectsViewDestination(navController = navController)
+                 }
             }
         }
     }
