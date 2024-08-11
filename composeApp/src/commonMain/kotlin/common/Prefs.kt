@@ -16,3 +16,4 @@ fun createDatastore(producePath : () -> String): DataStore<Preferences> {
 internal const val DATASTORE_FILE_NAME = "prefs.preferences_pb"
 
 val isUserLoggedInKey = booleanPreferencesKey("isUserLoggedIn")
+val hasOnboardedKey = booleanPreferencesKey("hasOnboardedKey")

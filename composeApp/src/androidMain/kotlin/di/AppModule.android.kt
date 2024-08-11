@@ -4,9 +4,9 @@ import data.local.room.YouDo2Database
 import data.local.room.getYouDo2Database
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import presentation.login.helpers.LoginViewModel
 import presentation.signup.helpers.SignupViewModel
 import presentation.dashboard.helpers.DashboardViewModel
+import presentation.login.helpers.LoginViewModel
 
 actual val platformModule= module {
     single<YouDo2Database> { getYouDo2Database(get()) }

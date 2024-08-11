@@ -92,6 +92,10 @@ kotlin {
             //DataStore
             api(libs.datastore.preferences)
             api(libs.datastore)
+
+            //Icons
+            implementation(libs.androidx.material.icons.core)
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

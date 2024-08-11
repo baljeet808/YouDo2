@@ -14,6 +14,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import common.hasOnboardedKey
 import common.isUserLoggedInKey
 import domain.dto_helpers.DataError
 import kotlinx.coroutines.flow.map
@@ -22,6 +23,8 @@ import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
 import presentation.dashboard.helpers.addDashboardDestination
 import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
 import presentation.login.helpers.addLoginDestination
+import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
+import presentation.onboarding.helpers.addOnboardingDestination
 import presentation.shared.AlertDialogView
 import presentation.signup.helpers.addSignupDestination
 
@@ -53,11 +56,16 @@ fun App(
 
     val navAnimationDuration = 500 //millis
     val userLoggedIn = prefs.data.map { it[isUserLoggedInKey]?:false }.collectAsState(initial = false)
+    val hasOnboarded = prefs.data.map { it[hasOnboardedKey]?:false }.collectAsState(initial = false)
+
+    val startDestination = if (hasOnboarded.value) {
+        if (userLoggedIn.value) DESTINATION_DASHBOARD_ROUTE else DESTINATION_LOGIN_ROUTE
+    } else DESTINATION_ONBOARDING_ROUTE
 
     MaterialTheme {
         NavHost(
             navController = navController,
-            startDestination = if (userLoggedIn.value) DESTINATION_DASHBOARD_ROUTE else DESTINATION_LOGIN_ROUTE,
+            startDestination = startDestination,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(navAnimationDuration)
@@ -88,6 +96,7 @@ fun App(
                 )
             }
         ){
+            addOnboardingDestination(navController = navController , prefs = prefs)
             addLoginDestination(
                 navController = navController,
                 showErrorAlertDialog = { error ->

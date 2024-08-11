@@ -1,4 +1,4 @@
-package presentation.login.components
+package presentation.onboarding.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
