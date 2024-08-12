@@ -11,6 +11,7 @@ import presentation.dashboard.helpers.DashboardViewModel
 import presentation.login.helpers.LoginViewModel
 import presentation.projects.helpers.ProjectsViewModel
 import presentation.onboarding.helpers.OnBoardingViewModel
+import presentation.createproject.helpers.CreateProjectViewModel
 import AppViewModel
 import data.local.preferences.createDataStore
 
@@ -22,6 +23,7 @@ actual val platformModule= module {
     singleOf(::DashboardViewModel)
     singleOf(::ProjectsViewModel)
     singleOf(::OnBoardingViewModel)
+    singleOf(::CreateProjectViewModel)
     singleOf(::AppViewModel)
     single<DataStore<Preferences>>{ createDataStore() }
 }

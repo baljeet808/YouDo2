@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import presentation.createproject.helpers.DESTINATION_CREATE_PROJECT_ROUTE
 import presentation.projects.ProjectsView
 
 
@@ -28,7 +29,10 @@ fun NavGraphBuilder.addProjectsViewDestination(
             onToggleTask = {
 
             },
-            uiState = uiState
+            uiState = uiState,
+            navigateToCreateProject = {
+                navController.navigate(DESTINATION_CREATE_PROJECT_ROUTE)
+            }
         )
 
     }

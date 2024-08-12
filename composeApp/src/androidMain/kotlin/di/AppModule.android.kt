@@ -14,6 +14,7 @@ import presentation.login.helpers.LoginViewModel
 import presentation.projects.helpers.ProjectsViewModel
 import presentation.signup.helpers.SignupViewModel
 import presentation.onboarding.helpers.OnBoardingViewModel
+import presentation.createproject.helpers.CreateProjectViewModel
 
 actual val platformModule= module {
     single<YouDo2Database> { getYouDo2Database(get()) }
@@ -23,5 +24,6 @@ actual val platformModule= module {
     viewModelOf(::AppViewModel)
     viewModelOf(::ProjectsViewModel)
     viewModelOf(::OnBoardingViewModel)
+    viewModelOf(::CreateProjectViewModel)
     single<DataStore<Preferences>> { createDataStore(androidContext()) }
 }

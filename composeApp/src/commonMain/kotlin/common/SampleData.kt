@@ -61,6 +61,11 @@ fun String.getColor(): Color {
     }
 }
 
+fun EnumProjectColors.getLongValueInString(): String {
+    return  this.name.getColor().value.toLong().toString()
+}
+
+
 expect fun getCurrentTimeZone() : TimeZone
 
 fun getSampleDateInLong(): Long {

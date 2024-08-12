@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import common.menuItems
 import kotlinx.coroutines.launch
+import presentation.createproject.helpers.addCreateProjectViewDestination
 import presentation.dashboard.helpers.DashboardScreenState
 import presentation.dashboard.helpers.DashboardUIState
 import presentation.dashboard.helpers.dashboardScreenStateConverter
@@ -197,6 +198,7 @@ fun DashboardScreen(
                          .fillMaxSize()
                  ) {
                      addProjectsViewDestination(navController = navController)
+                     addCreateProjectViewDestination(navController = navController)
                  }
             }
         }
