@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
@@ -86,12 +88,12 @@ fun CreateProjectView(
             toggleColorOptions = {
                 onScreenEvent(CreateProjectScreenEvent.ToggleColorOptions)
             },
-            modifier = Modifier
+            modifier = Modifier.padding(top = 10.dp)
         )
 
 
         ProjectPreviewAndDescriptionButton(
-            modifier = Modifier.fillMaxHeight(0.15f),
+            modifier = Modifier.fillMaxHeight(0.2f),
             onPreviewClicked = {
 
             },
@@ -110,7 +112,7 @@ fun CreateProjectView(
 
 
         NoBorderEditText(
-            modifier = Modifier.fillMaxHeight(0.25f),
+            modifier = Modifier,
             text = uiState.projectName,
             updateText = {
                 onScreenEvent(CreateProjectScreenEvent.ProjectNameChanged(it))
@@ -138,7 +140,7 @@ fun CreateProjectView(
          * **/
         AnimatedVisibility(visible = uiState.showDescription) {
             NoBorderEditText(
-                modifier = Modifier.fillMaxHeight(0.25f),
+                modifier = Modifier.padding(top = 10.dp),
                 text = uiState.projectDescription,
                 updateText = {
                     onScreenEvent(CreateProjectScreenEvent.ProjectDescriptionChanged(it))

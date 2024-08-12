@@ -43,7 +43,7 @@ import presentation.projects.components.DialogState
 import presentation.projects.components.ProjectsLazyRow
 import presentation.projects.helpers.ProjectsUIState
 import presentation.shared.AppCustomDialog
-import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.getDarkThemeColor
 import presentation.theme.getLightThemeColor
@@ -139,7 +139,7 @@ fun ProjectsView(
                     )
                     Text(
                         text = "Add Task",
-                        fontFamily = RobotoFontFamily(),
+                        fontFamily = AlataFontFamily(),
                         color = getTextColor(),
                         fontSize = 14.sp
                     )
@@ -193,7 +193,7 @@ fun ProjectsView(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 20.dp, end = 20.dp, top = 10.dp),
-                            fontFamily = RobotoFontFamily(),
+                            fontFamily = AlataFontFamily(),
                             fontSize = 38.sp,
                             color = getTextColor()
                         )
@@ -215,7 +215,7 @@ fun ProjectsView(
                             Text(
                                 text = "Projects".uppercase(),
                                 color = LightAppBarIconsColor,
-                                fontFamily = RobotoFontFamily(),
+                                fontFamily = AlataFontFamily(),
                                 fontSize = 16.sp,
                                 modifier = Modifier
                                     .padding(5.dp),
@@ -245,7 +245,7 @@ fun ProjectsView(
                                 )
                                 Text(
                                     text = "Add Project",
-                                    fontFamily = RobotoFontFamily(),
+                                    fontFamily = AlataFontFamily(),
                                     color = getTextColor(),
                                     fontSize = 13.sp
                                 )
@@ -290,7 +290,7 @@ fun ProjectsView(
                             } else {
                                 "Show projects"
                             },
-                            fontFamily = RobotoFontFamily(),
+                            fontFamily = AlataFontFamily(),
                             color = getTextColor()
                         )
                         Icon(
@@ -325,7 +325,7 @@ fun ProjectsView(
                             } else {
                                 "Priorities View"
                             },
-                            fontFamily = RobotoFontFamily(),
+                            fontFamily = AlataFontFamily(),
                             color = getTextColor()
                         )
 

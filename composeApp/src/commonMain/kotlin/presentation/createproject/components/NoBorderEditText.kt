@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.maxTitleCharsAllowedForProject
 import kotlinx.coroutines.delay
-import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooRed
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.getTextColor
@@ -90,7 +90,7 @@ fun NoBorderEditText(
             text = label,
             color = LightAppBarIconsColor,
             fontSize = 13.sp,
-            fontFamily = RobotoFontFamily(),
+            fontFamily = AlataFontFamily(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 15.dp)
@@ -116,7 +116,7 @@ fun NoBorderEditText(
                     text = placeHolder,
                     color = getTextColor(),
                     fontSize = 24.sp,
-                    fontFamily = RobotoFontFamily(),
+                    fontFamily = AlataFontFamily(),
                     modifier = Modifier
                         .rotate(
                             if (showTitleErrorAnimation) {
@@ -130,7 +130,7 @@ fun NoBorderEditText(
             textStyle = TextStyle(
                 color = getTextColor(),
                 fontSize = 24.sp,
-                fontFamily = RobotoFontFamily()
+                fontFamily = AlataFontFamily()
             ),
             maxLines = 3,
             modifier = Modifier
@@ -159,7 +159,7 @@ fun NoBorderEditText(
                 LightAppBarIconsColor
             },
             fontSize = 13.sp,
-            fontFamily = RobotoFontFamily(),
+            fontFamily = AlataFontFamily(),
             modifier = Modifier.padding(start = 15.dp)
         )
     }

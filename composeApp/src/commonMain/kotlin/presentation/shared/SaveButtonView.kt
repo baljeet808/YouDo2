@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
-import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.fonts.AlataFontFamily
 
 @Composable
 fun SaveButtonView(
@@ -60,7 +60,7 @@ fun SaveButtonView(
                 text = label,
                 color = Color.White,
                 fontSize = 16.sp,
-                fontFamily = RobotoFontFamily(),
+                fontFamily = AlataFontFamily(),
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.width(4.dp))

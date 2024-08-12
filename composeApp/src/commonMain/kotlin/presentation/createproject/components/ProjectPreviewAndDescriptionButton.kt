@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
@@ -76,7 +76,7 @@ fun ProjectPreviewAndDescriptionButton(
             Text(
                 text = "Preview",
                 color = LightAppBarIconsColor,
-                fontFamily = RobotoFontFamily(),
+                fontFamily = AlataFontFamily(),
                 fontSize = 16.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -121,7 +121,7 @@ fun ProjectPreviewAndDescriptionButton(
                     "Add Description"
                 },
                 color = LightAppBarIconsColor,
-                fontFamily = RobotoFontFamily(),
+                fontFamily = AlataFontFamily(),
                 fontSize = 16.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

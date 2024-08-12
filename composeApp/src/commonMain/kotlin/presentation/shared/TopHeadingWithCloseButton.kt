@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
 import presentation.theme.NightDotooTextColor
@@ -49,7 +49,7 @@ fun TopHeadingWithCloseButton(
             modifier = Modifier
                 .padding(5.dp)
                 .weight(1f),
-            fontFamily = RobotoFontFamily(),
+            fontFamily = AlataFontFamily(),
             fontSize = 28.sp,
             color = getTextColor()
         )

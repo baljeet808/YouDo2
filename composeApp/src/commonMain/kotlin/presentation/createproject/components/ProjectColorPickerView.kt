@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
-import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
@@ -51,7 +51,7 @@ fun ProjectColorPicker(
             text = "Select Project Color",
             color = getTextColor(),
             fontSize = 20.sp,
-            fontFamily = RobotoFontFamily()
+            fontFamily = AlataFontFamily()
         )
 
         ColorSelectionButton(selectedColor) {
@@ -90,7 +90,7 @@ fun ColorSelectionButton(selectedColor: EnumProjectColors, onClick: () -> Unit) 
         Text(
             text = selectedColor.name,
             color = LightAppBarIconsColor,
-            fontFamily = RobotoFontFamily(),
+            fontFamily = AlataFontFamily(),
             fontSize = 16.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -180,7 +180,7 @@ fun ColorOptionItem(
             } else {
                 LightAppBarIconsColor
             },
-            fontFamily = RobotoFontFamily(),
+            fontFamily = AlataFontFamily(),
             fontSize = 15.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

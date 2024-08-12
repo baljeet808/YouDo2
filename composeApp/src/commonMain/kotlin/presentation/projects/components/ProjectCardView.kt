@@ -35,7 +35,7 @@ import common.EnumRoles
 import common.getColor
 import data.local.entities.ProjectEntity
 import data.local.relations.ProjectWithTasks
-import presentation.shared.fonts.ReenieBeanieFontFamily
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getDarkThemeColor
 import presentation.theme.getTextColor
 
@@ -143,7 +143,7 @@ fun ProjectCardView(
                     text = project.tasks.size.toString()
                         .plus(if (project.tasks.size == 1) " Task" else " Tasks"),
                     color = getTextColor(),
-                    fontFamily = ReenieBeanieFontFamily(),
+                    fontFamily = AlataFontFamily(),
                     fontSize = if (usingForDemo) {
                         9.sp
                     } else 16.sp,
@@ -153,7 +153,7 @@ fun ProjectCardView(
                 Text(
                     text = role.name,
                     color = getTextColor(),
-                    fontFamily = ReenieBeanieFontFamily(),
+                    fontFamily = AlataFontFamily(),
                     fontSize = if (usingForDemo) {
                         9.sp
                     } else 16.sp,
@@ -164,7 +164,7 @@ fun ProjectCardView(
             Text(
                 text = project.project.name,
                 color = getTextColor(),
-                fontFamily = ReenieBeanieFontFamily(),
+                fontFamily = AlataFontFamily(),
                 fontSize = if (usingForDemo) {
                     14.sp
                 } else 20.sp,
