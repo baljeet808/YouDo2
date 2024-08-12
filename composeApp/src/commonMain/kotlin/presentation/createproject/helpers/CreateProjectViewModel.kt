@@ -9,6 +9,7 @@ import common.getLongValueInString
 import common.getRandomId
 import common.getSampleDateInLong
 import data.local.entities.ProjectEntity
+import data.local.mappers.toProject
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.repository_interfaces.DataStoreRepository
@@ -107,7 +108,7 @@ class CreateProjectViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             projectsReference
                 .document(project.id)
-                .set(project)
+                .set(project.toProject())
         }
     }
 }
