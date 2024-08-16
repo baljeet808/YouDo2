@@ -21,7 +21,7 @@ class DashboardViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
 ) : ViewModel(), KoinComponent{
 
-    val dataStoreRepository : DataStoreRepository by inject()
+    private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
 
     var uiState by mutableStateOf(DashboardUIState())
         private set
@@ -79,6 +79,10 @@ class DashboardViewModel(
                 }
                 is Result.Success -> {
                     dataStoreRepository.saveIsUserLoggedIn(false)
+                    dataStoreRepository.saveUserId("")
+                    dataStoreRepository.saveUserName("")
+                    dataStoreRepository.saveUserEmail("")
+                    dataStoreRepository.saveUserAvatar("")
                     withContext(Dispatchers.Main){
                        uiState = uiState.copy(isLoading = false, error = null, isLoggedOut = true)
                     }
