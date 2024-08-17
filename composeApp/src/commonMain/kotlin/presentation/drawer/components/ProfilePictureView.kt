@@ -44,8 +44,8 @@ fun  ProfilePictureView(
     val animatedProgress = animateFloatAsState(
         targetValue = (progress),
         animationSpec = tween(
-            delayMillis = 1500,
-            durationMillis = 1500,
+            delayMillis = 0,
+            durationMillis = 200,
             easing = LinearEasing
         ), label = ""
     ).value
@@ -101,7 +101,7 @@ fun  ProfilePictureView(
                     .progressSemantics()
                     .size(100.dp),
                 color = NightDotooBrightPink,
-                trackColor = getLightThemeColor(),
+                trackColor = Color.Transparent,
             )
         }
     }

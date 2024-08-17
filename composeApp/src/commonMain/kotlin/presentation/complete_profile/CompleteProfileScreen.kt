@@ -119,8 +119,7 @@ fun CompleteProfileScreen(
                             onClick = {
                                 updateAvatarUrl(avatarUrl)
                             },
-                            progress = 1f,
-                            showProgress = uiState.selectedAvatar == avatarUrl
+                            progress = if (uiState.selectedAvatar == avatarUrl) 1f else 0f,
                         )
                     }
                 }
