@@ -2,10 +2,7 @@ package presentation.signup.helpers
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -29,13 +26,10 @@ fun NavGraphBuilder.addSignupDestination(
         val viewModel = koinViewModel<SignupViewModel>()
         val uiState = viewModel.uiState
 
-        var emailBackup by remember { mutableStateOf("") }
-        var passwordBackup by remember { mutableStateOf("") }
-
         //retry api call triggers when user clicks retry button in error dialog
         LaunchedEffect (key1 = retryApiCall.value) {
             if(retryApiCall.value){
-                viewModel.attemptSignup(email = emailBackup, password =  passwordBackup)
+                viewModel.attemptSignup()
             }
         }
 
@@ -59,13 +53,17 @@ fun NavGraphBuilder.addSignupDestination(
 
         SignupScreen(
             uiState = uiState,
-            signUp = { email, password ->
-                emailBackup = email
-                passwordBackup  = password
-                viewModel.attemptSignup(email = email,password = password)
+            signUp = {
+                viewModel.attemptSignup()
             },
-            onCredentialsUpdated = { email, password ->
-                viewModel.updateCredentials(email = email, password = password)
+            onEmailChanged = {
+                viewModel.updateEmail(it)
+            },
+            onPasswordChanged = {
+                viewModel.updatePassword(it)
+            },
+            navigateBackToLogin = {
+                navController.popBackStack()
             }
         )
 

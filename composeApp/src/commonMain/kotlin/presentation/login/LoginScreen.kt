@@ -2,10 +2,14 @@ package presentation.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -17,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -27,17 +32,18 @@ import common.EnumProjectColors
 import common.getColor
 import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
-import presentation.login.components.SignupLineView
 import presentation.login.helpers.LoginUIState
+import presentation.onboarding.components.NextButton
 import presentation.shared.SaveButtonView
+import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
-import presentation.theme.NightDotooBrightPink
 import presentation.theme.getTextColor
 
 @Composable
 fun LoginScreen(
     navigateToPolicy: () -> Unit = {},
-    navigateToSignup: () -> Unit = {}, onPasswordChanged: (password: String) -> Unit = {},
+    navigateToSignup: () -> Unit = {},
+    onPasswordChanged: (password: String) -> Unit = {},
     onEmailChanged: (email: String) -> Unit = {},
     uiState: LoginUIState = LoginUIState(),
     login: () -> Unit,
@@ -57,7 +63,9 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Column {
+        Column(
+            modifier = Modifier.fillMaxHeight(0.3f)
+        ) {
             Text(
                 text = "Login",
                 modifier = Modifier.fillMaxWidth()
@@ -90,8 +98,9 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight(1f)
                 .windowInsetsPadding(WindowInsets.ime),
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.Top
         ) {
             NoBorderEditText(
                 modifier = Modifier
@@ -134,25 +143,20 @@ fun LoginScreen(
             SaveButtonView(
                 containerModifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, bottom = 30.dp),
+                    .padding(top = 30.dp, bottom = 15.dp),
                 label = "Lets Go!",
                 onClick = {
                     if (uiState.enableLoginButton) {
                         login()
                     }
                 },
-                buttonThemeColor = themeColor,
+                buttonThemeColor = EnumProjectColors.Green.getColor(),
                 alignment = Alignment.Center,
-                buttonModifier = Modifier.fillMaxWidth(),
+                buttonModifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
                 showIcon = false,
                 fontSize = 18
-            )
-
-            //signup text button
-            SignupLineView(
-                navigateToSignup = navigateToSignup,
-                clickableTextColor = NightDotooBrightPink,
-                modifier = Modifier.padding(bottom = 30.dp)
             )
 
             //policy text buttons
@@ -163,5 +167,36 @@ fun LoginScreen(
             )
         }
 
+    }
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 40.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(start = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Do not have an account?",
+                textAlign = TextAlign.Center,
+                style = TextStyle(
+                    color = getTextColor(),
+                    fontSize = 16.sp,
+                    fontFamily = AlataFontFamily()
+                ),
+            )
+            NextButton(
+                label = "Signup",
+                backgroundColor = EnumProjectColors.Green.getColor(),
+                onClick = {
+                    navigateToSignup()
+                }
+            )
+        }
     }
 }

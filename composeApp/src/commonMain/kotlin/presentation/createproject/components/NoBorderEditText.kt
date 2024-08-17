@@ -103,7 +103,6 @@ fun NoBorderEditText(
             fontFamily = AlataFontFamily(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 15.dp)
         )
         TextField(
             value = text,
@@ -131,7 +130,7 @@ fun NoBorderEditText(
                 Text(
                     text = placeHolder,
                     color = LightAppBarIconsColor,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     fontFamily = AlataFontFamily(),
                     modifier = Modifier
                         .rotate(

@@ -1,6 +1,5 @@
 package common
 
-import data.local.entities.ColorPaletteEntity
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlin.random.Random
@@ -46,4 +45,8 @@ fun getRandomLoginHeading() : String {
 
 fun getRandomPasswordPlaceholder() : String {
     return passwordPlaceholders[Random.nextInt(0, passwordPlaceholders.size-1)]
+}
+
+fun getRandomSignUpHeading() : String {
+    return signupHeadings[Random.nextInt(0, signupHeadings.size-1)]
 }

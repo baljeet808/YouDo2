@@ -86,3 +86,15 @@ val passwordPlaceholders = arrayOf(
     "Don’t tell anyone!",
     "The key to the kingdom"
 )
+
+val signupHeadings = arrayOf(
+    "Join the inner Circle",
+    "Step into the Spotlight",
+    "Sign Up & Stand Out",
+    "Claim Your Spot",
+    "Be Part of the Crew",
+    "Sign Up & Sparkle",
+    "Join the Elite Squad",
+    "Enter the Cool Zone",
+    "Be One of the Greats"
+)

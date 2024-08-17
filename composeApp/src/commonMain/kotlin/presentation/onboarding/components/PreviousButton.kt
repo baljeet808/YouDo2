@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +24,7 @@ import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getTextColor
 
 @Composable
-fun NextButton(
+fun PreviousButton(
     backgroundColor: Color,
     onClick: () -> Unit,
     label: String = "",
@@ -36,12 +36,17 @@ fun NextButton(
             .height(60.dp)
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
+                shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
             )
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Previous",
+            tint = Color.White
+        )
         if(label.isNotEmpty()){
             Text(
                 text = label,
@@ -52,13 +57,8 @@ fun NextButton(
                     fontFamily = AlataFontFamily()
                 ),
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 5.dp)
+                    .padding(start = 5.dp, end = 20.dp)
             )
         }
-        Icon(
-            Icons.AutoMirrored.Filled.ArrowForward,
-            contentDescription = "Next",
-            tint = Color.White
-        )
     }
 }

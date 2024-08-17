@@ -1,238 +1,192 @@
 package presentation.signup
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import presentation.login.components.PolicyLineView
-import presentation.shared.fonts.CantarellFontFamily
-import presentation.shared.fonts.ReenieBeanieFontFamily
+import common.EnumProjectColors
+import common.getColor
+import presentation.createproject.components.NoBorderEditText
+import presentation.onboarding.components.PreviousButton
+import presentation.shared.SaveButtonView
+import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.signup.helpers.SignupUIState
-import presentation.theme.getNightDarkColor
-import presentation.theme.getNightLightColor
-import youdo2.composeapp.generated.resources.Res
-import youdo2.composeapp.generated.resources.app_icon
-import youdo2.composeapp.generated.resources.app_name
-import youdo2.composeapp.generated.resources.signup_label
+import presentation.theme.getTextColor
 
 @Composable
 fun SignupScreen(
     uiState: SignupUIState = SignupUIState(),
-    onCredentialsUpdated: (email: String, password: String) -> Unit = { _, _ -> },
-    signUp: (email: String, password: String) -> Unit = { _, _ -> }
+    onPasswordChanged: (password: String) -> Unit = {},
+    onEmailChanged: (email: String) -> Unit = {},
+    signUp: () -> Unit,
+    navigateBackToLogin: () -> Unit,
 ) {
-
-    var emailText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
-            .background(
-                color = if (isSystemInDarkTheme()) {
-                    getNightDarkColor()
-                } else {
-                    getNightLightColor()
-                }
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+            .background(color = EnumProjectColors.Green.getColor().copy(alpha = 0.5f))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        /**
-         * Fixed App name
-         * **/
-        androidx.compose.material.Text(
-            text = stringResource(Res.string.app_name),
-            fontFamily = ReenieBeanieFontFamily(),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.1f)
-                .padding(start = 10.dp),
-            maxLines = 1,
-            textAlign = TextAlign.Center
-        )
-
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Bottom
-        ) {
+        Column(
+            modifier = Modifier.fillMaxHeight(0.3f)
+        )  {
             Text(
-                text = stringResource(Res.string.signup_label),
-                modifier = Modifier,
-                fontFamily = RobotoFontFamily(),
+                text = "Signup",
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                color = getTextColor(),
                 textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold,
-                fontSize = 38.sp
+                fontSize = 36.sp,
+                fontFamily = RobotoFontFamily(),
+                fontWeight = FontWeight.Black,
+                lineHeight = 50.sp
             )
-            Spacer(modifier = Modifier.width(10.dp))
-            Image(
-                painterResource(Res.drawable.app_icon),
-                contentDescription = "app logo",
+            Text(
+                text = uiState.heading,
                 modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-                    .background(color = Color.Transparent)
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Start,
+                fontFamily = RobotoFontFamily(),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.White,
+                lineHeight = 30.sp
             )
+
         }
 
+
         /**
-         * Signup and policy button
+         * Signup form
          * **/
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(1f),
-            verticalArrangement = Arrangement.Center
+                .fillMaxHeight(1f)
+                .windowInsetsPadding(WindowInsets.ime),
+            verticalArrangement = Arrangement.Top
         ) {
-            OutlinedTextField(
-                value = emailText,
-                onValueChange = {
-                    emailText = it
-                    onCredentialsUpdated(it, passwordText)
-                },
-                label = {
-                    androidx.compose.material.Text(text = "Email")
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 6.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = ""
-                    )
-                },
-                isError = uiState.emailInValid,
-                supportingText = {
-                    if (uiState.emailInValid) {
-                        androidx.compose.material.Text("Invalid email.")
-                    }
-                }
-            )
-            OutlinedTextField(
-                value = passwordText,
-                onValueChange = {
-                    passwordText = it
-                    onCredentialsUpdated(emailText, it)
-                },
-                label = {
-                    androidx.compose.material.Text(text = "Password")
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-                    .padding(top = 6.dp, bottom = 10.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        if (uiState.enableSignupButton) {
-                            signUp(emailText, passwordText)
-                        }
-                    }
-                ),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "password icon"
-                    )
-                },
-                isError = uiState.passwordInValid,
-                supportingText = {
-                    if (uiState.passwordInValid) {
-                        androidx.compose.material.Text("Invalid password format. Please include at least one uppercase letter, number and special symbol.")
-                    }
-                }
-            )
-
-            Button(
-                onClick = {
-                    signUp(emailText, passwordText)
-                },
+            NoBorderEditText(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .clip(shape = RoundedCornerShape(30.dp))
-                    .border(
-                        width = 1.dp,
-                        shape = RoundedCornerShape(30.dp),
-                        color = Color.Gray
-                    ),
-                enabled = uiState.enableSignupButton
-            ) {
-                androidx.compose.material.Text(
-                    text = "Signup",
-                    fontFamily = CantarellFontFamily(),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-
-            PolicyLineView(
-                navigateToPolicy = {
-                    //TODO navigate to policy
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth().padding(bottom = 20.dp),
+                text = uiState.email,
+                updateText = { onEmailChanged(it) }, focusRequester = emailFocusRequester,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                nextFieldFocusRequester = passwordFocusRequester,
+                placeHolder = "Enter your email",
+                label = "Email",
+                showHelperText = false,
+                showClearTextButtonIcon = true,
+                maxLines = 1,
+                fontSize = 20
+            )
+            //password field
+            NoBorderEditText(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+                text = uiState.password,
+                updateText = { onPasswordChanged(it) },
+                focusRequester = passwordFocusRequester,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                placeHolder = uiState.passwordPlaceholder,
+                label = "Password",
+                showHelperText = false,
+                showClearTextButtonIcon = true,
+                onDone = {
+                    if (uiState.enableSignupButton) {
+                        signUp()
+                    }
                 },
-                navigateToTermOfUse = {
-                    //TODO navigate to term of use
+                visualTransformation = PasswordVisualTransformation(),
+                maxLines = 1,
+                fontSize = 20
+            )
+            //login button
+            SaveButtonView(
+                containerModifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp, bottom = 30.dp),
+                label = "Sign Me Up!",
+                onClick = {
+                    if (uiState.enableSignupButton) {
+                        signUp()
+                    }
+                },
+                buttonThemeColor = Color.Black,
+                alignment = Alignment.Center,
+                buttonModifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp),
+                showIcon = false,
+                fontSize = 18
+            )
+        }
+
+    }
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 40.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(end = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            PreviousButton(
+                label = "Login",
+                backgroundColor = Color.Black,
+                onClick = {
+                    navigateBackToLogin()
                 }
             )
-
+            Text(
+                text = "Already have an account?",
+                textAlign = TextAlign.Center,
+                style = TextStyle(
+                    color = getTextColor(),
+                    fontSize = 16.sp,
+                    fontFamily = AlataFontFamily()
+                ),
+            )
         }
+
     }
 }

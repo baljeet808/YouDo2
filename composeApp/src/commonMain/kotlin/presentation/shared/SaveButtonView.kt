@@ -50,10 +50,10 @@ fun SaveButtonView(
 
         Row(
             modifier = buttonModifier
-                .shadow(elevation = 5.dp, shape = RoundedCornerShape(30.dp))
+                .shadow(elevation = 5.dp, shape = RoundedCornerShape(20.dp))
                 .background(
                     color = buttonThemeColor,
-                    shape = RoundedCornerShape(30.dp)
+                    shape = RoundedCornerShape(20.dp)
                 )
                 .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                 .clickable(
