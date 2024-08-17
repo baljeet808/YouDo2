@@ -77,8 +77,7 @@ fun App(
                     color = if (isSystemInDarkTheme()) getNightDarkColor() else getNightLightColor()
                 )
         ) {
-
-            BackgroundCircles()
+            BackgroundCircles(navController = navController)
             NavHost(
                 navController = navController,
                 startDestination = startDestination,

@@ -63,6 +63,7 @@ fun NavGraphBuilder.addSignupDestination(
                 viewModel.updatePassword(it)
             },
             navigateBackToLogin = {
+                navController.currentBackStackEntry?.savedStateHandle?.set("popBackStack", true)
                 navController.popBackStack()
             }
         )
