@@ -33,7 +33,8 @@ enum class EnumProjectColors{
     Black,
     Cyan,
     Indigo,
-    RoseRed
+    RoseRed,
+    Murrey
 }
 
 enum class EnumDashboardTasksTabs{
@@ -52,6 +53,7 @@ fun String.getColor(): Color {
         EnumProjectColors.Cyan.name -> Color(0xFF8BDFFE)
         EnumProjectColors.Indigo.name -> Color(0xFF4b0082)
         EnumProjectColors.RoseRed.name -> Color(0xFFBF1363)
+        EnumProjectColors.Murrey.name -> Color(0xFF820D43)
         else -> {
             Color(0xFF302D2D)
         }
@@ -70,6 +72,7 @@ fun EnumProjectColors.getColor(): Color {
         EnumProjectColors.Cyan -> Color(0xFF8BDFFE)
         EnumProjectColors.Indigo -> Color(0xFF4b0082)
         EnumProjectColors.RoseRed -> Color(0xFFBF1363)
+        EnumProjectColors.Murrey -> Color(0xFF820D43)
     }
 }
 

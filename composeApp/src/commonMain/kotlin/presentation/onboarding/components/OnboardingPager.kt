@@ -33,7 +33,7 @@ fun OnboardingPager(
     Column(
         modifier = Modifier.fillMaxWidth()
             .background(
-                color = pagerContent.backgroundColor.copy(alpha = 0.5f)
+                color = pagerContent.backgroundColor.copy(alpha = 0.2f)
             ).padding(
                 top = 50.dp,
                 start = 20.dp,
@@ -62,7 +62,7 @@ fun OnboardingPager(
             textAlign = TextAlign.Start,
             fontSize = headingFontSize.sp,
             fontFamily = RobotoFontFamily(),
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Black,
             lineHeight = 50.sp
         )
 
@@ -75,7 +75,7 @@ fun OnboardingPager(
             textAlign = TextAlign.Start,
             fontFamily = AlataFontFamily(),
             fontSize = descriptionFontSize.sp,
-            fontWeight = FontWeight.Thin,
+            fontWeight = FontWeight.Light,
             color = descriptionColor,
             lineHeight = 30.sp
         )

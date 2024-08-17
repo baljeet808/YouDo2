@@ -15,8 +15,8 @@ import youdo2.composeapp.generated.resources.todo_illustration
 
 
 const val ConstFirstScreenDescription = "From coffee breaks to commutes, your tasks travel with you. Sync up and check off from any device—anywhere, anytime."
-const val ConstSecScreenDescription = "Tame your to-do list with a swipe. Organize, prioritize, and crush your goals like a productivity ninja! 🥷"
-const val ConstThirdScreenDescription = "Set it and forget it! With smart reminders, you’ll be on time, every time—no more last-minute scrambles.🍳"
+const val ConstSecScreenDescription = "Tame your to-do list with a swipe. Organize, prioritize, and crush your goals like a productivity ninja!"
+const val ConstThirdScreenDescription = "Set it and forget it! With smart reminders, you’ll be on time, every time—no more last-minute scrambles."
 
 const val maxTitleCharsAllowed = 60
 const val maxDescriptionCharsAllowed = 120
@@ -66,7 +66,7 @@ fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
             title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
             description = ConstFirstScreenDescription,
-            backgroundColor = EnumProjectColors.RoseRed.getColor()
+            backgroundColor = EnumProjectColors.Murrey.getColor()
         )
     )
 }
