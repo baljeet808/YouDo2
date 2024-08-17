@@ -66,7 +66,7 @@ fun getOnBoardPagerContentList () : List<OnBoardPagerContent>{
             title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
             description = ConstFirstScreenDescription,
-            backgroundColor = EnumProjectColors.Brown.name.getColor()
+            backgroundColor = EnumProjectColors.Red.name.getColor()
         )
     )
 }

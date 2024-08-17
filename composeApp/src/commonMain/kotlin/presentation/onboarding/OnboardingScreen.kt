@@ -1,12 +1,12 @@
 package presentation.onboarding
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,7 +47,7 @@ fun OnboardingScreen(
     val list = getOnBoardPagerContentList()
     val pagerState = rememberPagerState(pageCount = { list.count() })
     val coroutineScope = rememberCoroutineScope()
-    Column(
+    Box (
         modifier = Modifier.fillMaxSize()
             .background(
                 color = if (isSystemInDarkTheme()) {
@@ -55,11 +55,40 @@ fun OnboardingScreen(
                 } else {
                     getNightLightColor()
                 }
-            ),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+            )
     ) {
+        Box(modifier = Modifier.fillMaxSize()){
+            Canvas(modifier = Modifier.fillMaxWidth(), onDraw = {
+                drawCircle(
+                    color = NightTransparentWhiteColor,
+                    radius = 230.dp.toPx(),
+                    center = Offset(
+                        x = 40.dp.toPx(),
+                        y = 100.dp.toPx()
+                    )
+                )
+                drawCircle(
+                    color = Color.White.copy(alpha = 0.7F),
+                    radius = 100.dp.toPx(),
+                    center = Offset(
+                        x = 20.dp.toPx(),
+                        y = 100.dp.toPx()
+                    )
+                )
 
+
+
+                drawCircle(
+                    color = NightTransparentWhiteColor,
+                    radius = 230.dp.toPx(),
+                    center = Offset(
+                        x = 240.dp.toPx(),
+                        y = 550.dp.toPx()
+                    )
+                )
+
+            })
+        }
         /**
          *On boarding screens
          * **/
