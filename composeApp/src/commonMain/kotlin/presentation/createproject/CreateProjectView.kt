@@ -159,7 +159,6 @@ fun CreateProjectView(
         }
 
         SaveButtonView(
-            modifier = Modifier,
             label = "Create",
             onClick = {
                 onScreenEvent(CreateProjectScreenEvent.CreateProject)

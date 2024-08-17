@@ -5,6 +5,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,8 @@ import androidx.compose.ui.Modifier
 import common.getOnBoardPagerContentList
 import presentation.onboarding.components.OnboardingPager
 import presentation.shared.HoverButton
+import presentation.theme.getNightDarkColor
+import presentation.theme.getNightLightColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -28,7 +32,14 @@ fun OnboardingScreen(
     val pagerState = rememberPagerState(pageCount = { list.count() })
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .background(
+                color = if (isSystemInDarkTheme()) {
+                    getNightDarkColor()
+                } else {
+                    getNightLightColor()
+                }
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

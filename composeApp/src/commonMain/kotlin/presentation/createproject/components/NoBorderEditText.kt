@@ -6,12 +6,16 @@ import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -28,6 +32,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.maxTitleCharsAllowedForProject
@@ -49,6 +54,11 @@ fun NoBorderEditText(
     modifier: Modifier = Modifier,
     nextFieldFocusRequester: FocusRequester = FocusRequester(),
     onDone: () -> Unit = {},
+    showHelperText : Boolean = true,
+    showClearTextButtonIcon : Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    maxLines : Int  = 3,
+    fontSize : Int = 24
 ) {
 
     val transition = rememberInfiniteTransition()
@@ -97,19 +107,25 @@ fun NoBorderEditText(
         )
         TextField(
             value = text,
+            singleLine = maxLines == 1,
             onValueChange = {
-                if (it.length <= maxTitleCharsAllowedForProject) {
+                if(showHelperText) {
+                    if (it.length <= maxTitleCharsAllowedForProject) {
+                        updateText(it)
+                    }
+                }else{
                     updateText(it)
                 }
             },
+            visualTransformation = visualTransformation,
             colors = TextFieldDefaults.colors(
                 disabledContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 focusedContainerColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = LightAppBarIconsColor,
+                errorIndicatorColor = DoTooRed,
+                focusedIndicatorColor = LightAppBarIconsColor
             ),
             placeholder = {
                 Text(
@@ -129,10 +145,10 @@ fun NoBorderEditText(
             },
             textStyle = TextStyle(
                 color = getTextColor(),
-                fontSize = 24.sp,
+                fontSize = fontSize.sp,
                 fontFamily = AlataFontFamily()
             ),
-            maxLines = 3,
+            maxLines = maxLines,
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
@@ -149,18 +165,33 @@ fun NoBorderEditText(
                 onNext = {
                     nextFieldFocusRequester.requestFocus()
                 }
+            ),
+            trailingIcon = {
+                if(showClearTextButtonIcon && text.isNotBlank()){
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "",
+                        tint = getTextColor(),
+                        modifier = Modifier
+                            .clickable {
+                                updateText("")
+                            }
+                    )
+                }
+            }
+        )
+        if (showHelperText) {
+            Text(
+                text = "${text.length}/$maxCharAllowed",
+                color = if (text.length >= maxCharAllowed) {
+                    DoTooRed
+                } else {
+                    LightAppBarIconsColor
+                },
+                fontSize = 13.sp,
+                fontFamily = AlataFontFamily(),
+                modifier = Modifier.padding(start = 15.dp)
             )
-        )
-        Text(
-            text = "${text.length}/$maxCharAllowed",
-            color = if (text.length >= maxCharAllowed) {
-                DoTooRed
-            } else {
-                LightAppBarIconsColor
-            },
-            fontSize = 13.sp,
-            fontFamily = AlataFontFamily(),
-            modifier = Modifier.padding(start = 15.dp)
-        )
+        }
     }
 }

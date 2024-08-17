@@ -1,5 +1,6 @@
 package presentation.login.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.ClickableText
@@ -14,12 +15,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import presentation.shared.fonts.CantarellFontFamily
+import presentation.theme.LightDotooLightBlue
+import presentation.theme.NightDotooLightBlue
+import presentation.theme.getTextColor
 
 
 @Composable
 fun PolicyLineView(
     navigateToPolicy : () -> Unit,
-    navigateToTermOfUse : () -> Unit
+    navigateToTermOfUse : () -> Unit,
+    clickableTextColor : Color = if (isSystemInDarkTheme()) NightDotooLightBlue else LightDotooLightBlue
 ) {
     val initialText = "By signing up, you agree to the "
     val termOfService = "Term of Service"
@@ -29,13 +34,14 @@ fun PolicyLineView(
 
     val normalStyle = SpanStyle(
         fontFamily = CantarellFontFamily(),
-        fontSize = 13.sp
+        fontSize = 13.sp,
+        color = getTextColor()
     )
 
     val clickableStyle = SpanStyle(
-        color = Color.Blue,
+        color = clickableTextColor,
         fontFamily = CantarellFontFamily(),
-        fontSize = 13.sp
+        fontSize = 14.sp
     )
 
     val annotatedString = buildAnnotatedString {

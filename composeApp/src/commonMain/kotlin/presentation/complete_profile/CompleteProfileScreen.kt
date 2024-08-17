@@ -1,6 +1,7 @@
 package presentation.complete_profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.shared.HoverButton
 import presentation.theme.getNightDarkColor
+import presentation.theme.getNightLightColor
 
 @Composable
 fun CompleteProfileScreen(
@@ -21,7 +23,11 @@ fun CompleteProfileScreen(
 ) {
 
     Box(
-        modifier = Modifier.fillMaxSize().background(color = getNightDarkColor()),
+        modifier = Modifier.fillMaxSize().background(color = if (isSystemInDarkTheme()) {
+            getNightDarkColor()
+        } else {
+            getNightLightColor()
+        }),
         contentAlignment = Alignment.Center
     ) {
         Text(
