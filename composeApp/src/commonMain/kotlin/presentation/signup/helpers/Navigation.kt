@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import domain.dto_helpers.DataError
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.signup.SignupScreen
 
 const val DESTINATION_SIGNUP_ROUTE = "signup"
@@ -45,10 +46,14 @@ fun NavGraphBuilder.addSignupDestination(
             }
         }
 
-        //take user to login screen if signup is successful
+        //take user to complete profile screen if signup is successful
         LaunchedEffect(key1 = uiState.signupSuccessful){
             if(uiState.signupSuccessful){
-                navController.popBackStack()
+                navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE) {
+                    popUpTo(DESTINATION_SIGNUP_ROUTE){
+                        inclusive = true
+                    }
+                }
             }
         }
 

@@ -68,7 +68,13 @@ class AuthRepositoryImpl(
         return auth.currentUser == null
     }
 
-    override suspend fun updateCurrentUser(user: FirebaseUser) {
-        auth.updateCurrentUser(user)
+    override suspend fun updateCurrentUser(name: String, avatarUrl: String) {
+        auth.currentUser?.apply {
+            updateProfile(
+                displayName = name,
+                photoUrl = avatarUrl
+            )
+        }
     }
+
 }

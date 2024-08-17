@@ -15,6 +15,7 @@ import domain.dto_helpers.DataError
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import presentation.complete_profile.helpers.addCompleteProfileDestination
 import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
 import presentation.dashboard.helpers.addDashboardDestination
 import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
@@ -122,6 +123,19 @@ fun App(
                 retryApiCall = retryApiCall
             )
             addDashboardDestination(
+                navController = navController,
+                showErrorAlertDialog = { error ->
+                    retryApiCall.value = false
+                    if (error != null) {
+                        errorType.value = error
+                        openAlertDialog.value = true
+                    } else {
+                        openAlertDialog.value = false
+                    }
+                },
+                retryApiCall = retryApiCall
+            )
+            addCompleteProfileDestination(
                 navController = navController,
                 showErrorAlertDialog = { error ->
                     retryApiCall.value = false

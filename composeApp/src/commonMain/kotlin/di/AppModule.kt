@@ -25,6 +25,7 @@ import domain.use_cases.auth_use_cases.IsUserAuthenticatedUseCase
 import domain.use_cases.auth_use_cases.LoginUseCase
 import domain.use_cases.auth_use_cases.SignOutUseCase
 import domain.use_cases.auth_use_cases.SignupUseCase
+import domain.use_cases.auth_use_cases.UpdateCurrentUserUseCase
 import domain.use_cases.database_operations_use_cases.DeleteAllTablesUseCase
 import domain.use_cases.task_use_cases.DeleteTaskUseCase
 import domain.use_cases.task_use_cases.DeleteTasksByProjectIdUseCase
@@ -102,6 +103,7 @@ val repositoriesModule = module {
 }
 
 val authUseCasesModule = module {
+    single<UpdateCurrentUserUseCase>{ UpdateCurrentUserUseCase(get()) }
     single<GetCurrentUserUseCase>{ GetCurrentUserUseCase(get()) }
     single<GetCurrentUserIdUseCase>{ GetCurrentUserIdUseCase(get())}
     single<IsUserAuthenticatedUseCase>{ IsUserAuthenticatedUseCase(get())}
