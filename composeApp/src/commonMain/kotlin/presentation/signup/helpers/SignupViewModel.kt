@@ -5,14 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import common.getRandomAvatar
 import common.isEmailValid
 import common.isPasswordValid
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.FirebaseUser
+import dev.gitlive.firebase.firestore.firestore
+import domain.dto_helpers.DataError
 import domain.dto_helpers.Result
+import domain.models.User
 import domain.use_cases.auth_use_cases.SignupUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 
 class SignupViewModel(
@@ -52,10 +59,35 @@ class SignupViewModel(
                     }
                 }
                 is Result.Success -> {
-                    withContext(Dispatchers.Main){
-                       uiState = uiState.copy(isLoading = false, error = null, signupSuccessful = true)
-                    }
+                    saveToFirebase(it.data)
                 }
+            }
+        }
+    }
+
+    private fun saveToFirebase(firebaseUser : FirebaseUser) = viewModelScope.launch(Dispatchers.IO){
+        val newUser = User(
+            id = firebaseUser.uid,
+            name = firebaseUser.displayName ?: "",
+            email = firebaseUser.email ?: "",
+            joined = Clock.System.now().epochSeconds,
+            avatarUrl = firebaseUser.photoURL ?: getRandomAvatar()
+        )
+        try {
+            Firebase.firestore
+                .collection("users")
+                .document(newUser.id)
+                .set(newUser)
+            withContext(Dispatchers.Main){
+                uiState = uiState.copy(isLoading = false, error = null, signupSuccessful = true)
+            }
+        }catch(e: Exception) {
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    error = DataError.Network.ALL_OTHER,
+                    signupSuccessful = false
+                )
             }
         }
     }

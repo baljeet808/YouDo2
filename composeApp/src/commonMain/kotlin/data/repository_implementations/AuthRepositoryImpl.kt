@@ -67,4 +67,8 @@ class AuthRepositoryImpl(
         auth.signOut()
         return auth.currentUser == null
     }
+
+    override suspend fun updateCurrentUser(user: FirebaseUser) {
+        auth.updateCurrentUser(user)
+    }
 }

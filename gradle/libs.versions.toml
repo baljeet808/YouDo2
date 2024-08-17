@@ -43,6 +43,9 @@ places = "3.5.0"
 #Datetime
 kotlinxDatetime = "0.6.0"
 
+#Coil
+landscapistCoil3 = "2.3.6"
+
 [libraries]
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
@@ -82,6 +85,9 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 core-splashscreen= { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
+
+#Coil
+landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapistCoil3" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -99,9 +99,11 @@ kotlin {
             //Icons
             implementation(libs.androidx.material.icons.core)
 
-            //datatime
+            //datetime
             implementation(libs.kotlinx.datetime)
 
+            //coil
+            implementation(libs.landscapist.coil3)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

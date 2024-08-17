@@ -111,9 +111,7 @@ fun DashboardScreen(
                     userName = uiState.userName,
                     menuItems = menuItems,
                     onMenuItemClick = { item ->
-                        when (item) {
-
-                        }
+                        closeDrawer()
                     },
                     closeDrawer = {
                         closeDrawer()

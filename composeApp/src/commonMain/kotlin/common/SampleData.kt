@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 fun getRandomAvatar(): String {
     val randomInt = Random.nextInt(from = 0, 6)
-    val avatars = arrayListOf<String>(
+    val avatars = arrayListOf(
         "https://firebasestorage.googleapis.com/v0/b/youdotoo-81372.appspot.com/o/20.png?alt=media&token=fa1489d4-8951-4ef6-8f96-862938aedb62",
         "https://firebasestorage.googleapis.com/v0/b/youdotoo-81372.appspot.com/o/1.png?alt=media&token=b15d14e9-722d-410d-b9b4-23682b5773f3",
         "https://firebasestorage.googleapis.com/v0/b/youdotoo-81372.appspot.com/o/2.png?alt=media&token=68e95bc9-9553-4027-90d9-af688b9fd0f4",
