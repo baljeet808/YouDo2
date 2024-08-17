@@ -24,7 +24,7 @@ fun BackgroundCircles() {
                 )
             )
             drawCircle(
-                color = Color.White.copy(alpha = 0.7F),
+                color = Color.White.copy(alpha = 0.3F),
                 radius = 100.dp.toPx(),
                 center = Offset(x = 20.dp.toPx(),
                     y = 100.dp.toPx()

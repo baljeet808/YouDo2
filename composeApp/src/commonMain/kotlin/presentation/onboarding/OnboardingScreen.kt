@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -29,11 +28,8 @@ import kotlinx.coroutines.launch
 import presentation.onboarding.components.NextButton
 import presentation.onboarding.components.OnboardingPager
 import presentation.onboarding.components.PageCountIndicatorView
-import presentation.shared.BackgroundCircles
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.NightTransparentWhiteColor
-import presentation.theme.getNightDarkColor
-import presentation.theme.getNightLightColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,28 +41,19 @@ fun OnboardingScreen(
     val pagerState = rememberPagerState(pageCount = { list.count() })
     val coroutineScope = rememberCoroutineScope()
 
-    Box (
-        modifier = Modifier.fillMaxSize()
-            .background(
-                color = if (isSystemInDarkTheme()) getNightDarkColor() else getNightLightColor()
-            )
+
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-
-        BackgroundCircles()
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            OnboardingPager(
-                pagerContent = list[it],
-                headingColor = Color.White,
-                headingFontSize = 36,
-                descriptionColor = Color.White,
-                descriptionFontSize = 18
-            )
-        }
+        OnboardingPager(
+            pagerContent = list[it],
+            headingColor = Color.White,
+            headingFontSize = 36,
+            descriptionColor = Color.White,
+            descriptionFontSize = 18
+        )
     }
 
     Box(
@@ -74,7 +61,7 @@ fun OnboardingScreen(
             .fillMaxSize()
             .padding(30.dp),
         contentAlignment = Alignment.TopEnd
-    ){
+    ) {
         Text(
             text = "Skip",
             color = Color.White,
@@ -97,7 +84,7 @@ fun OnboardingScreen(
             .fillMaxSize()
             .padding(bottom = 40.dp),
         contentAlignment = Alignment.BottomEnd
-    ){
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(start = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -111,9 +98,9 @@ fun OnboardingScreen(
             )
 
             NextButton(
-                backgroundColor = list[(pagerState.currentPage +1)%3 ].backgroundColor,
+                backgroundColor = list[(pagerState.currentPage + 1) % 3].backgroundColor,
                 onClick = {
-                    when (pagerState.currentPage){
+                    when (pagerState.currentPage) {
                         list.count() - 1 -> moveToLogin()
                         else -> coroutineScope.launch {
                             delay(100)

@@ -28,6 +28,7 @@ import presentation.login.helpers.addLoginDestination
 import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
 import presentation.onboarding.helpers.addOnboardingDestination
 import presentation.shared.AlertDialogView
+import presentation.shared.BackgroundCircles
 import presentation.signup.helpers.addSignupDestination
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
@@ -69,17 +70,15 @@ fun App(
     } else DESTINATION_ONBOARDING_ROUTE
 
     MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
+
+        Box (
+            modifier = Modifier.fillMaxSize()
                 .background(
-                    color = if (isSystemInDarkTheme()) {
-                        getNightDarkColor()
-                    } else {
-                        getNightLightColor()
-                    }
+                    color = if (isSystemInDarkTheme()) getNightDarkColor() else getNightLightColor()
                 )
         ) {
+
+            BackgroundCircles()
             NavHost(
                 navController = navController,
                 startDestination = startDestination,

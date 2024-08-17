@@ -70,3 +70,19 @@ fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
         )
     )
 }
+
+val loginHeadings = arrayOf(
+    "Time to join the Party!",
+    "Welcome Back, Superstar!",
+    "Ready to Rock?",
+    "Welcome to the Fun Zone!",
+    "Come On In, We Missed You!"
+)
+
+val passwordPlaceholders = arrayOf(
+    "Shh... It’s a secret",
+    "Super secret password",
+    "Magic words here",
+    "Don’t tell anyone!",
+    "The key to the kingdom"
+)

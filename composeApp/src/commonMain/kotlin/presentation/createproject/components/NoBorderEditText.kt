@@ -98,7 +98,7 @@ fun NoBorderEditText(
     ) {
         Text(
             text = label,
-            color = LightAppBarIconsColor,
+            color = getTextColor(),
             fontSize = 13.sp,
             fontFamily = AlataFontFamily(),
             modifier = Modifier
@@ -130,7 +130,7 @@ fun NoBorderEditText(
             placeholder = {
                 Text(
                     text = placeHolder,
-                    color = getTextColor(),
+                    color = LightAppBarIconsColor,
                     fontSize = 24.sp,
                     fontFamily = AlataFontFamily(),
                     modifier = Modifier

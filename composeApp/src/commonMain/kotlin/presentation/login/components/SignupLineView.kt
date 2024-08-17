@@ -2,7 +2,6 @@ package presentation.login.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +11,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import presentation.shared.fonts.CantarellFontFamily
 import presentation.theme.LightDotooLightBlue
@@ -22,6 +20,7 @@ import presentation.theme.getTextColor
 
 @Composable
 fun SignupLineView(
+    modifier: Modifier,
     navigateToSignup : () -> Unit,
     clickableTextColor : Color = if (isSystemInDarkTheme()) NightDotooLightBlue else LightDotooLightBlue
 ) {
@@ -60,7 +59,7 @@ fun SignupLineView(
             textAlign = TextAlign.Center),
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 60.dp),
+            .then(modifier),
         onClick= {offset ->
             annotatedString.getStringAnnotations(start = offset, end = offset)
                 .firstOrNull()?.also { span ->

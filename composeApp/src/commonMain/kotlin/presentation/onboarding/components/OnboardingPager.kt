@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.OnBoardPagerContent
 import org.jetbrains.compose.resources.painterResource
-import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 
 @Composable
@@ -33,7 +32,7 @@ fun OnboardingPager(
     Column(
         modifier = Modifier.fillMaxWidth()
             .background(
-                color = pagerContent.backgroundColor.copy(alpha = 0.2f)
+                color = pagerContent.backgroundColor.copy(alpha = 0.7f)
             ).padding(
                 top = 50.dp,
                 start = 20.dp,
@@ -73,9 +72,9 @@ fun OnboardingPager(
                 .fillMaxWidth()
                 .fillMaxHeight(1f),
             textAlign = TextAlign.Start,
-            fontFamily = AlataFontFamily(),
+            fontFamily = RobotoFontFamily(),
             fontSize = descriptionFontSize.sp,
-            fontWeight = FontWeight.Light,
+            fontWeight = FontWeight.Normal,
             color = descriptionColor,
             lineHeight = 30.sp
         )

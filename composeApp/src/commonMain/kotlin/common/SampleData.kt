@@ -30,17 +30,6 @@ fun getRandomColorEnum(): EnumProjectColors {
     return EnumProjectColors.entries[randomInt]
 }
 
-fun getSampleColorPalette(): ColorPaletteEntity {
-    return ColorPaletteEntity(
-        id = getRandomId(),
-        paletteName = "Randomized",
-        nightDark = getRandomColor().getColor().value.toLong(),
-        nightLight = getRandomColor().getColor().value.toLong(),
-        dayDark = getRandomColor().getColor().value.toLong(),
-        dayLight = getRandomColor().getColor().value.toLong()
-    )
-}
-
 expect fun getRandomId(): String
 
 
@@ -51,4 +40,10 @@ fun getSampleDateInLong(): Long {
     return currentDateTime.toEpochMilliseconds()
 }
 
+fun getRandomLoginHeading() : String {
+    return loginHeadings[Random.nextInt(0, loginHeadings.size-1)]
+}
 
+fun getRandomPasswordPlaceholder() : String {
+    return passwordPlaceholders[Random.nextInt(0, passwordPlaceholders.size-1)]
+}

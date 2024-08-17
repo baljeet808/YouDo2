@@ -27,24 +27,27 @@ class LoginViewModel(
     var uiState by mutableStateOf(LoginUIState())
         private set
 
-    fun updateCredentials(email : String, password: String){
-        uiState = uiState.copy(emailInValid = false, passwordInValid = false)
-        if(email.isEmailValid() && password.isPasswordValid()){
-            uiState = uiState.copy(enableLoginButton = true)
-        }
+    fun updatePassword(password : String){
+        val passwordValid = password.isPasswordValid()
+        uiState = uiState.copy(password = password, passwordInValid = passwordValid.not(), enableLoginButton = passwordValid && uiState.email.isEmailValid())
     }
 
-    fun attemptLogin(email : String, password : String){
-        if(!email.isEmailValid()){
+    fun updateEmail(email : String){
+        val emailValid = email.isEmailValid()
+        uiState = uiState.copy(email = email, emailInValid = emailValid.not(), enableLoginButton = emailValid && uiState.password.isPasswordValid())
+    }
+
+    fun attemptLogin(){
+        if(!uiState.email.isEmailValid()){
             uiState = uiState.copy(emailInValid = true, enableLoginButton = false)
             return
         }
-        if(!password.isPasswordValid()){
+        if(!uiState.password.isPasswordValid()){
             uiState = uiState.copy(passwordInValid = true, enableLoginButton = false)
             return
         }
         uiState = uiState.copy(emailInValid = false, passwordInValid = false, isLoading = true)
-        login(email = email, password = password)
+        login(email = uiState.email, password = uiState.password)
     }
 
     private fun login(email: String, password: String) = viewModelScope.launch(Dispatchers.IO){

@@ -1,32 +1,22 @@
 package presentation.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -35,114 +25,62 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
 import presentation.login.components.SignupLineView
 import presentation.login.helpers.LoginUIState
 import presentation.shared.SaveButtonView
-import presentation.shared.fonts.ReenieBeanieFontFamily
 import presentation.shared.fonts.RobotoFontFamily
-import presentation.theme.getNightDarkColor
-import presentation.theme.getNightLightColor
+import presentation.theme.NightDotooBrightPink
 import presentation.theme.getTextColor
-import youdo2.composeapp.generated.resources.Res
-import youdo2.composeapp.generated.resources.app_icon
-import youdo2.composeapp.generated.resources.app_name
-
 
 @Composable
 fun LoginScreen(
     navigateToPolicy: () -> Unit = {},
-    navigateToSignup: () -> Unit = {},
-    onCredentialsUpdated: (email: String, password: String) -> Unit = { _, _ -> },
+    navigateToSignup: () -> Unit = {}, onPasswordChanged: (password: String) -> Unit = {},
+    onEmailChanged: (email: String) -> Unit = {},
     uiState: LoginUIState = LoginUIState(),
-    login: (email: String, password: String) -> Unit = { _, _ -> },
+    login: () -> Unit,
 ) {
 
-    val themeColor =  EnumProjectColors.Blue.getColor()
+    val themeColor = EnumProjectColors.Blue.getColor()
 
-    var emailText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
-
-    val passwordFocusRequester = remember {
-        FocusRequester()
-    }
-    val emailFocusRequester = remember {
-        FocusRequester()
-    }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = if (isSystemInDarkTheme()) {
-                    getNightDarkColor()
-                } else {
-                    getNightLightColor()
-                }
-            ).padding(20.dp),
-        verticalArrangement = Arrangement.Top,
+            .background(color = Color.Black.copy(alpha = 0.5f))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
-        /**
-         * Fixed App name
-         * **/
-        Text(
-            text = stringResource(Res.string.app_name),
-            fontFamily = ReenieBeanieFontFamily(),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.1f)
-                .padding(start = 10.dp),
-            maxLines = 1,
-            textAlign = TextAlign.Center,
-            color = themeColor
-        )
+    ) {
 
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.1f),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Bottom
-        ) {
+        Column {
             Text(
                 text = "Login",
-                modifier = Modifier,
-                fontFamily = RobotoFontFamily(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                color = getTextColor(),
                 textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold,
-                fontSize = 38.sp,
-                color = getTextColor()
+                fontSize = 36.sp,
+                fontFamily = RobotoFontFamily(),
+                fontWeight = FontWeight.Black,
+                lineHeight = 50.sp
             )
-            Spacer(modifier = Modifier.width(10.dp))
-            Box(
+            Text(
+                text = uiState.heading,
                 modifier = Modifier
-                    .width(42.dp)
-                    .height(42.dp)
-                    .clip(
-                        shape = RoundedCornerShape(50.dp)
-                    ).border(
-                        width = 1.dp,
-                        shape = RoundedCornerShape(50.dp),
-                        color = themeColor
-                    )
-                    .padding(1.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painterResource(Res.drawable.app_icon),
-                    contentDescription = "app logo",
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Start,
+                fontFamily = RobotoFontFamily(),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.White,
+                lineHeight = 30.sp
+            )
+
         }
 
 
@@ -152,26 +90,18 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(1f),
-            verticalArrangement = Arrangement.Center
+                .windowInsetsPadding(WindowInsets.ime),
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-
-            //email field
-
             NoBorderEditText(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(),
-                text = emailText,
-                updateText = {
-                    emailText = it
-                    onCredentialsUpdated(it, passwordText)
-                },
-                focusRequester = emailFocusRequester,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                nextFieldFocusRequester =passwordFocusRequester,
-                placeHolder = "Email \uD83D\uDC26",
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth().padding(bottom = 20.dp),
+                text = uiState.email,
+                updateText = { onEmailChanged(it) }, focusRequester = emailFocusRequester,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                nextFieldFocusRequester = passwordFocusRequester,
+                placeHolder = "Enter your email",
                 label = "Email",
                 showHelperText = false,
                 showClearTextButtonIcon = true,
@@ -179,42 +109,36 @@ fun LoginScreen(
                 fontSize = 20
             )
             //password field
-            Spacer(modifier = Modifier.height(20.dp))
             NoBorderEditText(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
                     .fillMaxWidth(),
-                text = passwordText,
-                updateText = {
-                    passwordText = it
-                    onCredentialsUpdated(emailText, it)
-                },
+                text = uiState.password,
+                updateText = { onPasswordChanged(it) },
                 focusRequester = passwordFocusRequester,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
-                placeHolder = "Make Me Strong\uD83D\uDCAA",
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                placeHolder = uiState.passwordPlaceholder,
                 label = "Password",
                 showHelperText = false,
                 showClearTextButtonIcon = true,
                 onDone = {
                     if (uiState.enableLoginButton) {
-                        login(emailText, passwordText)
+                        login()
                     }
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 maxLines = 1,
                 fontSize = 20
             )
-
             //login button
             SaveButtonView(
                 containerModifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, bottom = 20.dp ),
+                    .padding(top = 30.dp, bottom = 30.dp),
                 label = "Lets Go!",
                 onClick = {
                     if (uiState.enableLoginButton) {
-                        login(emailText, passwordText)
+                        login()
                     }
                 },
                 buttonThemeColor = themeColor,
@@ -223,26 +147,21 @@ fun LoginScreen(
                 showIcon = false,
                 fontSize = 18
             )
-            Spacer(modifier = Modifier.height(20.dp))
 
             //signup text button
             SignupLineView(
                 navigateToSignup = navigateToSignup,
-                clickableTextColor = themeColor
+                clickableTextColor = NightDotooBrightPink,
+                modifier = Modifier.padding(bottom = 30.dp)
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
 
             //policy text buttons
             PolicyLineView(
                 clickableTextColor = themeColor,
-                navigateToPolicy = {
-                    navigateToPolicy()
-                },
-                navigateToTermOfUse = {
-                    navigateToPolicy()
-                }
+                navigateToPolicy = { navigateToPolicy() },
+                navigateToTermOfUse = { navigateToPolicy() }
             )
         }
+
     }
 }

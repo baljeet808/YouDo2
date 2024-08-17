@@ -2,11 +2,7 @@ package presentation.login.helpers
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -31,15 +27,10 @@ fun NavGraphBuilder.addLoginDestination(
         val viewModel = koinViewModel<LoginViewModel>()
         val uiState = viewModel.uiState
 
-        val scope = rememberCoroutineScope()
-
-        var emailBackup by remember { mutableStateOf("") }
-        var passwordBackup by remember { mutableStateOf("") }
-
         //retry api call triggers when user clicks retry button in error dialog
         LaunchedEffect (key1 = retryApiCall.value) {
             if(retryApiCall.value){
-                viewModel.attemptLogin(email = emailBackup,password = passwordBackup)
+                viewModel.attemptLogin()
             }
         }
 
@@ -63,10 +54,8 @@ fun NavGraphBuilder.addLoginDestination(
 
         LoginScreen(
             uiState = uiState,
-            login = { email, password ->
-                emailBackup = email
-                passwordBackup  = password
-                viewModel.attemptLogin(email = email,password = password)
+            login = {
+                viewModel.attemptLogin()
             },
             navigateToSignup = {
                 navController.navigate(DESTINATION_SIGNUP_ROUTE)
@@ -74,9 +63,13 @@ fun NavGraphBuilder.addLoginDestination(
             navigateToPolicy = {
                 //TODO: navigate to policy
             },
-            onCredentialsUpdated = { email, password ->
-                viewModel.updateCredentials(email, password)
-            }
+            onPasswordChanged = { password ->
+                viewModel.updatePassword(password)
+            },
+            onEmailChanged = {  email ->
+                viewModel.updateEmail(email)
+            },
+
         )
     }
 }
