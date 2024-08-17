@@ -8,8 +8,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import common.EnumProjectColors
+import common.getColor
 import presentation.complete_profile.helpers.CompleteProfileUIState
-import presentation.shared.HoverButton
+import presentation.shared.SaveButtonView
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
@@ -35,11 +37,13 @@ fun CompleteProfileScreen(
             modifier = Modifier
         )
     }
-    HoverButton(
+    SaveButtonView(
         onClick = {
             skip()
         },
-        buttonLabel = "Skip",
-        contentAlignment = Alignment.BottomStart
+        label = "Skip",
+        alignment = Alignment.BottomStart,
+        buttonThemeColor = EnumProjectColors.Blue.name.getColor(),
+        showIcon = false
     )
 }

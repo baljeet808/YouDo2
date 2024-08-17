@@ -3,6 +3,7 @@ package common
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.ui.graphics.Color
 import domain.models.MenuItem
 import org.jetbrains.compose.resources.DrawableResource
 import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
@@ -13,27 +14,14 @@ import youdo2.composeapp.generated.resources.todo_illustration
 
 
 
-const val ConstFirstScreenDescription = "Work on tasks with family and friends. and finish them all together."
-const val ConstSecScreenDescription = "Chat about specific task. Manage permissions for collaborators."
-const val ConstThirdScreenDescription = "Create multiple DoToos and track there progress."
-const val ConstSampleAvatarUrl = "https://firebasestorage.googleapis.com/v0/b/youdotoo-81372.appspot.com/o/20.png?alt=media&token=fa1489d4-8951-4ef6-8f96-862938aedb62"
-
-
+const val ConstFirstScreenDescription = "From coffee breaks to commutes, your tasks travel with you. Sync up and check off from any device—anywhere, anytime."
+const val ConstSecScreenDescription = "Tame your to-do list with a swipe. Organize, prioritize, and crush your goals like a productivity ninja! 🥷"
+const val ConstThirdScreenDescription = "Set it and forget it! With smart reminders, you’ll be on time, every time—no more last-minute scrambles.🍳"
 
 const val maxTitleCharsAllowed = 60
 const val maxDescriptionCharsAllowed = 120
 const val maxTitleCharsAllowedForProject = 40
 
-
-
-const val InvitationPending = 0
-const val InvitationAccepted = 1
-const val InvitationDeclined = 2
-const val InvitationArchived = 3
-
-const val AccessTypeAdmin = 0
-const val AccessTypeEditor = 1
-const val AccessTypeViewer = 2
 
 val menuItems = arrayListOf(
     MenuItem(
@@ -55,26 +43,30 @@ val menuItems = arrayListOf(
 data class OnBoardPagerContent(
     val title: String,
     val res: DrawableResource,
-    val description: String
+    val description: String,
+    val backgroundColor : Color = Color.Black
 )
 
 
 fun getOnBoardPagerContentList () : List<OnBoardPagerContent>{
     return listOf(
         OnBoardPagerContent(
-            title = "Tag Tasks Directly into Your Chat!",
+            title = "Conquer Your \nChaos",
             res = Res.drawable.chat_illustration,
-            description = ConstSecScreenDescription
+            description = ConstSecScreenDescription,
+            backgroundColor = EnumProjectColors.Blue.name.getColor()
         ),
         OnBoardPagerContent(
-            title = "Organize Tasks Easily!",
+            title = "Time Is On \nYour Side",
             res = Res.drawable.set_reminders,
-            description = ConstThirdScreenDescription
+            description = ConstThirdScreenDescription,
+            backgroundColor = EnumProjectColors.Pink.name.getColor()
         ),
         OnBoardPagerContent(
-            title = "To it together!",
+            title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
-            description = ConstFirstScreenDescription
+            description = ConstFirstScreenDescription,
+            backgroundColor = EnumProjectColors.Green.name.getColor()
         )
     )
 }
