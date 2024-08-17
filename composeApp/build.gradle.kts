@@ -77,6 +77,10 @@ kotlin {
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.analytics)
 
+            implementation (libs.androidx.material.icons.extended)
+
+            implementation (libs.androidx.foundation)
+
             //Room
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.paging.common)

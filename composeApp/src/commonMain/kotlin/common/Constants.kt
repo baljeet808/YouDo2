@@ -54,19 +54,19 @@ fun getOnBoardPagerContentList () : List<OnBoardPagerContent>{
             title = "Conquer Your \nChaos",
             res = Res.drawable.chat_illustration,
             description = ConstSecScreenDescription,
-            backgroundColor = EnumProjectColors.Blue.name.getColor()
+            backgroundColor = EnumProjectColors.Black.name.getColor()
         ),
         OnBoardPagerContent(
-            title = "Time Is On \nYour Side",
+            title = "Deadlines? \nHandled!",
             res = Res.drawable.set_reminders,
             description = ConstThirdScreenDescription,
-            backgroundColor = EnumProjectColors.Pink.name.getColor()
+            backgroundColor = EnumProjectColors.Indigo.name.getColor()
         ),
         OnBoardPagerContent(
             title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
             description = ConstFirstScreenDescription,
-            backgroundColor = EnumProjectColors.Green.name.getColor()
+            backgroundColor = EnumProjectColors.Brown.name.getColor()
         )
     )
 }

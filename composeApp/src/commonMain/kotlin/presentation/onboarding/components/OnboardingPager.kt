@@ -33,7 +33,7 @@ fun OnboardingPager(
     Column(
         modifier = Modifier.fillMaxWidth()
             .background(
-                color = pagerContent.backgroundColor
+                color = pagerContent.backgroundColor.copy(alpha = 0.5f)
             ).padding(
                 top = 50.dp,
                 start = 20.dp,

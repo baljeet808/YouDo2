@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import common.getOnBoardPagerContentList
 import kotlinx.coroutines.launch
 import presentation.onboarding.components.OnboardingPager
+import presentation.onboarding.components.PageCountIndicatorView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.NightTransparentWhiteColor
 import presentation.theme.getNightDarkColor
@@ -106,36 +108,46 @@ fun OnboardingScreen(
         contentAlignment = Alignment.BottomEnd
     ){
         Row(
-            modifier = Modifier
-                .width(80.dp)
-                .height(60.dp)
-                .background(
-                    color = list[(pagerState.currentPage +1)%3 ].backgroundColor,
-                    shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-                )
-                .shadow(
-                    elevation = 5.dp,
-                    shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-                )
-                .clickable {
-                    if(pagerState.currentPage == list.count() - 1){
-                        moveToLogin()
-                    }else{
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+            modifier = Modifier.fillMaxWidth().padding(start = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            PageCountIndicatorView(
+                count = list.count(),
+                currentPage = pagerState.currentPage,
+                modifier = Modifier.fillMaxWidth(0.7f)
+            )
+
+            Row(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(60.dp)
+                    .background(
+                        color = list[(pagerState.currentPage +1)%3 ].backgroundColor,
+                        shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
+                    )
+                    .clickable {
+                        if(pagerState.currentPage == list.count() - 1){
+                            moveToLogin()
+                        }else{
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
                         }
                     }
-                }
-            ,
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        )
-        {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Next",
-                tint = Color.White
+                ,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             )
+            {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Next",
+                    tint = Color.White
+                )
+            }
         }
+
     }
 }

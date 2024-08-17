@@ -2,12 +2,17 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -24,6 +29,8 @@ import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
 import presentation.onboarding.helpers.addOnboardingDestination
 import presentation.shared.AlertDialogView
 import presentation.signup.helpers.addSignupDestination
+import presentation.theme.getNightDarkColor
+import presentation.theme.getNightLightColor
 
 
 @OptIn(KoinExperimentalAPI::class)
@@ -62,92 +69,104 @@ fun App(
     } else DESTINATION_ONBOARDING_ROUTE
 
     MaterialTheme {
-        NavHost(
-            navController = navController,
-            startDestination = startDestination,
-            enterTransition = {
-                fadeIn(
-                    animationSpec = tween(navAnimationDuration)
-                ) +
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(navAnimationDuration)
-                        )
-            },
-            exitTransition = {
-                fadeOut(
-                    animationSpec = tween(navAnimationDuration)
-                ) + slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(navAnimationDuration)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = if (isSystemInDarkTheme()) {
+                        getNightDarkColor()
+                    } else {
+                        getNightLightColor()
+                    }
                 )
-            },
-            popEnterTransition = {
-                fadeIn(animationSpec = tween(navAnimationDuration)) + slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(navAnimationDuration)
+        ) {
+            NavHost(
+                navController = navController,
+                startDestination = startDestination,
+                enterTransition = {
+                    fadeIn(
+                        animationSpec = tween(navAnimationDuration)
+                    ) +
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(navAnimationDuration)
+                            )
+                },
+                exitTransition = {
+                    fadeOut(
+                        animationSpec = tween(navAnimationDuration)
+                    ) + slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(navAnimationDuration)
+                    )
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(navAnimationDuration)) + slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(navAnimationDuration)
+                    )
+                },
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(navAnimationDuration)) + slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(navAnimationDuration)
+                    )
+                }
+            ){
+                addOnboardingDestination(navController = navController)
+                addLoginDestination(
+                    navController = navController,
+                    showErrorAlertDialog = { error ->
+                        retryApiCall.value = false
+                        if (error != null) {
+                            errorType.value = error
+                            openAlertDialog.value = true
+                        } else {
+                            openAlertDialog.value = false
+                        }
+                    },
+                    retryApiCall = retryApiCall
                 )
-            },
-            popExitTransition = {
-                fadeOut(animationSpec = tween(navAnimationDuration)) + slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(navAnimationDuration)
+                addSignupDestination(
+                    navController = navController,
+                    showErrorAlertDialog = { error ->
+                        retryApiCall.value = false
+                        if (error != null) {
+                            errorType.value = error
+                            openAlertDialog.value = true
+                        } else {
+                            openAlertDialog.value = false
+                        }
+                    },
+                    retryApiCall = retryApiCall
+                )
+                addDashboardDestination(
+                    navController = navController,
+                    showErrorAlertDialog = { error ->
+                        retryApiCall.value = false
+                        if (error != null) {
+                            errorType.value = error
+                            openAlertDialog.value = true
+                        } else {
+                            openAlertDialog.value = false
+                        }
+                    },
+                    retryApiCall = retryApiCall
+                )
+                addCompleteProfileDestination(
+                    navController = navController,
+                    showErrorAlertDialog = { error ->
+                        retryApiCall.value = false
+                        if (error != null) {
+                            errorType.value = error
+                            openAlertDialog.value = true
+                        } else {
+                            openAlertDialog.value = false
+                        }
+                    },
+                    retryApiCall = retryApiCall
                 )
             }
-        ){
-            addOnboardingDestination(navController = navController)
-            addLoginDestination(
-                navController = navController,
-                showErrorAlertDialog = { error ->
-                    retryApiCall.value = false
-                    if (error != null) {
-                        errorType.value = error
-                        openAlertDialog.value = true
-                    } else {
-                        openAlertDialog.value = false
-                    }
-                },
-                retryApiCall = retryApiCall
-            )
-            addSignupDestination(
-                navController = navController,
-                showErrorAlertDialog = { error ->
-                    retryApiCall.value = false
-                    if (error != null) {
-                        errorType.value = error
-                        openAlertDialog.value = true
-                    } else {
-                        openAlertDialog.value = false
-                    }
-                },
-                retryApiCall = retryApiCall
-            )
-            addDashboardDestination(
-                navController = navController,
-                showErrorAlertDialog = { error ->
-                    retryApiCall.value = false
-                    if (error != null) {
-                        errorType.value = error
-                        openAlertDialog.value = true
-                    } else {
-                        openAlertDialog.value = false
-                    }
-                },
-                retryApiCall = retryApiCall
-            )
-            addCompleteProfileDestination(
-                navController = navController,
-                showErrorAlertDialog = { error ->
-                    retryApiCall.value = false
-                    if (error != null) {
-                        errorType.value = error
-                        openAlertDialog.value = true
-                    } else {
-                        openAlertDialog.value = false
-                    }
-                },
-                retryApiCall = retryApiCall
-            )
         }
     }
     when (errorType.value) {
