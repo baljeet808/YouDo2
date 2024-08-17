@@ -13,6 +13,7 @@ data class SignupUIState(
     val error: DataError.Network? = null,
     val signupSuccessful : Boolean = false,
     val email : String = "",
+    val uid : String = "",
     val password : String = "",
     val heading : String = getRandomSignUpHeading(),
     val passwordPlaceholder : String = getRandomPasswordPlaceholder(),

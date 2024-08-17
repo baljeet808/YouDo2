@@ -41,7 +41,8 @@ fun SaveButtonView(
     alignment: Alignment = Alignment.BottomEnd,
     showIcon : Boolean = true,
     icon : ImageVector = Icons.Default.Add,
-    fontSize : Int = 24
+    fontSize : Int = 24,
+    enabled : Boolean = true
 ) {
     Box(
         modifier = containerModifier,
@@ -52,7 +53,7 @@ fun SaveButtonView(
             modifier = buttonModifier
                 .shadow(elevation = 5.dp, shape = RoundedCornerShape(20.dp))
                 .background(
-                    color = buttonThemeColor,
+                    color = buttonThemeColor.copy(alpha = if(enabled) 1f else 0.5f),
                     shape = RoundedCornerShape(20.dp)
                 )
                 .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)

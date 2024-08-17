@@ -5,5 +5,9 @@ sealed interface DataError: Error {
         NO_INTERNET,
         ALL_OTHER,
         NOT_FOUND,
+        FORM_NOT_VALID,
+        UNAUTHORIZED,
+        FORBIDDEN,
+        CONFLICT
     }
 }

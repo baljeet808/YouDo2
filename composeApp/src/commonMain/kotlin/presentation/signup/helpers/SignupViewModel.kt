@@ -81,7 +81,7 @@ class SignupViewModel(
                 .document(newUser.id)
                 .set(newUser)
             withContext(Dispatchers.Main){
-                uiState = uiState.copy(isLoading = false, error = null, signupSuccessful = true)
+                uiState = uiState.copy(isLoading = false, error = null, uid = newUser.id , signupSuccessful = true)
             }
         }catch(e: Exception) {
             withContext(Dispatchers.Main) {

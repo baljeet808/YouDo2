@@ -43,7 +43,7 @@ fun NavGraphBuilder.addSignupDestination(
         //take user to complete profile screen if signup is successful
         LaunchedEffect(key1 = uiState.signupSuccessful){
             if(uiState.signupSuccessful){
-                navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE) {
+                navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE.plus("/${uiState.uid}/${uiState.email}")) {
                     popUpTo(DESTINATION_SIGNUP_ROUTE){
                         inclusive = true
                     }
@@ -63,9 +63,8 @@ fun NavGraphBuilder.addSignupDestination(
                 viewModel.updatePassword(it)
             },
             navigateBackToLogin = {
-                navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE)
-                /*navController.currentBackStackEntry?.savedStateHandle?.set("popBackStack", true)
-                navController.popBackStack()*/
+                navController.currentBackStackEntry?.savedStateHandle?.set("popBackStack", true)
+                navController.popBackStack()
             }
         )
 
