@@ -43,7 +43,7 @@ fun CompleteProfileScreen(
         },
         label = "Skip",
         alignment = Alignment.BottomStart,
-        buttonThemeColor = EnumProjectColors.Blue.name.getColor(),
+        buttonThemeColor = EnumProjectColors.Blue.getColor(),
         showIcon = false
     )
 }

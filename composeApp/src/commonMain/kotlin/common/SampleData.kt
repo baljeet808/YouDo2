@@ -1,6 +1,5 @@
 package common
 
-import androidx.compose.ui.graphics.Color
 import data.local.entities.ColorPaletteEntity
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -20,9 +19,9 @@ fun getRandomAvatar(): String {
     return avatars[randomInt]
 }
 
-fun getRandomColor(): String {
+fun getRandomColor(): EnumProjectColors {
     val randomInt = Random.nextInt(from = 0, 9)
-    return EnumProjectColors.entries[randomInt].name
+    return EnumProjectColors.entries[randomInt]
 }
 
 
@@ -43,27 +42,6 @@ fun getSampleColorPalette(): ColorPaletteEntity {
 }
 
 expect fun getRandomId(): String
-
-fun String.getColor(): Color {
-    return when(this){
-        EnumProjectColors.Green.name -> Color(0xFF006261)
-        EnumProjectColors.Pink.name -> Color(0xFFFF69B4)
-        EnumProjectColors.Blue.name -> Color(0xff363CB5)
-        EnumProjectColors.Red.name -> Color(0xFFF53C4F)
-        EnumProjectColors.Yellow.name -> Color(0xFFFF8526)
-        EnumProjectColors.Brown.name -> Color(0xFFA52A2A)
-        EnumProjectColors.Black.name -> Color(0xFF302D2D)
-        EnumProjectColors.Cyan.name -> Color(0xFF8BDFFE)
-        EnumProjectColors.Indigo.name -> Color(0xFF4b0082)
-        else -> {
-            Color(0xFF4b0082)
-        }
-    }
-}
-
-fun EnumProjectColors.getLongValueInString(): String {
-    return  this.name.getColor().value.toLong().toString()
-}
 
 
 expect fun getCurrentTimeZone() : TimeZone

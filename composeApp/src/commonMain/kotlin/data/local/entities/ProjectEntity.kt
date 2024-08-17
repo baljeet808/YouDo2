@@ -13,7 +13,7 @@ data class ProjectEntity(
     var description : String = "",
     var ownerId : String = "",
     var update : String = "",
-    var color : String = getRandomColor(),
+    var color : String = getRandomColor().name,
     var collaboratorIds : String = "",
     var viewerIds: String = "",
     var updatedAt : Long = 0L,

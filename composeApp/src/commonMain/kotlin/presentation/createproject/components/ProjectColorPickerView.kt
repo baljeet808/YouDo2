@@ -81,7 +81,7 @@ fun ColorSelectionButton(selectedColor: EnumProjectColors, onClick: () -> Unit) 
         Icon(
             Icons.Outlined.Edit,
             contentDescription = "Button to set project color.",
-            tint = selectedColor.name.getColor(),
+            tint = selectedColor.getColor(),
             modifier = Modifier
                 .width(30.dp)
                 .height(30.dp)
@@ -163,7 +163,7 @@ fun ColorOptionItem(
         Icon(
             Icons.Outlined.Edit,
             contentDescription = "Button to set project color.",
-            tint = color.name.getColor(),
+            tint = color.getColor(),
             modifier = Modifier
                 .width(25.dp)
                 .height(25.dp)

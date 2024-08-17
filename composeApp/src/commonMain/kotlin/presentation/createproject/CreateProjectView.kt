@@ -163,7 +163,7 @@ fun CreateProjectView(
             onClick = {
                 onScreenEvent(CreateProjectScreenEvent.CreateProject)
             },
-            buttonThemeColor = uiState.projectColor.name.getColor()
+            buttonThemeColor = uiState.projectColor.getColor()
         )
     }
 

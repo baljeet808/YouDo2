@@ -36,7 +36,7 @@ fun SaveButtonView(
         .padding(20.dp),
     buttonModifier : Modifier = Modifier,
     label: String = "Save",
-    buttonThemeColor: Color = EnumProjectColors.Red.name.getColor(),
+    buttonThemeColor: Color = EnumProjectColors.Red.getColor(),
     onClick: () -> Unit = {},
     alignment: Alignment = Alignment.BottomEnd,
     showIcon : Boolean = true,

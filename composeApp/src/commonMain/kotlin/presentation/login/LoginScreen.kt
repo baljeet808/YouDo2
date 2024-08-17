@@ -61,7 +61,7 @@ fun LoginScreen(
     login: (email: String, password: String) -> Unit = { _, _ -> },
 ) {
 
-    val themeColor =  EnumProjectColors.Blue.name.getColor()
+    val themeColor =  EnumProjectColors.Blue.getColor()
 
     var emailText by remember { mutableStateOf("") }
     var passwordText by remember { mutableStateOf("") }
