@@ -48,7 +48,7 @@ data class OnBoardPagerContent(
 )
 
 
-fun getOnBoardPagerContentList () : List<OnBoardPagerContent>{
+fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
     return listOf(
         OnBoardPagerContent(
             title = "Conquer Your \nChaos",

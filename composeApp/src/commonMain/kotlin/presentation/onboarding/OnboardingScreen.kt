@@ -1,6 +1,7 @@
 package presentation.onboarding
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,28 +11,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import common.getOnBoardPagerContentList
+import common.getOnboardingPagerContentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import presentation.onboarding.components.NextButton
 import presentation.onboarding.components.OnboardingPager
 import presentation.onboarding.components.PageCountIndicatorView
+import presentation.shared.BackgroundCircles
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.NightTransparentWhiteColor
 import presentation.theme.getNightDarkColor
@@ -43,55 +41,19 @@ fun OnboardingScreen(
     moveToLogin: () -> Unit = {}
 ) {
 
-    //pager related setup
-    val list = getOnBoardPagerContentList()
+    val list = getOnboardingPagerContentList()
     val pagerState = rememberPagerState(pageCount = { list.count() })
     val coroutineScope = rememberCoroutineScope()
+
     Box (
         modifier = Modifier.fillMaxSize()
             .background(
-                color = if (isSystemInDarkTheme()) {
-                    getNightDarkColor()
-                } else {
-                    getNightLightColor()
-                }
+                color = if (isSystemInDarkTheme()) getNightDarkColor() else getNightLightColor()
             )
     ) {
-        Box(modifier = Modifier.fillMaxSize()){
-            Canvas(modifier = Modifier.fillMaxWidth(), onDraw = {
-                drawCircle(
-                    color = NightTransparentWhiteColor,
-                    radius = 230.dp.toPx(),
-                    center = Offset(
-                        x = 40.dp.toPx(),
-                        y = 100.dp.toPx()
-                    )
-                )
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.7F),
-                    radius = 100.dp.toPx(),
-                    center = Offset(
-                        x = 20.dp.toPx(),
-                        y = 100.dp.toPx()
-                    )
-                )
 
+        BackgroundCircles()
 
-
-                drawCircle(
-                    color = NightTransparentWhiteColor,
-                    radius = 230.dp.toPx(),
-                    center = Offset(
-                        x = 240.dp.toPx(),
-                        y = 550.dp.toPx()
-                    )
-                )
-
-            })
-        }
-        /**
-         *On boarding screens
-         * **/
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -148,34 +110,24 @@ fun OnboardingScreen(
                 modifier = Modifier.fillMaxWidth(0.7f)
             )
 
-            Row(
-                modifier = Modifier
-                    .width(80.dp)
-                    .height(60.dp)
-                    .background(
-                        color = list[(pagerState.currentPage +1)%3 ].backgroundColor,
-                        shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-                    )
-                    .clickable {
-                        if(pagerState.currentPage == list.count() - 1){
-                            moveToLogin()
-                        }else{
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                            }
+            NextButton(
+                backgroundColor = list[(pagerState.currentPage +1)%3 ].backgroundColor,
+                onClick = {
+                    when (pagerState.currentPage){
+                        list.count() - 1 -> moveToLogin()
+                        else -> coroutineScope.launch {
+                            delay(100)
+                            pagerState.animateScrollToPage(
+                                pagerState.currentPage + 1,
+                                animationSpec = tween(
+                                    durationMillis = 500,
+                                    easing = FastOutSlowInEasing
+                                )
+                            )
                         }
                     }
-                ,
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                }
             )
-            {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "Next",
-                    tint = Color.White
-                )
-            }
         }
 
     }

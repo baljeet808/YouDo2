@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +24,8 @@ fun PageCountIndicatorView(
     currentPage : Int = 0,
     modifier: Modifier = Modifier
     .fillMaxWidth()
-) {val dotWidth = 15.dp
+) {
+    val dotWidth = 15.dp
     val selectedDotWidth = 40.dp
     val dotColor = Color.White
     val inactiveDotColor = dotColor.copy(alpha = 0.5f)
@@ -34,13 +36,15 @@ fun PageCountIndicatorView(
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in 0 until count) {
-            IndicatorDot(
-                isSelected = i == currentPage,
-                dotWidth = dotWidth,
-                selectedDotWidth = selectedDotWidth,
-                dotColor = dotColor,
-                inactiveDotColor = inactiveDotColor
-            )
+            key(i) {
+                IndicatorDot(
+                    isSelected = i == currentPage,
+                    dotWidth = dotWidth,
+                    selectedDotWidth = selectedDotWidth,
+                    dotColor = dotColor,
+                    inactiveDotColor = inactiveDotColor
+                )
+            }
         }
     }
 }
