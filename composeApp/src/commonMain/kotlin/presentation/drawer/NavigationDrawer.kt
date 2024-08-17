@@ -43,6 +43,7 @@ import presentation.theme.getNightLightColor
 fun NavigationDrawer(
     userEmail: String = "",
     userName: String = "",
+    avatarUrl: String = "",
     menuItems: List<MenuItem>,
     onMenuItemClick: (MenuItem) -> Unit,
     closeDrawer: () -> Unit,
@@ -79,7 +80,8 @@ fun NavigationDrawer(
             ) {
                 ProfilePictureView(
                     onClick = openProfile,
-                    progress = 0.5f
+                    progress = 0.5f,
+                    avatarUrl = avatarUrl
                 )
                 IconButtonView(
                     onClick = {

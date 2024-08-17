@@ -5,9 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.firestore.firestore
+import domain.dto_helpers.DataError
 import domain.dto_helpers.Result
+import domain.models.User
 import domain.repository_interfaces.DataStoreRepository
-import domain.use_cases.auth_use_cases.GetCurrentUserUseCase
 import domain.use_cases.auth_use_cases.SignOutUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -18,7 +21,6 @@ import org.koin.core.component.inject
 
 class DashboardViewModel(
     private val signOutUseCase: SignOutUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
 ) : ViewModel(), KoinComponent{
 
     private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
@@ -43,28 +45,29 @@ class DashboardViewModel(
         uiState = uiState.copy(isLoading = true, error = null)
     }
 
+
     private fun fetchCurrentUser() = viewModelScope.launch(Dispatchers.IO){
-        getCurrentUserUseCase().collect {
-            when (it) {
-                is Result.Error -> {
-                    withContext(Dispatchers.Main){
-                       uiState = uiState.copy(isLoading = false, error = it.error)
-                    }
+        dataStoreRepository.userIdAsFlow().collect {
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(userId = it)
+            }
+        }
+        try {
+            Firebase.firestore.collection("users").document(uiState.userId).snapshots.collect{ documentSnapshot ->
+                val user = documentSnapshot.data<User>()
+                withContext(Dispatchers.Main) {
+                    uiState = uiState.copy(
+                        userName = user.name,
+                        userEmail = user.email,
+                        userAvatarUrl = user.avatarUrl,
+                        isLoading = false
+                    )
                 }
-                is Result.Success -> {
-                    it.data.let { user ->
-                        withContext(Dispatchers.Main){
-                           uiState = uiState.copy(
-                                isLoading = false,
-                                error = null,
-                                userId = user.id,
-                                userEmail = user.email,
-                                userName = user.name,
-                                userAvatarUrl = user.avatarUrl
-                            )
-                        }
-                    }
-                }
+            }
+
+        }catch (e : Exception){
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
             }
         }
     }

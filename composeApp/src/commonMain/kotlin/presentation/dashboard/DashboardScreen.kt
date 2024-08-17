@@ -109,6 +109,7 @@ fun DashboardScreen(
                 NavigationDrawer(
                     userEmail = uiState.userEmail,
                     userName = uiState.userName,
+                    avatarUrl = uiState.userAvatarUrl,
                     menuItems = menuItems,
                     onMenuItemClick = { item ->
                         closeDrawer()

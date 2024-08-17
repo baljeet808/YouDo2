@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import common.getRandomAvatar
 import common.isEmailValid
 import common.isPasswordValid
 import domain.dto_helpers.Result
@@ -60,10 +59,10 @@ class LoginViewModel(
                 }
                 is Result.Success -> {
                     dataStoreRepository.saveIsUserLoggedIn(true)
-                    dataStoreRepository.saveUserId(it.data.uid)
-                    dataStoreRepository.saveUserName(it.data.displayName?:it.data.email?:"No Name")
-                    dataStoreRepository.saveUserEmail(it.data.email?:"No Email")
-                    dataStoreRepository.saveUserAvatar(it.data.photoURL?: getRandomAvatar())
+                    dataStoreRepository.saveUserId(it.data.id)
+                    dataStoreRepository.saveUserName(it.data.name)
+                    dataStoreRepository.saveUserEmail(it.data.email)
+                    dataStoreRepository.saveUserAvatar(it.data.avatarUrl)
                     withContext(Dispatchers.Main){
                         uiState =uiState.copy(isLoading = false, error = null, loginSuccessful = true)
                     }
