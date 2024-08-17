@@ -36,9 +36,10 @@ import youdo2.composeapp.generated.resources.app_icon
  * **/
 @Composable
 fun  ProfilePictureView(
-    profilePictureUrl : String = "",
-    openProfile: () -> Unit,
-    progress: Float
+    avatarUrl : String = "",
+    onClick: () -> Unit,
+    progress: Float,
+    showProgress: Boolean = true
 ) {
     val animatedProgress = animateFloatAsState(
         targetValue = (progress),
@@ -53,7 +54,7 @@ fun  ProfilePictureView(
             .width(100.dp)
             .height(100.dp)
             .clickable(
-                onClick = openProfile
+                onClick = onClick
             )
             .padding(0.dp), contentAlignment = Alignment.Center
     ) {
@@ -62,7 +63,7 @@ fun  ProfilePictureView(
                 .width(80.dp)
                 .height(80.dp)
                 .clip(shape = RoundedCornerShape(80.dp)),
-            imageModel = { profilePictureUrl.ifEmpty { getRandomAvatar() } },
+            imageModel = { avatarUrl.ifEmpty { getRandomAvatar() } },
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center,
@@ -93,13 +94,15 @@ fun  ProfilePictureView(
 
         )
 
-        CircularProgressIndicator(
-            progress = { animatedProgress },
-            modifier = Modifier
-                .progressSemantics()
-                .size(100.dp),
-            color = NightDotooBrightPink,
-            trackColor = getLightThemeColor(),
-        )
+        if(showProgress){
+            CircularProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .progressSemantics()
+                    .size(100.dp),
+                color = NightDotooBrightPink,
+                trackColor = getLightThemeColor(),
+            )
+        }
     }
 }

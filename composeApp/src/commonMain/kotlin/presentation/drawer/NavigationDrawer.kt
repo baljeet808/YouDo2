@@ -78,7 +78,7 @@ fun NavigationDrawer(
                 verticalAlignment = Alignment.Top
             ) {
                 ProfilePictureView(
-                    openProfile = openProfile,
+                    onClick = openProfile,
                     progress = 0.5f
                 )
                 IconButtonView(

@@ -58,7 +58,7 @@ fun NoBorderEditText(
     showClearTextButtonIcon : Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     maxLines : Int  = 3,
-    fontSize : Int = 24
+    fontSize : Int = 24,
 ) {
 
     val transition = rememberInfiniteTransition()
