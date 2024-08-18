@@ -27,7 +27,6 @@ import com.skydoves.landscapist.coil3.CoilImage
 import common.getRandomAvatar
 import org.jetbrains.compose.resources.painterResource
 import presentation.theme.NightDotooBrightPink
-import presentation.theme.getLightThemeColor
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_icon
 
@@ -39,7 +38,8 @@ fun  ProfilePictureView(
     avatarUrl : String = "",
     onClick: () -> Unit,
     progress: Float,
-    showProgress: Boolean = true
+    showProgress: Boolean = true,
+    size: Int = 100
 ) {
     val animatedProgress = animateFloatAsState(
         targetValue = (progress),
@@ -51,8 +51,9 @@ fun  ProfilePictureView(
     ).value
     Box(
         modifier = Modifier
-            .width(100.dp)
-            .height(100.dp)
+            .width(size.dp)
+            .height(size.dp)
+            .clip(shape = RoundedCornerShape(size.dp))
             .clickable(
                 onClick = onClick
             )
@@ -60,9 +61,9 @@ fun  ProfilePictureView(
     ) {
         CoilImage(
             modifier = Modifier
-                .width(80.dp)
-                .height(80.dp)
-                .clip(shape = RoundedCornerShape(80.dp)),
+                .width((size-10).dp)
+                .height((size-10).dp)
+                .clip(shape = RoundedCornerShape((size-10).dp)),
             imageModel = { avatarUrl.ifEmpty { getRandomAvatar() } },
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Crop,
@@ -99,9 +100,10 @@ fun  ProfilePictureView(
                 progress = { animatedProgress },
                 modifier = Modifier
                     .progressSemantics()
-                    .size(100.dp),
+                    .size(size.dp),
                 color = NightDotooBrightPink,
                 trackColor = Color.Transparent,
+                strokeWidth = (size/25).dp
             )
         }
     }

@@ -15,7 +15,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +36,8 @@ fun TopBar(
     notificationsState : Boolean,
     onMenuItemClick: () -> Unit,
     onNotificationsClicked: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    avatarUrl : String = ""
 ) {
 
     Box(
@@ -52,26 +52,15 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            /**
-             * Menu icon to open side nav drawer
-             * **/
-            IconButton(
+            ProfilePictureView(
+                size = 50,
+                showProgress = true,
                 onClick = {
                     onMenuItemClick()
                 },
-                modifier = Modifier
-                    .width(30.dp)
-                    .height(30.dp)
-            ) {
-                Icon(
-                    Icons.Outlined.Menu,
-                    contentDescription = "Menu button to open side drawer.",
-                    tint = LightAppBarIconsColor,
-                    modifier = Modifier
-                        .width(35.dp)
-                        .height(35.dp)
-                )
-            }
+                avatarUrl = avatarUrl,
+                progress = 1f
+            )
 
             Text(
                 text = getCurrentDateTime().formatNicelyWithoutYear(),

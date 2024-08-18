@@ -192,7 +192,8 @@ fun DashboardScreen(
                     },
                     onNotificationsClicked = {
                         //TODO: Add notifications
-                    }
+                    },
+                    avatarUrl = uiState.userAvatarUrl
                 )
                 Column(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(1f),
