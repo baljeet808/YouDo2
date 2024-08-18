@@ -1,5 +1,6 @@
 package presentation.dashboard
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -11,12 +12,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Scaffold
@@ -35,7 +39,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import common.EnumProjectColors
+import common.getColor
+import common.getRole
 import common.menuItems
+import data.local.mappers.toProjectEntity
 import kotlinx.coroutines.launch
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.dashboard.helpers.DashboardScreenState
@@ -43,6 +51,8 @@ import presentation.dashboard.helpers.DashboardUIState
 import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
+import presentation.onboarding.components.NextButton
+import presentation.shared.ProjectCardWithProfiles
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
@@ -52,7 +62,8 @@ import presentation.theme.getTextColor
 fun DashboardScreen(
     uiState: DashboardUIState = DashboardUIState(),
     logout: () -> Unit = {},
-    navigateToCompleteProfile: () -> Unit = {}
+    navigateToCompleteProfile: () -> Unit = {},
+    navigateToCreateProject: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -112,10 +123,11 @@ fun DashboardScreen(
                     avatarUrl = uiState.userAvatarUrl,
                     menuItems = menuItems,
                     onMenuItemClick = { item ->
-                        when(item.id){
-                            DESTINATION_COMPLETE_PROFILE_ROUTE ->{
+                        when (item.id) {
+                            DESTINATION_COMPLETE_PROFILE_ROUTE -> {
                                 navigateToCompleteProfile()
                             }
+
                             else -> {
                                 closeDrawer()
                             }
@@ -169,7 +181,7 @@ fun DashboardScreen(
                 )
                 .padding(padding)
         ) {
-            Column(
+            Box (
                 modifier = Modifier
                     .fillMaxSize()
                     .offset(
@@ -182,31 +194,71 @@ fun DashboardScreen(
                         shape = RoundedCornerShape(animatedState.roundness)
                     )
                     .clip(shape = RoundedCornerShape(animatedState.roundness)),
-                verticalArrangement = Arrangement.SpaceBetween,
+                contentAlignment = Alignment.Center,
             ) {
-                TopBar(
-                    modifier = Modifier.height(60.dp),
-                    notificationsState = true,
-                    onMenuItemClick = {
-                        openDrawer()
-                    },
-                    onNotificationsClicked = {
-                        //TODO: Add notifications
-                    },
-                    avatarUrl = uiState.userAvatarUrl
-                )
-                Column(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                Column(modifier = Modifier.fillMaxSize()) {
+                    TopBar(
+                        modifier = Modifier.height(70.dp),
+                        notificationsState = true,
+                        onMenuItemClick = {
+                            openDrawer()
+                        },
+                        onNotificationsClicked = {
+                            //TODO: Add notifications
+                        },
+                        avatarUrl = uiState.userAvatarUrl
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(visible = uiState.projects.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(
+                                    20.dp,
+                                    alignment = Alignment.CenterVertically
+                                )
+                            ) {
+                                items(items = uiState.projects, key = { it.id }) { project ->
+                                    ProjectCardWithProfiles(
+                                        project = project,
+                                        role = getRole(
+                                            project = project.toProjectEntity(),
+                                            userId = uiState.userId
+                                        ),
+                                        showFullCardInitially = false
+                                    )
+                                }
+                                item {
+                                    Spacer(modifier = Modifier.height(100.dp))
+                                }
+                            }
+                        }
+                        AnimatedVisibility(visible = uiState.projects.isEmpty()) {
+                            Text(
+                                text = "No projects yet",
+                                color = getTextColor()
+                            )
+                        }
+                    }
+                }
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
+                    contentAlignment = Alignment.BottomEnd
                 ) {
-                    Text(
-                        text = "Projects",
-                        color = getTextColor()
+                    NextButton(
+                        backgroundColor = EnumProjectColors.Blue.getColor(),
+                        label = "Add Project",
+                        onClick = {
+                            navigateToCreateProject()
+                        },
                     )
                 }
             }
+
         }
     }
-
 }

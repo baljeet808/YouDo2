@@ -10,6 +10,7 @@ import domain.dto_helpers.DataError
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
+import presentation.createproject.helpers.DESTINATION_CREATE_PROJECT_ROUTE
 import presentation.dashboard.DashboardScreen
 import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
 
@@ -59,6 +60,9 @@ fun NavGraphBuilder.addDashboardDestination(
             },
             navigateToCompleteProfile = {
                 navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE.plus("/${uiState.userId}/${uiState.userEmail}/${false}"))
+            },
+            navigateToCreateProject = {
+                navController.navigate(DESTINATION_CREATE_PROJECT_ROUTE)
             }
         )
     }

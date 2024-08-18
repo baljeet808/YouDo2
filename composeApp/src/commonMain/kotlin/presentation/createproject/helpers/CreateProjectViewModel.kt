@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import common.getLongValueInString
 import common.getRandomId
 import common.getSampleDateInLong
 import data.local.entities.ProjectEntity
@@ -119,7 +118,7 @@ class CreateProjectViewModel(
             collaboratorIds = "",
             viewerIds = "listOf()",
             update = "${uiState.userName.ifBlank { uiState.userEmail }} created new project named '${uiState.projectName}.'",
-            color = uiState.projectColor.getLongValueInString(),
+            color = uiState.projectColor.name,
             updatedAt = getSampleDateInLong()
         )
         createProject(newProject)

@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import common.getRole
+import common.EnumRoles
 import data.local.entities.ProjectEntity
 import data.local.relations.ProjectWithTasks
 
@@ -40,7 +40,7 @@ fun ProjectsLazyRow(
                 ),
                 project = project,
                 onItemClick = { navigateToDoToos(project.project) },
-                role = getRole(project.project),
+                role = EnumRoles.Viewer,
                 hideProjectTasksFromDashboard = {
                     hideProjectTasksFromDashboard(it)
                 }

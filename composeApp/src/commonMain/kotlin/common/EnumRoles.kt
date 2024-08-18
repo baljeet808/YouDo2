@@ -8,16 +8,10 @@ enum class EnumRoles {
 }
 
 
-
-fun getRole(project: ProjectEntity): EnumRoles {
+fun getRole(project: ProjectEntity, userId: String): EnumRoles {
     val currentUserId = ""
-    return if (project.ownerId == currentUserId) {
-        /*if (SharedPref.isUserAPro) {
-            EnumRoles.ProAdmin
-        } else {
-            EnumRoles.Admin
-        }*/
-        EnumRoles.Viewer
+    return if (project.ownerId == userId) {
+        EnumRoles.Admin
     } else if (project.collaboratorIds.contains(currentUserId)) {
         EnumRoles.Editor
     } else if (project.viewerIds.contains(currentUserId)) {
@@ -28,9 +22,9 @@ fun getRole(project: ProjectEntity): EnumRoles {
 }
 
 
-fun doesUserHavePermissionToEdit(project: ProjectEntity) : Boolean{
+fun doesUserHavePermissionToEdit(project: ProjectEntity): Boolean {
     val currentUserId = ""
-    return  (project.ownerId == currentUserId) || project.collaboratorIds.contains(currentUserId)
+    return (project.ownerId == currentUserId) || project.collaboratorIds.contains(currentUserId)
 }
 
 

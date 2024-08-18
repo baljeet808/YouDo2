@@ -73,7 +73,7 @@ class ProjectsViewModel(
         }
     }
     private fun updateTask(task: TaskEntity, project : ProjectEntity){
-        when(getRole(project)){
+        when(getRole(project, userId =  uiState.userId)){
             EnumRoles.ProAdmin -> {
                 updateTaskOnServer(task, project)
             }
@@ -122,7 +122,7 @@ class ProjectsViewModel(
 
     private fun deleteTask(task : TaskEntity, projectEntity: ProjectEntity){
         val project = projectEntity
-        when(getRole(project)){
+        when(getRole(project, userId =  uiState.userId)){
             EnumRoles.ProAdmin -> {
                 deleteTaskOnServer(task, project)
             }
@@ -170,7 +170,7 @@ class ProjectsViewModel(
         val projectCopy = project.copy()
         projectCopy.updatedAt = getSampleDateInLong()
 
-        when(getRole(project)){
+        when(getRole(project, userId =  uiState.userId)){
             EnumRoles.ProAdmin -> {
                 updateProjectOnSever(projectCopy)
             }

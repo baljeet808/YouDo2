@@ -5,13 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import data.local.mappers.toProjectEntity
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
 import domain.dto_helpers.Result
+import domain.models.Project
 import domain.models.User
 import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.auth_use_cases.SignOutUseCase
+import domain.use_cases.project_use_cases.UpsertProjectUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -21,6 +24,7 @@ import org.koin.core.component.inject
 
 class DashboardViewModel(
     private val signOutUseCase: SignOutUseCase,
+    private val upsertProjectUseCase: UpsertProjectUseCase
 ) : ViewModel(), KoinComponent{
 
     private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
@@ -56,21 +60,44 @@ class DashboardViewModel(
         try {
             Firebase.firestore.collection("users").document(uid).snapshots.collect{ documentSnapshot ->
                 val user = documentSnapshot.data<User>()
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(
-                        userId = user.id,
-                        userName = user.name,
-                        userEmail = user.email,
-                        userAvatarUrl = user.avatarUrl,
-                        isLoading = false
-                    )
-                }
+                fetchProjectsFromFireStore(user)
             }
         }catch (e : Exception){
             withContext(Dispatchers.Main) {
                 uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
             }
         }
+    }
+
+    private fun fetchProjectsFromFireStore(user : User) = viewModelScope.launch(Dispatchers.IO){
+        try {
+        Firebase.firestore.collection("projects")
+
+            .snapshots.collect{ querySnapshot ->
+                val projects = querySnapshot.documents.map { documentSnapshot ->
+                    documentSnapshot.data<Project>()
+                }
+                withContext(Dispatchers.Main) {
+                    uiState = uiState.copy(
+                        userId = user.id,
+                        userName = user.name,
+                        userEmail = user.email,
+                        userAvatarUrl = user.avatarUrl,
+                        isLoading = false,
+                        projects = projects
+                    )
+                }
+                upsertProjectsLocally(projects)
+            }
+        }catch (e : Exception){
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
+            }
+        }
+    }
+
+    private fun upsertProjectsLocally(projects : List<Project>) = viewModelScope.launch(Dispatchers.IO){
+        upsertProjectUseCase(projects.map { it.toProjectEntity() })
     }
 
     private fun signOut() = viewModelScope.launch(Dispatchers.IO){
