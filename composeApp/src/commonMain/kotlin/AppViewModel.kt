@@ -14,21 +14,20 @@ import org.koin.core.component.inject
 
 class AppViewModel : ViewModel(), KoinComponent {
 
-    val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
+    private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
 
     var userState by mutableStateOf(AppUIState())
         private set
 
     init {
-        checkOnboardingStatus()
         checkUserLoggedInStatus()
     }
 
     private fun checkOnboardingStatus(){
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.hasOnboardedAsFlow().collect{
-                withContext(Dispatchers.Main){
-                    userState = userState.copy(hasOnboarded = it)
+                withContext(Dispatchers.Main) {
+                    userState = userState.copy(hasOnboarded = it, resultFound = true)
                 }
             }
         }
@@ -37,8 +36,12 @@ class AppViewModel : ViewModel(), KoinComponent {
     private fun checkUserLoggedInStatus(){
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.isUserLoggedInAsFlow().collect {
-                withContext(Dispatchers.Main) {
-                    userState = userState.copy(isUserLoggedIn = it)
+                if(it){
+                    withContext(Dispatchers.Main) {
+                        userState = userState.copy(isUserLoggedIn = true, resultFound = true)
+                    }
+                }else{
+                   checkOnboardingStatus()
                 }
             }
         }
@@ -47,5 +50,6 @@ class AppViewModel : ViewModel(), KoinComponent {
 
 data class AppUIState(
     val isUserLoggedIn : Boolean = false,
-    val hasOnboarded : Boolean = false
+    val hasOnboarded : Boolean = false,
+    val resultFound : Boolean = false
 )

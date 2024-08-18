@@ -30,6 +30,8 @@ import presentation.onboarding.helpers.addOnboardingDestination
 import presentation.shared.AlertDialogView
 import presentation.shared.BackgroundCircles
 import presentation.signup.helpers.addSignupDestination
+import presentation.splash.DESTINATION_SPLASH_ROUTE
+import presentation.splash.addSplashDestination
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
@@ -59,15 +61,25 @@ fun App(
     }
     val icon: ImageVector
 
-    val navAnimationDuration = 500 //millis
+    val navAnimationDuration = 300 //millis
 
     val viewModel = koinViewModel<AppViewModel>()
 
     val userState = viewModel.userState
 
-    val startDestination = if (userState.hasOnboarded) {
-        if (userState.isUserLoggedIn) DESTINATION_DASHBOARD_ROUTE else DESTINATION_LOGIN_ROUTE
-    } else DESTINATION_ONBOARDING_ROUTE
+    val startDestination = if (userState.isUserLoggedIn) {
+        DESTINATION_DASHBOARD_ROUTE
+    } else {
+        if (userState.hasOnboarded) {
+            DESTINATION_LOGIN_ROUTE
+        } else {
+            if(userState.resultFound){
+                DESTINATION_ONBOARDING_ROUTE
+            }else{
+                DESTINATION_SPLASH_ROUTE
+            }
+        }
+    }
 
     MaterialTheme {
 
@@ -111,7 +123,7 @@ fun App(
                     )
                 }
             ){
-                addOnboardingDestination(navController = navController)
+                addSplashDestination()
                 addLoginDestination(
                     navController = navController,
                     showErrorAlertDialog = { error ->
@@ -125,6 +137,7 @@ fun App(
                     },
                     retryApiCall = retryApiCall
                 )
+                addOnboardingDestination(navController = navController)
                 addSignupDestination(
                     navController = navController,
                     showErrorAlertDialog = { error ->

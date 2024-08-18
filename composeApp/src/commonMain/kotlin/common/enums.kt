@@ -31,6 +31,7 @@ enum class EnumProjectColors{
     Yellow,
     Brown,
     Black,
+    DarkBlack,
     Cyan,
     Indigo,
     RoseRed,
@@ -50,6 +51,7 @@ fun String.getColor(): Color {
         EnumProjectColors.Yellow.name -> Color(0xFFFF8526)
         EnumProjectColors.Brown.name -> Color(0xFFA52A2A)
         EnumProjectColors.Black.name -> Color(0xFF302D2D)
+        EnumProjectColors.DarkBlack.name -> Color(0xFF0A0909)
         EnumProjectColors.Cyan.name -> Color(0xFF8BDFFE)
         EnumProjectColors.Indigo.name -> Color(0xFF4b0082)
         EnumProjectColors.RoseRed.name -> Color(0xFFBF1363)
@@ -69,6 +71,7 @@ fun EnumProjectColors.getColor(): Color {
         EnumProjectColors.Yellow -> Color(0xFFFF8526)
         EnumProjectColors.Brown -> Color(0xFFA52A2A)
         EnumProjectColors.Black -> Color(0xFF302D2D)
+        EnumProjectColors.DarkBlack -> Color(0xFF0A0909)
         EnumProjectColors.Cyan -> Color(0xFF8BDFFE)
         EnumProjectColors.Indigo -> Color(0xFF4b0082)
         EnumProjectColors.RoseRed -> Color(0xFFBF1363)
