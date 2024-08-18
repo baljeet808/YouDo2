@@ -32,15 +32,20 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.maxTitleCharsAllowedForProject
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooRed
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.getTextColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.baseline_visibility_24
+import youdo2.composeapp.generated.resources.baseline_visibility_off_24
 
 @Composable
 fun NoBorderEditText(
@@ -56,9 +61,10 @@ fun NoBorderEditText(
     onDone: () -> Unit = {},
     showHelperText : Boolean = true,
     showClearTextButtonIcon : Boolean = false,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
     maxLines : Int  = 3,
     fontSize : Int = 24,
+    labelColor : Color = getTextColor(),
+    isPasswordField : Boolean = false
 ) {
 
     val transition = rememberInfiniteTransition()
@@ -82,6 +88,11 @@ fun NoBorderEditText(
         showTitleErrorAnimation = false
     }
 
+    var passwordVisibility by remember{
+        mutableStateOf(false)
+    }
+
+    val passwordIcon = if(passwordVisibility) painterResource(Res.drawable.baseline_visibility_24) else painterResource(Res.drawable.baseline_visibility_off_24)
 
     /**
      * Text field for adding title
@@ -98,7 +109,7 @@ fun NoBorderEditText(
     ) {
         Text(
             text = label,
-            color = getTextColor(),
+            color = labelColor,
             fontSize = 13.sp,
             fontFamily = AlataFontFamily(),
             modifier = Modifier
@@ -116,7 +127,7 @@ fun NoBorderEditText(
                     updateText(it)
                 }
             },
-            visualTransformation = visualTransformation,
+            visualTransformation = if (passwordVisibility || !isPasswordField) VisualTransformation.None else PasswordVisualTransformation(),
             colors = TextFieldDefaults.colors(
                 disabledContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -143,7 +154,7 @@ fun NoBorderEditText(
                 )
             },
             textStyle = TextStyle(
-                color = getTextColor(),
+                color = labelColor,
                 fontSize = fontSize.sp,
                 fontFamily = AlataFontFamily()
             ),
@@ -170,10 +181,21 @@ fun NoBorderEditText(
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "",
-                        tint = getTextColor(),
+                        tint = labelColor,
                         modifier = Modifier
                             .clickable {
                                 updateText("")
+                            }
+                    )
+                }
+                if(isPasswordField){
+                    Icon(
+                        passwordIcon,
+                        contentDescription = "",
+                        tint = labelColor,
+                        modifier = Modifier
+                            .clickable {
+                                passwordVisibility = passwordVisibility.not()
                             }
                     )
                 }

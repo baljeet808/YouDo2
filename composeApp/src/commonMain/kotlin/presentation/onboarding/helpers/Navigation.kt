@@ -20,7 +20,7 @@ fun NavGraphBuilder.addOnboardingDestination(
         val viewModel = koinViewModel<OnBoardingViewModel>()
         OnboardingScreen(
             moveToLogin = {
-                viewModel.setOnboardingStatus(isComplete = true)
+                //viewModel.setOnboardingStatus(isComplete = true)
                 navController.navigate(DESTINATION_LOGIN_ROUTE){
                     popUpTo(DESTINATION_ONBOARDING_ROUTE){
                         inclusive = true

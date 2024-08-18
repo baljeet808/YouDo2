@@ -42,7 +42,8 @@ fun SaveButtonView(
     showIcon : Boolean = true,
     icon : ImageVector = Icons.Default.Add,
     fontSize : Int = 24,
-    enabled : Boolean = true
+    enabled : Boolean = true,
+    labelColor : Color = getTextColor()
 ) {
     Box(
         modifier = containerModifier,
@@ -69,7 +70,7 @@ fun SaveButtonView(
                 text = label,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    color = getTextColor(),
+                    color = labelColor,
                     fontSize = fontSize.sp,
                     fontFamily = AlataFontFamily()
                 )

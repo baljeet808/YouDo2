@@ -41,7 +41,10 @@ class AppViewModel : ViewModel(), KoinComponent {
                         userState = userState.copy(isUserLoggedIn = true, resultFound = true)
                     }
                 }else{
-                   checkOnboardingStatus()
+                   //checkOnboardingStatus()
+                    withContext(Dispatchers.Main) {
+                        userState = userState.copy(isUserLoggedIn = false, resultFound = true)
+                    }
                 }
             }
         }

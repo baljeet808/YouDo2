@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,7 @@ import presentation.onboarding.components.NextButton
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
-import presentation.theme.getTextColor
+import presentation.theme.DotooPink
 
 @Composable
 fun LoginScreen(
@@ -50,14 +51,16 @@ fun LoginScreen(
 ) {
 
     val themeColor = EnumProjectColors.Blue.getColor()
-
+    val contentColor = Color.White
+    val signupThemeColor = EnumProjectColors.Pink.getColor()
     val passwordFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.Black.copy(alpha = 0.5f))
+            .background(color = themeColor.copy(alpha = 0.7f))
             .padding(20.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -70,7 +73,7 @@ fun LoginScreen(
                 text = "Login",
                 modifier = Modifier.fillMaxWidth()
                     .padding(bottom = 20.dp),
-                color = getTextColor(),
+                color = contentColor,
                 textAlign = TextAlign.Start,
                 fontSize = 36.sp,
                 fontFamily = RobotoFontFamily(),
@@ -85,7 +88,7 @@ fun LoginScreen(
                 fontFamily = RobotoFontFamily(),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.White,
+                color = contentColor,
                 lineHeight = 30.sp
             )
 
@@ -108,14 +111,18 @@ fun LoginScreen(
                     .fillMaxWidth().padding(bottom = 20.dp),
                 text = uiState.email,
                 updateText = { onEmailChanged(it) }, focusRequester = emailFocusRequester,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                ),
                 nextFieldFocusRequester = passwordFocusRequester,
                 placeHolder = "Enter your email",
                 label = "Email",
                 showHelperText = false,
                 showClearTextButtonIcon = true,
                 maxLines = 1,
-                fontSize = 20
+                fontSize = 20,
+                labelColor = contentColor
             )
             //password field
             NoBorderEditText(
@@ -125,19 +132,23 @@ fun LoginScreen(
                 text = uiState.password,
                 updateText = { onPasswordChanged(it) },
                 focusRequester = passwordFocusRequester,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
                 placeHolder = uiState.passwordPlaceholder,
                 label = "Password",
                 showHelperText = false,
-                showClearTextButtonIcon = true,
+                showClearTextButtonIcon = false,
                 onDone = {
                     if (uiState.enableLoginButton) {
                         login()
                     }
                 },
-                visualTransformation = PasswordVisualTransformation(),
+                isPasswordField = true,
                 maxLines = 1,
-                fontSize = 20
+                fontSize = 20,
+                labelColor = contentColor
             )
             //login button
             SaveButtonView(
@@ -150,18 +161,20 @@ fun LoginScreen(
                         login()
                     }
                 },
-                buttonThemeColor = EnumProjectColors.Green.getColor(),
+                buttonThemeColor = signupThemeColor,
                 alignment = Alignment.Center,
                 buttonModifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
                 showIcon = false,
-                fontSize = 18
+                fontSize = 18,
+                labelColor = contentColor
             )
 
             //policy text buttons
             PolicyLineView(
-                clickableTextColor = themeColor,
+                normalTextColor = contentColor,
+                clickableTextColor = DotooPink,
                 navigateToPolicy = { navigateToPolicy() },
                 navigateToTermOfUse = { navigateToPolicy() }
             )
@@ -185,17 +198,18 @@ fun LoginScreen(
                 text = "Do not have an account?",
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    color = getTextColor(),
+                    color = contentColor,
                     fontSize = 16.sp,
                     fontFamily = AlataFontFamily()
                 ),
             )
             NextButton(
                 label = "Signup",
-                backgroundColor = EnumProjectColors.Green.getColor(),
+                backgroundColor = signupThemeColor,
                 onClick = {
                     navigateToSignup()
-                }
+                },
+                contentColor = contentColor
             )
         }
     }

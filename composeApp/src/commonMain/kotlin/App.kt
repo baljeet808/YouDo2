@@ -70,7 +70,12 @@ fun App(
     val startDestination = if (userState.isUserLoggedIn) {
         DESTINATION_DASHBOARD_ROUTE
     } else {
-        if (userState.hasOnboarded) {
+        if(userState.resultFound){
+            DESTINATION_ONBOARDING_ROUTE
+        }else{
+            DESTINATION_SPLASH_ROUTE
+        }
+        /*if (userState.hasOnboarded) {
             DESTINATION_LOGIN_ROUTE
         } else {
             if(userState.resultFound){
@@ -78,7 +83,7 @@ fun App(
             }else{
                 DESTINATION_SPLASH_ROUTE
             }
-        }
+        }*/
     }
 
     MaterialTheme {

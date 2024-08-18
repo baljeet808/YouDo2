@@ -29,6 +29,7 @@ fun NextButton(
     onClick: () -> Unit,
     label: String = "",
     fontSize : Int = 20,
+    contentColor : Color = getTextColor()
 ) {
     Row(
         modifier = Modifier
@@ -47,7 +48,7 @@ fun NextButton(
                 text = label,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    color = getTextColor(),
+                    color = contentColor,
                     fontSize = fontSize.sp,
                     fontFamily = AlataFontFamily()
                 ),
@@ -58,7 +59,7 @@ fun NextButton(
         Icon(
             Icons.AutoMirrored.Filled.ArrowForward,
             contentDescription = "Next",
-            tint = Color.White
+            tint = contentColor
         )
     }
 }

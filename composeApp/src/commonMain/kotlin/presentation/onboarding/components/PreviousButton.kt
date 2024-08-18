@@ -29,6 +29,7 @@ fun PreviousButton(
     onClick: () -> Unit,
     label: String = "",
     fontSize : Int = 20,
+    contentColor : Color = getTextColor()
 ) {
     Row(
         modifier = Modifier
@@ -45,14 +46,14 @@ fun PreviousButton(
         Icon(
             Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "Previous",
-            tint = Color.White
+            tint = contentColor
         )
         if(label.isNotEmpty()){
             Text(
                 text = label,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    color = getTextColor(),
+                    color = contentColor,
                     fontSize = fontSize.sp,
                     fontFamily = AlataFontFamily()
                 ),
