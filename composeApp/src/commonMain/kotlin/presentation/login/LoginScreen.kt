@@ -25,7 +25,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +34,7 @@ import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
 import presentation.login.helpers.LoginUIState
 import presentation.onboarding.components.NextButton
+import presentation.shared.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
@@ -168,7 +168,8 @@ fun LoginScreen(
                     .height(60.dp),
                 showIcon = false,
                 fontSize = 18,
-                labelColor = contentColor
+                labelColor = contentColor,
+                enabled = uiState.enableLoginButton
             )
 
             //policy text buttons
@@ -213,4 +214,9 @@ fun LoginScreen(
             )
         }
     }
+
+    if(uiState.isLoading){
+        LoadingDialog()
+    }
 }
+

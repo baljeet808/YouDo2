@@ -117,3 +117,16 @@ val signupHeadings = arrayOf(
     "Enter the Cool Zone",
     "Be One of the Greats"
 )
+
+val loadingMessages = listOf(
+    "Almost there!",
+    "Hang tight!",
+    "Just a sec!",
+    "Almost done!",
+    "One moment!",
+    "Be right back!",
+    "Quick pause!",
+    "Momentarily...",
+    "In progress!",
+    "Stay tuned!"
+)

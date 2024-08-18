@@ -23,12 +23,12 @@ fun PageCountIndicatorView(
     count : Int = 3,
     currentPage : Int = 0,
     modifier: Modifier = Modifier
-    .fillMaxWidth()
+    .fillMaxWidth(),
+    dotWidth: Dp = 15.dp,
+    selectedDotWidth: Dp = 40.dp,
+    dotColor: Color = Color.White,
+    inactiveDotColor: Color = dotColor.copy(alpha = 0.5f)
 ) {
-    val dotWidth = 15.dp
-    val selectedDotWidth = 40.dp
-    val dotColor = Color.White
-    val inactiveDotColor = dotColor.copy(alpha = 0.5f)
 
     Row(
         modifier = modifier,

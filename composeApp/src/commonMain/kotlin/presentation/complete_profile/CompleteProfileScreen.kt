@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +36,7 @@ import common.getColor
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.createproject.components.NoBorderEditText
 import presentation.drawer.components.ProfilePictureView
+import presentation.shared.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
@@ -132,13 +134,21 @@ fun CompleteProfileScreen(
                     .fillMaxWidth().padding( 20.dp),
                 text = uiState.userName,
                 updateText = { updateName(it) },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 placeHolder = "What do we call you?",
                 label = "Name",
                 showHelperText = false,
                 showClearTextButtonIcon = true,
                 maxLines = 1,
-                fontSize = 20
+                fontSize = 20,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Text
+                ),
+                onDone = {
+                    if (uiState.enableSaveButton) {
+                        attemptSaveProfile()
+                    }
+                }
             )
             Column {
 
@@ -167,7 +177,8 @@ fun CompleteProfileScreen(
                         .fillMaxWidth()
                         .height(60.dp),
                     showIcon = false,
-                    fontSize = 18
+                    fontSize = 18,
+                    enabled = uiState.enableSaveButton
                 )
             }
         }
@@ -196,6 +207,10 @@ fun CompleteProfileScreen(
             fontFamily = AlataFontFamily(),
             fontWeight = FontWeight.Thin
         )
+    }
+
+    if(uiState.isLoading){
+        LoadingDialog()
     }
 
 }

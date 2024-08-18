@@ -41,3 +41,6 @@ fun getRandomPasswordPlaceholder() : String {
 fun getRandomSignUpHeading() : String {
     return signupHeadings[Random.nextInt(0, signupHeadings.size-1)]
 }
+fun getRandomLoadingMessage() : String {
+    return loadingMessages[Random.nextInt(0, loadingMessages.size-1)]
+}

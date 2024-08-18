@@ -24,42 +24,60 @@ import org.koin.core.component.KoinComponent
 
 class SignupViewModel(
     private val signupUseCase: SignupUseCase,
-) : ViewModel(), KoinComponent{
+) : ViewModel(), KoinComponent {
 
     var uiState by mutableStateOf(SignupUIState())
         private set
 
-    fun updatePassword(password : String){
+    fun updatePassword(password: String) {
         val passwordValid = password.isPasswordValid()
-        uiState = uiState.copy(password = password, passwordInValid = passwordValid.not(), enableSignupButton = passwordValid && uiState.email.isEmailValid())
+        uiState = uiState.copy(
+            password = password,
+            passwordInValid = passwordValid.not(),
+            enableSignupButton = passwordValid && uiState.email.isEmailValid()
+        )
     }
 
-    fun updateEmail(email : String){
+    fun updateEmail(email: String) {
         val emailValid = email.isEmailValid()
-        uiState = uiState.copy(email = email, emailInValid = emailValid.not(), enableSignupButton = emailValid && uiState.password.isPasswordValid())
+        uiState = uiState.copy(
+            email = email,
+            emailInValid = emailValid.not(),
+            enableSignupButton = emailValid && uiState.password.isPasswordValid()
+        )
     }
 
-    fun attemptSignup(){
-        if(!uiState.email.isEmailValid()){
+    fun attemptSignup() {
+        if (!uiState.email.isEmailValid()) {
             uiState = uiState.copy(emailInValid = true, enableSignupButton = false)
             return
         }
-        if(!uiState.password.isPasswordValid()){
+        if (!uiState.password.isPasswordValid()) {
             uiState = uiState.copy(passwordInValid = true, enableSignupButton = false)
             return
         }
-        uiState = uiState.copy(emailInValid = false, passwordInValid = false, isLoading = true)
+        uiState = uiState.copy(
+            emailInValid = false,
+            passwordInValid = false,
+            isLoading = true,
+            enableSignupButton = false
+        )
         signup(email = uiState.email, password = uiState.password)
     }
 
-    private fun signup(email: String, password: String) = viewModelScope.launch(Dispatchers.IO){
+    private fun signup(email: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         signupUseCase(email, password).collect {
             when (it) {
                 is Result.Error -> {
-                    withContext(Dispatchers.Main){
-                       uiState = uiState.copy(isLoading = false, error = it.error, signupSuccessful = false)
+                    withContext(Dispatchers.Main) {
+                        uiState = uiState.copy(
+                            isLoading = false,
+                            error = it.error,
+                            enableSignupButton = uiState.password.isPasswordValid() && uiState.email.isEmailValid()
+                        )
                     }
                 }
+
                 is Result.Success -> {
                     saveToFirebase(it.data)
                 }
@@ -67,7 +85,7 @@ class SignupViewModel(
         }
     }
 
-    private fun saveToFirebase(firebaseUser : FirebaseUser) = viewModelScope.launch(Dispatchers.IO){
+    private fun saveToFirebase(firebaseUser: FirebaseUser) = viewModelScope.launch(Dispatchers.IO) {
         val newUser = User(
             id = firebaseUser.uid,
             name = firebaseUser.displayName ?: "",
@@ -80,15 +98,23 @@ class SignupViewModel(
                 .collection("users")
                 .document(newUser.id)
                 .set(newUser)
-            withContext(Dispatchers.Main){
-                uiState = uiState.copy(isLoading = false, error = null, uid = newUser.id , signupSuccessful = true)
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    error = null,
+                    uid = newUser.id,
+                    email = newUser.email,
+                    signupSuccessful = true
+                )
             }
-        }catch(e: Exception) {
+        } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 uiState = uiState.copy(
                     isLoading = false,
                     error = DataError.Network.ALL_OTHER,
-                    signupSuccessful = false
+                    uid = newUser.id,
+                    email =  newUser.email,
+                    signupSuccessful = true
                 )
             }
         }

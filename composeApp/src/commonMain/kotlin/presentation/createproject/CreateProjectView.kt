@@ -24,6 +24,7 @@ import presentation.createproject.components.ProjectColorPicker
 import presentation.createproject.components.ProjectPreviewAndDescriptionButton
 import presentation.createproject.helpers.CreateProjectScreenEvent
 import presentation.createproject.helpers.CreateProjectUiState
+import presentation.shared.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.TopHeadingWithCloseButton
 import presentation.theme.getLightThemeColor
@@ -163,8 +164,12 @@ fun CreateProjectView(
             onClick = {
                 onScreenEvent(CreateProjectScreenEvent.CreateProject)
             },
-            buttonThemeColor = uiState.projectColor.getColor()
+            buttonThemeColor = uiState.projectColor.getColor(),
+            enabled = uiState.enableSaveButton
         )
     }
 
+    if (uiState.isLoading){
+        LoadingDialog()
+    }
 }

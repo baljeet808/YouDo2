@@ -12,6 +12,7 @@ import data.local.entities.ProjectEntity
 import data.local.mappers.toProject
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
+import domain.dto_helpers.DataError
 import domain.repository_interfaces.DataStoreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -31,23 +32,23 @@ class CreateProjectViewModel(
         getUserDetails()
     }
 
-    private fun getUserDetails(){
+    private fun getUserDetails() {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.userIdAsFlow().collect{
-                withContext(Dispatchers.Main){
+            dataStoreRepository.userIdAsFlow().collect {
+                withContext(Dispatchers.Main) {
                     uiState = uiState.copy(
                         userId = it
                     )
                 }
             }
-            dataStoreRepository.userNameAsFlow().collect{
+            dataStoreRepository.userNameAsFlow().collect {
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(
                         userName = it
                     )
                 }
             }
-            dataStoreRepository.userEmailAsFlow().collect{
+            dataStoreRepository.userEmailAsFlow().collect {
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(
                         userEmail = it
@@ -60,20 +61,44 @@ class CreateProjectViewModel(
     fun onScreenEvent(event: CreateProjectScreenEvent) {
         when (event) {
             is CreateProjectScreenEvent.ProjectNameChanged -> {
-                uiState = uiState.copy(projectName = event.name)
+                val isNameValid = event.name.isNotBlank()
+                val descriptionValid =
+                    if (uiState.showDescription) uiState.projectDescription.isNotBlank() else true
+                uiState = uiState.copy(
+                    projectName = event.name,
+                    enableSaveButton = isNameValid && descriptionValid
+                )
             }
+
             is CreateProjectScreenEvent.ProjectDescriptionChanged -> {
-                uiState = uiState.copy(projectDescription = event.description)
+                val isNameValid = uiState.projectName.isNotBlank()
+                val descriptionValid =
+                    if (uiState.showDescription) event.description.isNotBlank() else true
+                uiState = uiState.copy(
+                    projectDescription = event.description,
+                    enableSaveButton = isNameValid && descriptionValid
+                )
             }
+
             is CreateProjectScreenEvent.ProjectColorChanged -> {
                 uiState = uiState.copy(projectColor = event.color)
             }
+
             is CreateProjectScreenEvent.ToggleDescriptionVisibility -> {
-                uiState = uiState.copy(showDescription = !uiState.showDescription)
+                val showDescription = !uiState.showDescription
+                val isNameValid = uiState.projectName.isNotBlank()
+                val descriptionValid =
+                    if (showDescription) uiState.projectDescription.isNotBlank() else true
+                uiState = uiState.copy(
+                    showDescription = !uiState.showDescription,
+                    enableSaveButton = isNameValid && descriptionValid
+                )
             }
+
             is CreateProjectScreenEvent.ToggleColorOptions -> {
                 uiState = uiState.copy(showColorOptions = !uiState.showColorOptions)
             }
+
             is CreateProjectScreenEvent.CreateProject -> {
                 createProject()
             }
@@ -85,6 +110,7 @@ class CreateProjectViewModel(
         .collection("projects")
 
     private fun createProject() {
+        uiState = uiState.copy(isLoading = true, enableSaveButton = false)
         val newProject = ProjectEntity(
             id = getRandomId(),
             ownerId = uiState.userId,
@@ -100,15 +126,35 @@ class CreateProjectViewModel(
     }
 
 
-    private fun createProject(project : ProjectEntity){
+    private fun createProject(project: ProjectEntity) {
         createProjectOnServer(project)
+
     }
 
     private fun createProjectOnServer(project: ProjectEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            projectsReference
-                .document(project.id)
-                .set(project.toProject())
+            try {
+                projectsReference
+                    .document(project.id)
+                    .set(project.toProject())
+                withContext(Dispatchers.Main) {
+                    uiState = uiState.copy(success = true)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                val isNameValid = uiState.projectName.isNotBlank()
+                val descriptionValid = if (uiState.showDescription) uiState.projectDescription.isNotBlank() else true
+                withContext(Dispatchers.Main) {
+                    uiState = uiState.copy(
+                        error = DataError.Network.ALL_OTHER,
+                        enableSaveButton = isNameValid && descriptionValid
+                    )
+                }
+            } finally {
+                withContext(Dispatchers.Main) {
+                    uiState = uiState.copy(isLoading = false)
+                }
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ fun String.isPasswordValid() : Boolean{
     if(this.length < 5){
         return false
     }
-    if(this.none { char -> char.isDigit() || char.isUpperCase() || !char.isLetterOrDigit() }){
+    if(this.none { char -> char.isDigit()}  || this.none { char -> char.isLetter()} || this.none { char -> !char.isLetterOrDigit()}){
         return false
     }
     return true

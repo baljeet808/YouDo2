@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -68,6 +69,7 @@ fun NoBorderEditText(
 ) {
 
     val transition = rememberInfiniteTransition()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val rotation = transition.animateValue(
         initialValue = -3f,
@@ -166,6 +168,7 @@ fun NoBorderEditText(
             keyboardActions = KeyboardActions(
                 onDone = {
                     if (text.isNotBlank()) {
+                        keyboardController?.hide()
                         onDone()
                     } else {
                         updateText("")

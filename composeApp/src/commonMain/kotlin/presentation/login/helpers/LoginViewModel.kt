@@ -23,44 +23,62 @@ import org.koin.core.component.inject
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     private val upsertUserUseCase: UpsertUserUseCase
-) : ViewModel(), KoinComponent{
+) : ViewModel(), KoinComponent {
 
-    private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
+    private val dataStoreRepository: DataStoreRepository by inject<DataStoreRepository>()
 
     var uiState by mutableStateOf(LoginUIState())
         private set
 
-    fun updatePassword(password : String){
+    fun updatePassword(password: String) {
         val passwordValid = password.isPasswordValid()
-        uiState = uiState.copy(password = password, passwordInValid = passwordValid.not(), enableLoginButton = passwordValid && uiState.email.isEmailValid())
+        uiState = uiState.copy(
+            password = password,
+            passwordInValid = passwordValid.not(),
+            enableLoginButton = passwordValid && uiState.email.isEmailValid()
+        )
     }
 
-    fun updateEmail(email : String){
+    fun updateEmail(email: String) {
         val emailValid = email.isEmailValid()
-        uiState = uiState.copy(email = email, emailInValid = emailValid.not(), enableLoginButton = emailValid && uiState.password.isPasswordValid())
+        uiState = uiState.copy(
+            email = email,
+            emailInValid = emailValid.not(),
+            enableLoginButton = emailValid && uiState.password.isPasswordValid()
+        )
     }
 
-    fun attemptLogin(){
-        if(!uiState.email.isEmailValid()){
+    fun attemptLogin() {
+        if (!uiState.email.isEmailValid()) {
             uiState = uiState.copy(emailInValid = true, enableLoginButton = false)
             return
         }
-        if(!uiState.password.isPasswordValid()){
+        if (!uiState.password.isPasswordValid()) {
             uiState = uiState.copy(passwordInValid = true, enableLoginButton = false)
             return
         }
-        uiState = uiState.copy(emailInValid = false, passwordInValid = false, isLoading = true)
+        uiState = uiState.copy(
+            emailInValid = false,
+            passwordInValid = false,
+            isLoading = true,
+            enableLoginButton = false
+        )
         login(email = uiState.email, password = uiState.password)
     }
 
-    private fun login(email: String, password: String) = viewModelScope.launch(Dispatchers.IO){
+    private fun login(email: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         loginUseCase(email, password).collect {
             when (it) {
                 is Result.Error -> {
-                    withContext(Dispatchers.Main){
-                        uiState = uiState.copy(isLoading = false, error = it.error, loginSuccessful = false)
+                    withContext(Dispatchers.Main) {
+                        uiState = uiState.copy(
+                            isLoading = false,
+                            error = it.error,
+                            enableLoginButton = uiState.password.isPasswordValid() && uiState.email.isEmailValid()
+                        )
                     }
                 }
+
                 is Result.Success -> {
                     dataStoreRepository.saveIsUserLoggedIn(true)
                     dataStoreRepository.saveUserId(it.data.id)
@@ -73,10 +91,10 @@ class LoginViewModel(
         }
     }
 
-    private fun saveUserToRoomDB(user : UserEntity) = viewModelScope.launch(Dispatchers.IO){
+    private fun saveUserToRoomDB(user: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
         upsertUserUseCase(listOf(user))
-        withContext(Dispatchers.Main){
-            uiState =uiState.copy(isLoading = false, error = null, loginSuccessful = true)
+        withContext(Dispatchers.Main) {
+            uiState = uiState.copy(isLoading = false, error = null, loginSuccessful = true)
         }
     }
 }

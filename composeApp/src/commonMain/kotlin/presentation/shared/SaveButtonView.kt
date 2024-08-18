@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
@@ -52,7 +51,6 @@ fun SaveButtonView(
 
         Row(
             modifier = buttonModifier
-                .shadow(elevation = 5.dp, shape = RoundedCornerShape(20.dp))
                 .background(
                     color = buttonThemeColor.copy(alpha = if(enabled) 1f else 0.5f),
                     shape = RoundedCornerShape(20.dp)

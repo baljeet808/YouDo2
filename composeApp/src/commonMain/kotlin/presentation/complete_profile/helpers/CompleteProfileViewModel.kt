@@ -77,7 +77,7 @@ class CompleteProfileViewModel(
     }
 
     fun attemptSaveProfile(email: String, uid: String) {
-        uiState = uiState.copy(isLoading = true)
+        uiState = uiState.copy(isLoading = true, enableSaveButton = false)
         updateInFirebase(email = email, uid = uid)
     }
 
@@ -108,7 +108,7 @@ class CompleteProfileViewModel(
                     uiState = uiState.copy(
                         isLoading = false,
                         error = DataError.Network.ALL_OTHER,
-                        savedSuccessfully = false
+                        enableSaveButton = uiState.userName.isNotEmpty() && uiState.selectedAvatar.isNotEmpty()
                     )
                 }
             }
