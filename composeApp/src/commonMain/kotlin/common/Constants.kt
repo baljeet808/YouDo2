@@ -1,17 +1,18 @@
 package common
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.Color
 import domain.models.MenuItem
 import org.jetbrains.compose.resources.DrawableResource
+import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.chat_illustration
 import youdo2.composeapp.generated.resources.set_reminders
 import youdo2.composeapp.generated.resources.todo_illustration
-
 
 
 const val ConstFirstScreenDescription = "From coffee breaks to commutes, your tasks travel with you. Sync up and check off from any device—anywhere, anytime."
@@ -25,9 +26,15 @@ const val maxTitleCharsAllowedForProject = 40
 
 val menuItems = arrayListOf(
     MenuItem(
+        id = DESTINATION_COMPLETE_PROFILE_ROUTE,
+        title = "Edit Profile",
+        icon = Icons.Default.Edit,
+        contentDescription = "Menu item to Edit profile screen"
+    ),
+    MenuItem(
         id = DESTINATION_PROJECTS_ROUTE,
         title = "Projects",
-        icon = Icons.Outlined.MoreVert,
+        icon = Icons.Default.AccountBox,
         contentDescription = "Menu item to show all Projects"
     ),
     MenuItem(

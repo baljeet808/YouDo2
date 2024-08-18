@@ -43,6 +43,7 @@ import presentation.theme.getTextColor
 
 @Composable
 fun CompleteProfileScreen(
+    title : String = "Complete Your \nProfile",
     uiState: CompleteProfileUIState,
     updateName: (String) -> Unit,
     updateAvatarUrl: (String) -> Unit,
@@ -62,7 +63,7 @@ fun CompleteProfileScreen(
             modifier = Modifier.fillMaxHeight(0.3f).padding(top = 20.dp, start = 20.dp, end = 20.dp)
         ) {
             Text(
-                text = "Complete Your \nProfile",
+                text = title,
                 modifier = Modifier.fillMaxWidth()
                     .padding(bottom = 20.dp),
                 color = getTextColor(),
@@ -111,7 +112,7 @@ fun CompleteProfileScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     item {
-                        Spacer(modifier = Modifier.width(90.dp))
+                        Spacer(modifier = Modifier.width(40.dp))
                     }
                     items(avatars){ avatarUrl ->
                         ProfilePictureView(

@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import common.menuItems
 import kotlinx.coroutines.launch
+import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.createproject.helpers.addCreateProjectViewDestination
 import presentation.dashboard.helpers.DashboardScreenState
 import presentation.dashboard.helpers.DashboardUIState
@@ -51,7 +52,8 @@ import presentation.theme.getNightLightColor
 @Composable
 fun DashboardScreen(
     uiState: DashboardUIState = DashboardUIState(),
-    logout: () -> Unit = {}
+    logout: () -> Unit = {},
+    navigateToCompleteProfile: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -112,7 +114,14 @@ fun DashboardScreen(
                     avatarUrl = uiState.userAvatarUrl,
                     menuItems = menuItems,
                     onMenuItemClick = { item ->
-                        closeDrawer()
+                        when(item.id){
+                            DESTINATION_COMPLETE_PROFILE_ROUTE ->{
+                                navigateToCompleteProfile()
+                            }
+                            else -> {
+                                closeDrawer()
+                            }
+                        }
                     },
                     closeDrawer = {
                         closeDrawer()

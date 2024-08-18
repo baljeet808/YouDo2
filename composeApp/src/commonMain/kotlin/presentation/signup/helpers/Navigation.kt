@@ -43,7 +43,7 @@ fun NavGraphBuilder.addSignupDestination(
         //take user to complete profile screen if signup is successful
         LaunchedEffect(key1 = uiState.signupSuccessful){
             if(uiState.signupSuccessful){
-                navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE.plus("/${uiState.uid}/${uiState.email}")) {
+                navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE.plus("/${uiState.uid}/${uiState.email}/${true}")) {
                     popUpTo(DESTINATION_SIGNUP_ROUTE){
                         inclusive = true
                     }

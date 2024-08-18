@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import common.isEmailValid
 import common.isPasswordValid
+import data.local.entities.UserEntity
+import data.local.mappers.toUserEntity
 import domain.dto_helpers.Result
 import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.auth_use_cases.LoginUseCase
+import domain.use_cases.user_use_cases.UpsertUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -18,7 +21,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val upsertUserUseCase: UpsertUserUseCase
 ) : ViewModel(), KoinComponent{
 
     private val dataStoreRepository : DataStoreRepository by inject<DataStoreRepository>()
@@ -63,11 +67,16 @@ class LoginViewModel(
                     dataStoreRepository.saveUserName(it.data.name)
                     dataStoreRepository.saveUserEmail(it.data.email)
                     dataStoreRepository.saveUserAvatar(it.data.avatarUrl)
-                    withContext(Dispatchers.Main){
-                        uiState =uiState.copy(isLoading = false, error = null, loginSuccessful = true)
-                    }
+                    saveUserToRoomDB(it.data.toUserEntity())
                 }
             }
+        }
+    }
+
+    private fun saveUserToRoomDB(user : UserEntity) = viewModelScope.launch(Dispatchers.IO){
+        upsertUserUseCase(listOf(user))
+        withContext(Dispatchers.Main){
+            uiState =uiState.copy(isLoading = false, error = null, loginSuccessful = true)
         }
     }
 }

@@ -9,5 +9,8 @@ data class CompleteProfileUIState(
     val error: DataError.Network? = null,
     val savedSuccessfully : Boolean = false,
     val selectedAvatar : String = "",
-    val userName : String = ""
+    val userName : String = "",
+    val userId : String = "",
+    val userEmail : String = "",
+    val userJoined : Long = 0L
 )

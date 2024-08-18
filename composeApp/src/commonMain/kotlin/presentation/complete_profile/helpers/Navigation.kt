@@ -14,7 +14,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.complete_profile.CompleteProfileScreen
 
 const val DESTINATION_COMPLETE_PROFILE_ROUTE = "complete_profile"
-const val DESTINATION_COMPLETE_PROFILE_ROUTE_RELATIVE_PATH = "/{uid}/{email}"
+const val DESTINATION_COMPLETE_PROFILE_ROUTE_RELATIVE_PATH = "/{uid}/{email}/{navigatedFromSignup}"
 
 
 @OptIn(KoinExperimentalAPI::class)
@@ -33,6 +33,10 @@ fun NavGraphBuilder.addCompleteProfileDestination(
             navArgument("email") {
                 type = NavType.StringType
                 defaultValue = ""
+            },
+            navArgument("navigatedFromSignup") {
+                type = NavType.BoolType
+                defaultValue = false
             }
         )
     ) { backStackEntry ->
@@ -40,10 +44,10 @@ fun NavGraphBuilder.addCompleteProfileDestination(
 
         val uid = backStackEntry.arguments?.getString("uid")
         val email = backStackEntry.arguments?.getString("email")
+        val navigatedFromSignup = backStackEntry.arguments?.getBoolean("navigatedFromSignup") ?: false
 
         val viewModel = koinViewModel<CompleteProfileViewModel>()
         val uiState = viewModel.uiState
-
 
         //retry api call triggers when user clicks retry button in error dialog
         LaunchedEffect(key1 = retryApiCall.value) {
@@ -71,6 +75,7 @@ fun NavGraphBuilder.addCompleteProfileDestination(
         }
 
         CompleteProfileScreen(
+            title = if(navigatedFromSignup) "Complete Your \nProfile" else "Update Your \nProfile",
             uiState = uiState,
             updateName = {
                 viewModel.updateName(it)

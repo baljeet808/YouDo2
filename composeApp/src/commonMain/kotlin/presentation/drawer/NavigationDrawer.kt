@@ -80,7 +80,7 @@ fun NavigationDrawer(
             ) {
                 ProfilePictureView(
                     onClick = openProfile,
-                    progress = 0.5f,
+                    progress = 0.75f,
                     avatarUrl = avatarUrl
                 )
                 IconButtonView(
