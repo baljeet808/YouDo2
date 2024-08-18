@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -27,27 +29,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import common.menuItems
 import kotlinx.coroutines.launch
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
-import presentation.createproject.helpers.addCreateProjectViewDestination
 import presentation.dashboard.helpers.DashboardScreenState
 import presentation.dashboard.helpers.DashboardUIState
 import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
-import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
-import presentation.projects.helpers.addProjectsViewDestination
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
+import presentation.theme.getTextColor
 
 @Composable
 fun DashboardScreen(
@@ -58,7 +57,6 @@ fun DashboardScreen(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scaffoldState = rememberScaffoldState(drawerState = drawerState)
-    val navController = rememberNavController()
 
     val interactionSource = remember { MutableInteractionSource() }
     var offsetX by remember { mutableStateOf(0f) }
@@ -186,9 +184,6 @@ fun DashboardScreen(
                     .clip(shape = RoundedCornerShape(animatedState.roundness)),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                /**
-                 * Top app bar
-                 * **/
                 TopBar(
                     modifier = Modifier.height(60.dp),
                     notificationsState = true,
@@ -199,15 +194,16 @@ fun DashboardScreen(
                         //TODO: Add notifications
                     }
                 )
-                 NavHost(
-                     navController = navController,
-                     startDestination = DESTINATION_PROJECTS_ROUTE,
-                     modifier = Modifier
-                         .fillMaxSize()
-                 ) {
-                     addProjectsViewDestination(navController = navController)
-                     addCreateProjectViewDestination(navController = navController)
-                 }
+                Column(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Projects",
+                        color = getTextColor()
+                    )
+                }
             }
         }
     }

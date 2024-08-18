@@ -21,12 +21,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.complete_profile.helpers.addCompleteProfileDestination
+import presentation.createproject.helpers.addCreateProjectViewDestination
 import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
 import presentation.dashboard.helpers.addDashboardDestination
 import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
 import presentation.login.helpers.addLoginDestination
 import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
 import presentation.onboarding.helpers.addOnboardingDestination
+import presentation.projects.helpers.addProjectsViewDestination
 import presentation.shared.AlertDialogView
 import presentation.shared.BackgroundCircles
 import presentation.signup.helpers.addSignupDestination
@@ -182,6 +184,8 @@ fun App(
                     },
                     retryApiCall = retryApiCall
                 )
+                addProjectsViewDestination(navController = navController)
+                addCreateProjectViewDestination(navController = navController)
             }
         }
     }
