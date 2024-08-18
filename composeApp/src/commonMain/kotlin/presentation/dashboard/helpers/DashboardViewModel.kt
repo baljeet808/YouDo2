@@ -34,7 +34,7 @@ class DashboardViewModel(
 
     fun getCurrentUser(){
         showLoading()
-        fetchCurrentUser()
+        fetchUserId()
     }
     fun attemptLogout(){
         showLoading()
@@ -45,18 +45,20 @@ class DashboardViewModel(
         uiState = uiState.copy(isLoading = true, error = null)
     }
 
-
-    private fun fetchCurrentUser() = viewModelScope.launch(Dispatchers.IO){
+    private fun fetchUserId() = viewModelScope.launch(Dispatchers.IO){
         dataStoreRepository.userIdAsFlow().collect {
-            withContext(Dispatchers.Main) {
-                uiState = uiState.copy(userId = it)
-            }
+            fetchCurrentUser(uid = it)
         }
+    }
+
+
+    private fun fetchCurrentUser(uid : String) = viewModelScope.launch(Dispatchers.IO){
         try {
-            Firebase.firestore.collection("users").document(uiState.userId).snapshots.collect{ documentSnapshot ->
+            Firebase.firestore.collection("users").document(uid).snapshots.collect{ documentSnapshot ->
                 val user = documentSnapshot.data<User>()
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(
+                        userId = user.id,
                         userName = user.name,
                         userEmail = user.email,
                         userAvatarUrl = user.avatarUrl,
@@ -64,7 +66,6 @@ class DashboardViewModel(
                     )
                 }
             }
-
         }catch (e : Exception){
             withContext(Dispatchers.Main) {
                 uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
