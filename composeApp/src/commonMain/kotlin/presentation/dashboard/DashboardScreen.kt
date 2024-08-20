@@ -1,6 +1,5 @@
 package presentation.dashboard
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -19,7 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
@@ -38,25 +38,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
-import common.getRole
 import common.menuItems
-import data.local.mappers.toProjectEntity
 import kotlinx.coroutines.launch
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
+import presentation.dashboard.components.SearchBoxView
 import presentation.dashboard.helpers.DashboardScreenState
 import presentation.dashboard.helpers.DashboardUIState
 import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
-import presentation.shared.ProjectCardWithProfiles
+import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
-import presentation.theme.getTextColor
 
 @Composable
 fun DashboardScreen(
@@ -199,49 +200,51 @@ fun DashboardScreen(
                 Column(modifier = Modifier.fillMaxSize()) {
                     TopBar(
                         modifier = Modifier.height(70.dp),
-                        notificationsState = true,
                         onMenuItemClick = {
                             openDrawer()
                         },
-                        onNotificationsClicked = {
-                            //TODO: Add notifications
-                        },
-                        avatarUrl = uiState.userAvatarUrl
+                        avatarUrl = uiState.userAvatarUrl,
+                        userName = uiState.userName
                     )
+                    SearchBoxView()
                     Column(
                         modifier = Modifier.fillMaxWidth().fillMaxHeight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Top
                     ) {
-                        AnimatedVisibility(visible = uiState.projects.isNotEmpty()) {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(
-                                    20.dp,
-                                    alignment = Alignment.CenterVertically
-                                )
-                            ) {
-                                items(items = uiState.projects, key = { it.id }) { project ->
-                                    ProjectCardWithProfiles(
-                                        project = project,
-                                        role = getRole(
-                                            project = project.toProjectEntity(),
-                                            userId = uiState.userId
-                                        ),
-                                        showFullCardInitially = false
+                        LazyRow (
+                            modifier = Modifier.fillMaxWidth().padding(top = 20.dp ),
+                            horizontalArrangement = Arrangement.spacedBy(15.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            item {
+                                Spacer(modifier = Modifier.width(5.dp))
+                            }
+                            items(items = uiState.projects, key = { it.id }) { project ->
+                                Column(
+                                    modifier = Modifier
+                                        .width(180.dp)
+                                        .height(150.dp)
+                                        .background(
+                                            color = EnumProjectColors.DarkBlack.getColor(),
+                                            shape = RoundedCornerShape(20.dp)
+                                        )
+                                ){
+                                    Text(
+                                        text = project.name,
+                                        modifier = Modifier
+                                            .padding(10.dp)
+                                            .fillMaxWidth(),
+                                        fontFamily = AlataFontFamily(),
+                                        fontSize = 28.sp,
+                                        color = Color.White,
+                                        lineHeight = TextUnit(39f, TextUnitType.Sp)
                                     )
                                 }
-                                item {
-                                    Spacer(modifier = Modifier.height(100.dp))
-                                }
                             }
-                        }
-                        AnimatedVisibility(visible = uiState.projects.isEmpty()) {
-                            Text(
-                                text = "No projects yet",
-                                color = getTextColor()
-                            )
+                            item {
+                                Spacer(modifier = Modifier.width(20.dp))
+                            }
                         }
                     }
                 }

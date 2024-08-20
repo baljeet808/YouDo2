@@ -72,7 +72,7 @@ class DashboardViewModel(
     private fun fetchProjectsFromFireStore(user : User) = viewModelScope.launch(Dispatchers.IO){
         try {
         Firebase.firestore.collection("projects")
-
+            .where { "ownerId" equalTo user.id }
             .snapshots.collect{ querySnapshot ->
                 val projects = querySnapshot.documents.map { documentSnapshot ->
                     documentSnapshot.data<Project>()
