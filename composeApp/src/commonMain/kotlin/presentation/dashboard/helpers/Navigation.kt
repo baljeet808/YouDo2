@@ -63,6 +63,9 @@ fun NavGraphBuilder.addDashboardDestination(
             },
             navigateToCreateProject = {
                 navController.navigate(DESTINATION_CREATE_PROJECT_ROUTE)
+            },
+            loadData = {
+                viewModel.getCurrentUser()
             }
         )
     }

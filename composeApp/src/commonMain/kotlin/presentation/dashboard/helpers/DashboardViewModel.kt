@@ -32,10 +32,6 @@ class DashboardViewModel(
     var uiState by mutableStateOf(DashboardUIState())
         private set
 
-    init {
-        getCurrentUser()
-    }
-
     fun getCurrentUser(){
         showLoading()
         fetchUserId()

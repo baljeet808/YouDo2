@@ -28,6 +28,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ import presentation.theme.getNightLightColor
 fun DashboardScreen(
     uiState: DashboardUIState = DashboardUIState(),
     logout: () -> Unit = {},
+    loadData: () -> Unit = {},
     navigateToCompleteProfile: () -> Unit = {},
     navigateToCreateProject: () -> Unit = {}
 ) {
@@ -263,5 +265,9 @@ fun DashboardScreen(
             }
 
         }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        loadData()
     }
 }
