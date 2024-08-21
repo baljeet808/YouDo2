@@ -51,7 +51,7 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            ProfilePictureView(
+            CircularPictureViewWithProgress(
                 size = 50,
                 showProgress = true,
                 onClick = {

@@ -53,6 +53,7 @@ import presentation.dashboard.helpers.DashboardScreenState
 import presentation.dashboard.helpers.DashboardUIState
 import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
+import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
 import presentation.shared.fonts.AlataFontFamily
@@ -225,23 +226,36 @@ fun DashboardScreen(
                             items(items = uiState.projects, key = { it.id }) { project ->
                                 Column(
                                     modifier = Modifier
-                                        .width(180.dp)
+                                        .width(240.dp)
                                         .height(150.dp)
                                         .background(
                                             color = EnumProjectColors.DarkBlack.getColor(),
                                             shape = RoundedCornerShape(20.dp)
                                         )
+                                        .padding(15.dp)
                                 ){
-                                    Text(
-                                        text = project.name,
-                                        modifier = Modifier
-                                            .padding(10.dp)
-                                            .fillMaxWidth(),
-                                        fontFamily = AlataFontFamily(),
-                                        fontSize = 28.sp,
-                                        color = Color.White,
-                                        lineHeight = TextUnit(39f, TextUnitType.Sp)
-                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.Top,
+                                        horizontalArrangement = Arrangement.Center
+                                    ){
+                                        Text(
+                                            text = project.name,
+                                            modifier = Modifier
+                                                .width(150.dp),
+                                            fontFamily = AlataFontFamily(),
+                                            fontSize = 28.sp,
+                                            color = Color.White,
+                                            lineHeight = TextUnit(39f, TextUnitType.Sp)
+                                        )
+                                        CircularPictureViewWithProgress(
+                                            backgroundColor = project.color.getColor(),
+                                            noImage = true,
+                                            progress = 1f,
+                                            showProgress = true,
+                                            size = 30
+                                        )
+                                    }
                                 }
                             }
                             item {

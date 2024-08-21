@@ -35,7 +35,7 @@ import common.avatars
 import common.getColor
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.createproject.components.NoBorderEditText
-import presentation.drawer.components.ProfilePictureView
+import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.shared.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
@@ -117,7 +117,7 @@ fun CompleteProfileScreen(
                         Spacer(modifier = Modifier.width(40.dp))
                     }
                     items(avatars){ avatarUrl ->
-                        ProfilePictureView(
+                        CircularPictureViewWithProgress(
                             avatarUrl = avatarUrl,
                             onClick = {
                                 updateAvatarUrl(avatarUrl)

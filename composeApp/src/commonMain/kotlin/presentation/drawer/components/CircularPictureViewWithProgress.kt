@@ -34,10 +34,12 @@ import youdo2.composeapp.generated.resources.app_icon
  * User Profile with Progress bar for total tasks completed
  * **/
 @Composable
-fun  ProfilePictureView(
+fun  CircularPictureViewWithProgress(
     avatarUrl : String = "",
-    onClick: () -> Unit,
-    progress: Float,
+    backgroundColor : Color = Color.Transparent,
+    noImage : Boolean = false,
+    onClick: () -> Unit = {},
+    progress: Float = 0f,
     showProgress: Boolean = true,
     size: Int = 100
 ) {
@@ -53,47 +55,52 @@ fun  ProfilePictureView(
         modifier = Modifier
             .width(size.dp)
             .height(size.dp)
-            .clip(shape = RoundedCornerShape(size.dp))
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(size.dp)
+            )
             .clickable(
                 onClick = onClick
             )
             .padding(0.dp), contentAlignment = Alignment.Center
     ) {
-        CoilImage(
-            modifier = Modifier
-                .width((size-10).dp)
-                .height((size-10).dp)
-                .clip(shape = RoundedCornerShape((size-10).dp)),
-            imageModel = { avatarUrl.ifEmpty { getRandomAvatar() } },
-            imageOptions = ImageOptions(
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center,
-            ),
-            loading = {
-                Box(
-                   modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                }
-            },
-            failure = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Gray.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center
-                ){
-                    Image(
-                        painterResource(Res.drawable.app_icon),
-                        contentDescription = "avatarImage",
+        if(noImage.not()) {
+            CoilImage(
+                modifier = Modifier
+                    .width((size - 10).dp)
+                    .height((size - 10).dp)
+                    .clip(shape = RoundedCornerShape((size - 10).dp)),
+                imageModel = { avatarUrl.ifEmpty { getRandomAvatar() } },
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                ),
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                },
+                failure = {
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
-                    )
+                            .background(Color.Gray.copy(alpha = 0.1f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painterResource(Res.drawable.app_icon),
+                            contentDescription = "avatarImage",
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    }
                 }
-            }
 
-        )
+            )
+        }
 
         if(showProgress){
             CircularProgressIndicator(
