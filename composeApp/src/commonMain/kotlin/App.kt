@@ -28,6 +28,7 @@ import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
 import presentation.login.helpers.addLoginDestination
 import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
 import presentation.onboarding.helpers.addOnboardingDestination
+import presentation.project.helpers.addProjectViewDestination
 import presentation.projects.helpers.addProjectsViewDestination
 import presentation.shared.AlertDialogView
 import presentation.shared.BackgroundCircles
@@ -186,6 +187,19 @@ fun App(
                 )
                 addProjectsViewDestination(navController = navController)
                 addCreateProjectViewDestination(navController = navController)
+                addProjectViewDestination(
+                    navController = navController,
+                    showErrorAlertDialog = { error ->
+                        retryApiCall.value = false
+                        if (error != null) {
+                            errorType.value = error
+                            openAlertDialog.value = true
+                        } else {
+                            openAlertDialog.value = false
+                        }
+                    },
+                    retryApiCall = retryApiCall
+                )
             }
         }
     }

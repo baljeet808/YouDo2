@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.EnumProjectColors
 import common.EnumRoles
 import common.getColor
 import common.maxDescriptionCharsAllowed
@@ -105,7 +104,7 @@ fun ProjectCardWithProfiles(
             .padding(10.dp)
             .shadow(elevation = 5.dp, shape = RoundedCornerShape(20.dp))
             .clip(shape = RoundedCornerShape(20.dp))
-            .background(color = EnumProjectColors.DarkBlack.getColor()),
+            .background(color = project.color.getColor()),
         verticalArrangement = Arrangement.SpaceAround
     ) {
 
@@ -121,7 +120,7 @@ fun ProjectCardWithProfiles(
                 )
             )
             drawCircle(
-                color = EnumProjectColors.DarkBlack.getColor(),
+                color = project.color.getColor(),
                 radius = 100.dp.toPx(),
                 center = Offset(
                     x = 50.dp.toPx(),

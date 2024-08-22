@@ -13,6 +13,7 @@ import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.createproject.helpers.DESTINATION_CREATE_PROJECT_ROUTE
 import presentation.dashboard.DashboardScreen
 import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
+import presentation.project.helpers.DESTINATION_PROJECT_ROUTE
 
 const val DESTINATION_DASHBOARD_ROUTE = "dashboard"
 
@@ -66,6 +67,9 @@ fun NavGraphBuilder.addDashboardDestination(
             },
             loadData = {
                 viewModel.getCurrentUser()
+            },
+            navigateToProject = { projectId ->
+                navController.navigate(DESTINATION_PROJECT_ROUTE.plus("/${projectId}"))
             }
         )
     }

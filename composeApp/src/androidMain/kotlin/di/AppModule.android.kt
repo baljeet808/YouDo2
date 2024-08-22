@@ -15,6 +15,7 @@ import presentation.projects.helpers.ProjectsViewModel
 import presentation.signup.helpers.SignupViewModel
 import presentation.onboarding.helpers.OnBoardingViewModel
 import presentation.createproject.helpers.CreateProjectViewModel
+import presentation.project.helpers.ProjectViewModel
 import presentation.complete_profile.helpers.CompleteProfileViewModel
 
 actual val platformModule= module {
@@ -27,5 +28,6 @@ actual val platformModule= module {
     viewModelOf(::OnBoardingViewModel)
     viewModelOf(::CreateProjectViewModel)
     viewModelOf(::CompleteProfileViewModel)
+    viewModelOf(::ProjectViewModel)
     single<DataStore<Preferences>> { createDataStore(androidContext()) }
 }

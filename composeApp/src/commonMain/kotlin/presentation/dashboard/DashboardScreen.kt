@@ -2,6 +2,7 @@ package presentation.dashboard
 
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -67,7 +68,8 @@ fun DashboardScreen(
     logout: () -> Unit = {},
     loadData: () -> Unit = {},
     navigateToCompleteProfile: () -> Unit = {},
-    navigateToCreateProject: () -> Unit = {}
+    navigateToCreateProject: () -> Unit = {},
+    navigateToProject: (projectId: String) -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -233,6 +235,9 @@ fun DashboardScreen(
                                             shape = RoundedCornerShape(20.dp)
                                         )
                                         .padding(15.dp)
+                                        .clickable {
+                                            navigateToProject(project.id)
+                                        }
                                 ){
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
