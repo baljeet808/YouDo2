@@ -91,7 +91,7 @@ fun UpsertTaskView(
     uiState: CreateTaskUiState = CreateTaskUiState(),
     navigateBack: () -> Unit,
     onScreenEvent: (CreateTaskScreenEvent) -> Unit = {},
-    getData : () -> Unit
+    getData: () -> Unit
 ) {
 
 
@@ -157,68 +157,26 @@ fun UpsertTaskView(
     }
 
 
-    var dueDate by remember {
-        mutableStateOf(
-            DueDates.TODAY
-        )
-    }
-    var customDatetime: LocalDate? by remember {
-        mutableStateOf(
-            null
-        )
-    }
-
-    val selectedProject by remember {
-        mutableStateOf(
-            uiState.project
-        )
-    }
-
-    var priority by remember {
-        mutableStateOf(
-            EnumPriorities.HIGH
-        )
-    }
-
-    var descriptionOn by remember {
-        mutableStateOf(true)
-    }
-
-    var description by remember {
-        mutableStateOf("")
-    }
-
-    var title by remember {
-        mutableStateOf("")
-    }
-
-
-
-
-
     BottomSheetScaffold(
         sheetContent = {
             currentBottomSheet?.let {
                 when (it) {
                     EnumCreateTaskSheetType.SELECT_PRIORITY -> {
-                        PrioritySheet(priority = priority) { newPriority ->
-                            priority = newPriority
+                        PrioritySheet(priority = uiState.priority) { newPriority ->
+                            onScreenEvent(CreateTaskScreenEvent.TaskPriorityChanged(newPriority))
                             closeSheet()
                         }
                     }
 
                     EnumCreateTaskSheetType.SELECT_DUE_DATE -> {
                         DueDatesSheet(
-                            dueDate = dueDate,
+                            dueDate = uiState.dueDate,
                             onDateSelected = { selectedDate ->
-                                dueDate = selectedDate
-                                customDatetime = selectedDate.getExactDate().date
+                                onScreenEvent(CreateTaskScreenEvent.TaskDueDateChanged(selectedDate))
                                 closeSheet()
                             },
                             onDatePickerSelected = {
-                                //OpenDatePicker
-                                //calendarState.show()
-                                dueDate = DueDates.CUSTOM
+                                onScreenEvent(CreateTaskScreenEvent.TaskDueDateChanged(DueDates.CUSTOM))
                                 closeSheet()
                             }
                         )
@@ -342,7 +300,7 @@ fun UpsertTaskView(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = dueDate.toString,
+                        text = uiState.dueDate.name,
                         color = LightAppBarIconsColor,
                         fontFamily = AlataFontFamily(),
                         fontSize = 16.sp,
@@ -351,22 +309,21 @@ fun UpsertTaskView(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
-            
-            AnimatedVisibility(visible = (customDatetime != null)) {
-                Text(
-                    text = "Due Date set to ".plus(
-                        customDatetime?: ""
-                    ),
-                    color = selectedProject?.color?.getColor()?: getRandomColor().getColor(),
-                    fontFamily = AlataFontFamily(),
-                    fontSize = 16.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 30.dp)
-                )
-            }
+
+
+            Text(
+                text = "Due Date set to ".plus(
+                    uiState.dueDate.getExactDate()
+                ),
+                color = uiState.project?.color?.getColor() ?: getRandomColor().getColor(),
+                fontFamily = AlataFontFamily(),
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(start = 30.dp)
+            )
             Spacer(modifier = Modifier.height(20.dp))
 
             /**
@@ -401,7 +358,7 @@ fun UpsertTaskView(
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = priority.toString,
+                        text = uiState.priority.name,
                         color = LightAppBarIconsColor,
                         fontFamily = AlataFontFamily(),
                         fontSize = 16.sp,
@@ -415,8 +372,8 @@ fun UpsertTaskView(
                     modifier = Modifier
                         .clickable(
                             onClick = {
-                                descriptionOn = descriptionOn.not()
-                                if (descriptionOn) {
+                                onScreenEvent(CreateTaskScreenEvent.ToggleDescriptionVisibility)
+                                if (uiState.showDescription) {
                                     closeSheet()
                                     focusScope.launch {
                                         delay(300)
@@ -425,7 +382,7 @@ fun UpsertTaskView(
                                     }
                                 } else {
                                     closeSheet()
-                                    description = ""
+                                    onScreenEvent(CreateTaskScreenEvent.TaskDescriptionChanged(""))
                                     descriptionFocusRequester.freeFocus()
                                 }
                             }
@@ -434,7 +391,7 @@ fun UpsertTaskView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        if (descriptionOn) {
+                        if (uiState.showDescription) {
                             Icons.Outlined.Done
                         } else {
                             Icons.AutoMirrored.Default.List
@@ -444,7 +401,7 @@ fun UpsertTaskView(
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = if (descriptionOn) {
+                        text = if (uiState.showDescription) {
                             "Clear Description"
                         } else {
                             "Add Description"
@@ -456,8 +413,6 @@ fun UpsertTaskView(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-
-
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -484,10 +439,10 @@ fun UpsertTaskView(
                         .padding(start = 15.dp)
                 )
                 TextField(
-                    value = title,
+                    value = uiState.taskName,
                     onValueChange = {
                         if (it.length <= maxTitleCharsAllowed) {
-                            title = it
+                            onScreenEvent(CreateTaskScreenEvent.TaskNameChanged(it))
                         }
                     },
                     colors = TextFieldDefaults.colors(
@@ -530,7 +485,7 @@ fun UpsertTaskView(
                             }
                         },
                     keyboardOptions = KeyboardOptions(
-                        imeAction = if (descriptionOn) {
+                        imeAction = if (uiState.showDescription) {
                             ImeAction.Next
                         } else {
                             ImeAction.Done
@@ -541,18 +496,18 @@ fun UpsertTaskView(
                             descriptionFocusRequester.requestFocus()
                         },
                         onDone = {
-                            if (title.isNotBlank()) {
+                            if (uiState.taskName.isNotBlank()) {
                                 onScreenEvent(CreateTaskScreenEvent.CreateTask)
                             } else {
-                                title = ""
+                                onScreenEvent(CreateTaskScreenEvent.TaskNameChanged(""))
                                 showTitleErrorAnimation = true
                             }
                         }
                     )
                 )
                 Text(
-                    text = "${title.length}/$maxTitleCharsAllowed",
-                    color = if (title.length >= maxTitleCharsAllowed) {
+                    text = "${uiState.taskName.length}/$maxTitleCharsAllowed",
+                    color = if (uiState.taskName.length >= maxTitleCharsAllowed) {
                         DoTooRed
                     } else {
                         LightAppBarIconsColor
@@ -563,14 +518,14 @@ fun UpsertTaskView(
                 )
             }
 
-            AnimatedVisibility(visible = descriptionOn) {
+            AnimatedVisibility(visible = uiState.showDescription) {
                 Spacer(modifier = Modifier.height(40.dp))
             }
 
             /**
              * Text field for adding description
              * **/
-            AnimatedVisibility(visible = descriptionOn) {
+            AnimatedVisibility(visible = uiState.showDescription) {
 
 
                 Column(
@@ -593,10 +548,10 @@ fun UpsertTaskView(
                             .padding(start = 15.dp)
                     )
                     TextField(
-                        value = description,
+                        value = uiState.taskDescription,
                         onValueChange = {
                             if (it.length <= maxDescriptionCharsAllowed) {
-                                description = it
+                                onScreenEvent(CreateTaskScreenEvent.TaskDescriptionChanged(it))
                             }
                         },
                         colors = TextFieldDefaults.colors(
@@ -635,18 +590,18 @@ fun UpsertTaskView(
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                if (title.isNotBlank()) {
+                                if (uiState.taskName.isNotBlank()) {
                                     onScreenEvent(CreateTaskScreenEvent.CreateTask)
                                 } else {
-                                    title = ""
+                                    onScreenEvent(CreateTaskScreenEvent.TaskDescriptionChanged(""))
                                     showTitleErrorAnimation = true
                                 }
                             }
                         )
                     )
                     Text(
-                        text = "${description.length}/$maxDescriptionCharsAllowed",
-                        color = if (description.length >= maxDescriptionCharsAllowed) {
+                        text = "${uiState.taskDescription.length}/$maxDescriptionCharsAllowed",
+                        color = if (uiState.taskDescription.length >= maxDescriptionCharsAllowed) {
                             DoTooRed
                         } else {
                             LightAppBarIconsColor
@@ -675,16 +630,17 @@ fun UpsertTaskView(
                     modifier = Modifier
                         .shadow(elevation = 5.dp, shape = RoundedCornerShape(30.dp))
                         .background(
-                            color = selectedProject?.color?.getColor()?: getRandomColor().getColor(),
+                            color = uiState.project?.color?.getColor()
+                                ?: getRandomColor().getColor(),
                             shape = RoundedCornerShape(30.dp)
                         )
                         .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                         .clickable(
                             onClick = {
-                                if (title.isNotBlank()) {
+                                if (uiState.taskName.isNotBlank()) {
                                     onScreenEvent(CreateTaskScreenEvent.CreateTask)
                                 } else {
-                                    title = ""
+                                    onScreenEvent(CreateTaskScreenEvent.TaskNameChanged(""))
                                     showTitleErrorAnimation = true
                                 }
                             }
@@ -706,13 +662,13 @@ fun UpsertTaskView(
                 }
             }
 
-            LaunchedEffect(composedForFirstTime ){
+            LaunchedEffect(composedForFirstTime) {
                 keyBoardController?.show()
                 delay(500)
                 titleFocusRequester.requestFocus()
                 composedForFirstTime.value = false
             }
-            LaunchedEffect(Unit){
+            LaunchedEffect(Unit) {
                 getData()
             }
         }

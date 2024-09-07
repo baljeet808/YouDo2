@@ -37,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import common.EnumProjectColors
 import common.EnumRoles
 import common.getColor
 import common.getRandomColor
@@ -47,6 +48,7 @@ import data.local.relations.TaskWithProject
 import domain.models.Project
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import presentation.onboarding.components.NextButton
 import presentation.project.components.DoTooItemsLazyColumn
 import presentation.project.helpers.ProjectScreenState
 import presentation.shared.ProjectCardWithProfiles
@@ -295,6 +297,18 @@ fun ProjectView(
         }
     }
 
+    Box(
+        modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        NextButton(
+            backgroundColor = EnumProjectColors.Blue.getColor(),
+            label = "Add Task",
+            onClick = {
+                navigateToCreateTask()
+            },
+        )
+    }
     LaunchedEffect(key1 = Unit){
         fetchScreenData()
     }

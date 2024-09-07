@@ -50,7 +50,6 @@ class CreateTaskViewModel(
                     enableSaveButton = isNameValid && descriptionValid
                 )
             }
-
             is CreateTaskScreenEvent.TaskDescriptionChanged -> {
                 val isNameValid = uiState.taskName.isNotBlank()
                 val descriptionValid =
@@ -60,7 +59,6 @@ class CreateTaskViewModel(
                     enableSaveButton = isNameValid && descriptionValid
                 )
             }
-
             is CreateTaskScreenEvent.ToggleDescriptionVisibility -> {
                 val showDescription = !uiState.showDescription
                 val isNameValid = uiState.taskName.isNotBlank()
@@ -71,9 +69,18 @@ class CreateTaskViewModel(
                     enableSaveButton = isNameValid && descriptionValid
                 )
             }
-
             is CreateTaskScreenEvent.CreateTask -> {
                 createTask()
+            }
+            is CreateTaskScreenEvent.TaskDueDateChanged -> {
+                uiState = uiState.copy(
+                    dueDate = event.dueDate
+                )
+            }
+            is CreateTaskScreenEvent.TaskPriorityChanged -> {
+                uiState = uiState.copy(
+                    priority = event.priority
+                )
             }
         }
     }
