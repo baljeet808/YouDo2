@@ -21,6 +21,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.complete_profile.helpers.addCompleteProfileDestination
+import presentation.create_task.addCreateTaskViewDestination
 import presentation.createproject.helpers.addCreateProjectViewDestination
 import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
 import presentation.dashboard.helpers.addDashboardDestination
@@ -187,6 +188,7 @@ fun App(
                 )
                 addProjectsViewDestination(navController = navController)
                 addCreateProjectViewDestination(navController = navController)
+                addCreateTaskViewDestination(navController = navController)
                 addProjectViewDestination(
                     navController = navController,
                     showErrorAlertDialog = { error ->

@@ -1,0 +1,720 @@
+package presentation.create_task
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import common.DueDates
+import common.EnumCreateTaskSheetType
+import common.EnumPriorities
+import common.getColor
+import common.getRandomColor
+import common.maxDescriptionCharsAllowed
+import common.maxTitleCharsAllowed
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import presentation.create_task.helpers.CreateTaskScreenEvent
+import presentation.create_task.helpers.CreateTaskUiState
+import presentation.shared.bottomSheets.DueDatesSheet
+import presentation.shared.bottomSheets.PrioritySheet
+import presentation.shared.fonts.AlataFontFamily
+import presentation.theme.DoTooRed
+import presentation.theme.LightAppBarIconsColor
+import presentation.theme.LightDotooFooterTextColor
+import presentation.theme.NightDotooFooterTextColor
+import presentation.theme.NightDotooTextColor
+import presentation.theme.getDayDarkColor
+import presentation.theme.getLightThemeColor
+import presentation.theme.getNightDarkColor
+import presentation.theme.getTextColor
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpsertTaskView(
+    uiState: CreateTaskUiState = CreateTaskUiState(),
+    navigateBack: () -> Unit,
+    onScreenEvent: (CreateTaskScreenEvent) -> Unit = {},
+    getData : () -> Unit
+) {
+
+
+    val focusScope = rememberCoroutineScope()
+
+    val composedForFirstTime = remember {
+        mutableStateOf(true)
+    }
+
+    val keyBoardController = LocalSoftwareKeyboardController.current
+    val titleFocusRequester = remember {
+        FocusRequester()
+    }
+    val descriptionFocusRequester = remember {
+        FocusRequester()
+    }
+
+
+    val transition = rememberInfiniteTransition(label = "")
+
+
+    val rotation = transition.animateValue(
+        initialValue = -3f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 100),
+            repeatMode = RepeatMode.Reverse
+        ),
+        typeConverter = Float.VectorConverter, label = ""
+    )
+
+    var showTitleErrorAnimation by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = showTitleErrorAnimation) {
+        delay(1000)
+        showTitleErrorAnimation = false
+    }
+
+    var currentBottomSheet: EnumCreateTaskSheetType? by remember {
+        mutableStateOf(null)
+    }
+
+    val sheetState = rememberStandardBottomSheetState(
+        skipHiddenState = false,
+        initialValue = SheetValue.Hidden
+    )
+    val sheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = sheetState
+    )
+    val scope = rememberCoroutineScope()
+
+    val closeSheet = {
+        scope.launch {
+            sheetScaffoldState.bottomSheetState.hide()
+        }
+    }
+    val openSheet = {
+        scope.launch {
+            sheetScaffoldState.bottomSheetState.expand()
+        }
+    }
+
+
+    var dueDate by remember {
+        mutableStateOf(
+            DueDates.TODAY
+        )
+    }
+    var customDatetime: LocalDate? by remember {
+        mutableStateOf(
+            null
+        )
+    }
+
+    val selectedProject by remember {
+        mutableStateOf(
+            uiState.project
+        )
+    }
+
+    var priority by remember {
+        mutableStateOf(
+            EnumPriorities.HIGH
+        )
+    }
+
+    var descriptionOn by remember {
+        mutableStateOf(true)
+    }
+
+    var description by remember {
+        mutableStateOf("")
+    }
+
+    var title by remember {
+        mutableStateOf("")
+    }
+
+
+
+
+
+    BottomSheetScaffold(
+        sheetContent = {
+            currentBottomSheet?.let {
+                when (it) {
+                    EnumCreateTaskSheetType.SELECT_PRIORITY -> {
+                        PrioritySheet(priority = priority) { newPriority ->
+                            priority = newPriority
+                            closeSheet()
+                        }
+                    }
+
+                    EnumCreateTaskSheetType.SELECT_DUE_DATE -> {
+                        DueDatesSheet(
+                            dueDate = dueDate,
+                            onDateSelected = { selectedDate ->
+                                dueDate = selectedDate
+                                customDatetime = selectedDate.getExactDate().date
+                                closeSheet()
+                            },
+                            onDatePickerSelected = {
+                                //OpenDatePicker
+                                //calendarState.show()
+                                dueDate = DueDates.CUSTOM
+                                closeSheet()
+                            }
+                        )
+                    }
+                }
+            }
+        },
+        modifier = Modifier
+            .background(
+                color = if (isSystemInDarkTheme()) {
+                    getNightDarkColor()
+                } else {
+                    getDayDarkColor()
+                },
+                shape = RoundedCornerShape(20.dp)
+            ),
+        scaffoldState = sheetScaffoldState,
+        sheetPeekHeight = 0.dp
+    ) {
+        /**
+         * Main content
+         * **/
+        Column(
+            modifier = Modifier
+                .background(
+                    color = getLightThemeColor()
+                )
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top
+        ) {
+
+            /**
+             * Row for top close button
+             * **/
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+
+                Text(
+                    text = "Create Task",
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .weight(1f),
+                    fontFamily = AlataFontFamily(),
+                    fontSize = 28.sp,
+                    color = getTextColor()
+                )
+
+
+                Spacer(modifier = Modifier.weight(.5f))
+
+                IconButton(
+                    onClick = navigateBack,
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(50.dp)
+                        .border(
+                            width = 2.dp,
+                            color = if (isSystemInDarkTheme()) {
+                                NightDotooFooterTextColor
+                            } else {
+                                LightDotooFooterTextColor
+                            },
+                            shape = RoundedCornerShape(40.dp)
+                        )
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Button to close side drawer.",
+                        tint = if (isSystemInDarkTheme()) {
+                            NightDotooTextColor
+                        } else {
+                            Color.Black
+                        }
+                    )
+                }
+            }
+
+            /**
+             * Row for Due date and Project selection
+             * **/
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                //Due Date
+                Row(
+                    modifier = Modifier
+                        .border(
+                            width = 2.dp,
+                            color = if (isSystemInDarkTheme()) {
+                                NightDotooFooterTextColor
+                            } else {
+                                LightDotooFooterTextColor
+                            },
+                            shape = RoundedCornerShape(30.dp)
+                        )
+                        .padding(top = 10.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                        .clickable(
+                            onClick = {
+                                closeSheet()
+                                keyBoardController?.hide()
+                                currentBottomSheet = EnumCreateTaskSheetType.SELECT_DUE_DATE
+                                openSheet()
+                            }
+                        ),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.Done,
+                        contentDescription = "Button to set due date for this task.",
+                        tint = LightAppBarIconsColor
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = dueDate.toString,
+                        color = LightAppBarIconsColor,
+                        fontFamily = AlataFontFamily(),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            AnimatedVisibility(visible = (customDatetime != null)) {
+                Text(
+                    text = "Due Date set to ".plus(
+                        customDatetime?: ""
+                    ),
+                    color = selectedProject?.color?.getColor()?: getRandomColor().getColor(),
+                    fontFamily = AlataFontFamily(),
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(start = 30.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+
+            /**
+             * Row for dotoo additional fields
+             * **/
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                //set priority
+                Row(
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                closeSheet()
+                                keyBoardController?.hide()
+                                currentBottomSheet = EnumCreateTaskSheetType.SELECT_PRIORITY
+                                openSheet()
+                            }
+                        ),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.Done,
+                        contentDescription = "Button to set priority",
+                        tint = LightAppBarIconsColor
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = priority.toString,
+                        color = LightAppBarIconsColor,
+                        fontFamily = AlataFontFamily(),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                //toggle description
+                Row(
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                descriptionOn = descriptionOn.not()
+                                if (descriptionOn) {
+                                    closeSheet()
+                                    focusScope.launch {
+                                        delay(300)
+                                        keyBoardController?.show()
+                                        descriptionFocusRequester.requestFocus()
+                                    }
+                                } else {
+                                    closeSheet()
+                                    description = ""
+                                    descriptionFocusRequester.freeFocus()
+                                }
+                            }
+                        ),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        if (descriptionOn) {
+                            Icons.Outlined.Done
+                        } else {
+                            Icons.AutoMirrored.Default.List
+                        },
+                        contentDescription = "Button to set due date for this task.",
+                        tint = LightAppBarIconsColor
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = if (descriptionOn) {
+                            "Clear Description"
+                        } else {
+                            "Add Description"
+                        },
+                        color = LightAppBarIconsColor,
+                        fontFamily = AlataFontFamily(),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+            /**
+             * Text field for adding title
+             * **/
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                verticalArrangement = Arrangement.spacedBy(
+                    1.dp,
+                    alignment = Alignment.CenterVertically
+                ),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Title",
+                    color = LightAppBarIconsColor,
+                    fontSize = 13.sp,
+                    fontFamily = AlataFontFamily(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 15.dp)
+                )
+                TextField(
+                    value = title,
+                    onValueChange = {
+                        if (it.length <= maxTitleCharsAllowed) {
+                            title = it
+                        }
+                    },
+                    colors = TextFieldDefaults.colors(
+                        disabledContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
+                    ),
+                    placeholder = {
+                        Text(
+                            text = "Enter new task",
+                            color = getTextColor(),
+                            fontSize = 24.sp,
+                            fontFamily = AlataFontFamily(),
+                            modifier = Modifier
+                                .rotate(
+                                    if (showTitleErrorAnimation) {
+                                        rotation.value
+                                    } else {
+                                        0f
+                                    }
+                                )
+                        )
+                    },
+                    textStyle = TextStyle(
+                        color = getTextColor(),
+                        fontSize = 24.sp,
+                        fontFamily = AlataFontFamily()
+                    ),
+                    maxLines = 3,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(titleFocusRequester)
+                        .onFocusEvent {
+                            if (it.hasFocus) {
+                                closeSheet()
+                            }
+                        },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = if (descriptionOn) {
+                            ImeAction.Next
+                        } else {
+                            ImeAction.Done
+                        }
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            descriptionFocusRequester.requestFocus()
+                        },
+                        onDone = {
+                            if (title.isNotBlank()) {
+                                onScreenEvent(CreateTaskScreenEvent.CreateTask)
+                            } else {
+                                title = ""
+                                showTitleErrorAnimation = true
+                            }
+                        }
+                    )
+                )
+                Text(
+                    text = "${title.length}/$maxTitleCharsAllowed",
+                    color = if (title.length >= maxTitleCharsAllowed) {
+                        DoTooRed
+                    } else {
+                        LightAppBarIconsColor
+                    },
+                    fontSize = 13.sp,
+                    fontFamily = AlataFontFamily(),
+                    modifier = Modifier.padding(start = 15.dp)
+                )
+            }
+
+            AnimatedVisibility(visible = descriptionOn) {
+                Spacer(modifier = Modifier.height(40.dp))
+            }
+
+            /**
+             * Text field for adding description
+             * **/
+            AnimatedVisibility(visible = descriptionOn) {
+
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        1.dp,
+                        alignment = Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "Description",
+                        color = LightAppBarIconsColor,
+                        fontSize = 13.sp,
+                        fontFamily = AlataFontFamily(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 15.dp)
+                    )
+                    TextField(
+                        value = description,
+                        onValueChange = {
+                            if (it.length <= maxDescriptionCharsAllowed) {
+                                description = it
+                            }
+                        },
+                        colors = TextFieldDefaults.colors(
+                            disabledContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent
+                        ),
+                        placeholder = {
+                            Text(
+                                text = "Enter description here",
+                                color = getTextColor(),
+                                fontSize = 16.sp,
+                                fontFamily = AlataFontFamily()
+                            )
+                        },
+                        textStyle = TextStyle(
+                            color = getTextColor(),
+                            fontSize = 16.sp,
+                            fontFamily = AlataFontFamily()
+                        ),
+                        maxLines = 3,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(descriptionFocusRequester)
+                            .onFocusEvent {
+                                if (it.hasFocus) {
+                                    closeSheet()
+                                }
+                            },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                if (title.isNotBlank()) {
+                                    onScreenEvent(CreateTaskScreenEvent.CreateTask)
+                                } else {
+                                    title = ""
+                                    showTitleErrorAnimation = true
+                                }
+                            }
+                        )
+                    )
+                    Text(
+                        text = "${description.length}/$maxDescriptionCharsAllowed",
+                        color = if (description.length >= maxDescriptionCharsAllowed) {
+                            DoTooRed
+                        } else {
+                            LightAppBarIconsColor
+                        },
+                        fontSize = 13.sp,
+                        fontFamily = AlataFontFamily(),
+                        modifier = Modifier.padding(start = 15.dp)
+                    )
+                }
+            }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            /**
+             * Save button
+             * **/
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .shadow(elevation = 5.dp, shape = RoundedCornerShape(30.dp))
+                        .background(
+                            color = selectedProject?.color?.getColor()?: getRandomColor().getColor(),
+                            shape = RoundedCornerShape(30.dp)
+                        )
+                        .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                        .clickable(
+                            onClick = {
+                                if (title.isNotBlank()) {
+                                    onScreenEvent(CreateTaskScreenEvent.CreateTask)
+                                } else {
+                                    title = ""
+                                    showTitleErrorAnimation = true
+                                }
+                            }
+                        )
+                ) {
+                    Text(
+                        text = "New Task",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontFamily = AlataFontFamily(),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        Icons.Default.Done,
+                        contentDescription = "Create task button",
+                        tint = Color.White
+                    )
+                }
+            }
+
+            LaunchedEffect(composedForFirstTime ){
+                keyBoardController?.show()
+                delay(500)
+                titleFocusRequester.requestFocus()
+                composedForFirstTime.value = false
+            }
+            LaunchedEffect(Unit){
+                getData()
+            }
+        }
+    }
+}

@@ -13,6 +13,7 @@ import presentation.projects.helpers.ProjectsViewModel
 import presentation.onboarding.helpers.OnBoardingViewModel
 import presentation.createproject.helpers.CreateProjectViewModel
 import presentation.complete_profile.helpers.CompleteProfileViewModel
+import presentation.create_task.helpers.CreateTaskViewModel
 import presentation.project.helpers.ProjectViewModel
 import AppViewModel
 import data.local.preferences.createDataStore
@@ -29,5 +30,6 @@ actual val platformModule= module {
     singleOf(::CompleteProfileViewModel)
     singleOf(::AppViewModel)
     singleOf(::ProjectViewModel)
+    singleOf(::CreateTaskViewModel)
     single<DataStore<Preferences>>{ createDataStore() }
 }

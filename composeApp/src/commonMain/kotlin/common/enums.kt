@@ -1,7 +1,42 @@
 package common
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
+
+enum class DueDates(val toString: String) {
+    NEXT_FRIDAY("Next Friday"),
+    TOMORROW("Tomorrow"),
+    TODAY("Today"),
+    CUSTOM("Custom");
+
+    fun getExactDate(): LocalDateTime {
+        val currentDate = getCurrentDateTime()
+        val timeZone = TimeZone.currentSystemDefault()
+
+        return when (this) {
+            TODAY -> currentDate
+            TOMORROW -> currentDate.toInstant(timeZone).plus(1, DateTimeUnit.DAY, timeZone).toLocalDateTime(timeZone)
+            NEXT_FRIDAY -> {
+                val currentDayOfWeek = currentDate.dayOfWeek.isoDayNumber
+                if (currentDayOfWeek == 5) {
+                    currentDate.toInstant(timeZone).plus(1, DateTimeUnit.DAY, timeZone).toLocalDateTime(timeZone)
+                } else if (currentDayOfWeek < 5) {
+                    currentDate.toInstant(timeZone).plus(5-currentDayOfWeek, DateTimeUnit.DAY, timeZone).toLocalDateTime(timeZone)
+                } else {
+                    currentDate.toInstant(timeZone).plus(7 - (currentDayOfWeek - 5), DateTimeUnit.DAY, timeZone).toLocalDateTime(timeZone)
+                }
+            }
+            else -> currentDate
+        }
+    }
+}
 
 enum class EnumPriorities(val toString: String) {
     HIGH("High"),
@@ -10,7 +45,7 @@ enum class EnumPriorities(val toString: String) {
 }
 
 enum class EnumCreateTaskSheetType {
-    SELECT_PROJECT, SELECT_DUE_DATE, SELECT_PRIORITY
+    SELECT_DUE_DATE, SELECT_PRIORITY
 }
 
 enum class EnumNotificationType{
