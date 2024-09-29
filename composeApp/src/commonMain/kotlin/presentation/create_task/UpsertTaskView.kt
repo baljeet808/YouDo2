@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Done
@@ -62,14 +62,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.DueDates
 import common.EnumCreateTaskSheetType
-import common.EnumPriorities
+import common.formatNicelyWithoutYear
 import common.getColor
 import common.getRandomColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.painterResource
+import presentation.create_task.components.PriorityAndDescriptionButton
 import presentation.create_task.helpers.CreateTaskScreenEvent
 import presentation.create_task.helpers.CreateTaskUiState
 import presentation.shared.bottomSheets.DueDatesSheet
@@ -84,6 +85,9 @@ import presentation.theme.getDayDarkColor
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getTextColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.baseline_calendar_month_24
+import youdo2.composeapp.generated.resources.baseline_topic_24
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,14 +98,9 @@ fun UpsertTaskView(
     getData: () -> Unit
 ) {
 
-
-    val focusScope = rememberCoroutineScope()
-
-    val composedForFirstTime = remember {
-        mutableStateOf(true)
-    }
-
     val keyBoardController = LocalSoftwareKeyboardController.current
+
+
     val titleFocusRequester = remember {
         FocusRequester()
     }
@@ -109,9 +108,18 @@ fun UpsertTaskView(
         FocusRequester()
     }
 
+    LaunchedEffect(key1 = uiState.showKeyboard) {
+        if (uiState.showKeyboard) {
+            keyBoardController?.show()
+            when {
+                uiState.focusOnTitle -> titleFocusRequester.requestFocus()
+                uiState.focusOnDescription -> descriptionFocusRequester.requestFocus()
+            }
+        }
+    }
+
 
     val transition = rememberInfiniteTransition(label = "")
-
 
     val rotation = transition.animateValue(
         initialValue = -3f,
@@ -268,7 +276,6 @@ fun UpsertTaskView(
                     .padding(start = 20.dp, end = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 //Due Date
                 Row(
                     modifier = Modifier
@@ -294,7 +301,7 @@ fun UpsertTaskView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        Icons.Outlined.Done,
+                        painter = painterResource(Res.drawable.baseline_calendar_month_24),
                         contentDescription = "Button to set due date for this task.",
                         tint = LightAppBarIconsColor
                     )
@@ -308,6 +315,41 @@ fun UpsertTaskView(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+
+                //Select Project
+                Row(
+                    modifier = Modifier
+                        .border(
+                            width = 2.dp,
+                            color = if (isSystemInDarkTheme()) {
+                                NightDotooFooterTextColor
+                            } else {
+                                LightDotooFooterTextColor
+                            },
+                            shape = RoundedCornerShape(30.dp)
+                        )
+                        .padding(top = 10.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                        ,
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.baseline_topic_24),
+                        contentDescription = "Button to set due date for this task.",
+                        tint = uiState.project?.color?.getColor()?: getRandomColor().getColor(),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = uiState.project?.name ?: "Select Project",
+                        color = LightAppBarIconsColor,
+                        fontFamily = AlataFontFamily(),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -315,9 +357,9 @@ fun UpsertTaskView(
 
             Text(
                 text = "Due Date set to ".plus(
-                    uiState.dueDate.getExactDate()
+                    uiState.dueDate.getExactDate().formatNicelyWithoutYear()
                 ),
-                color = uiState.project?.color?.getColor() ?: getRandomColor().getColor(),
+                color = getTextColor(),
                 fontFamily = AlataFontFamily(),
                 fontSize = 16.sp,
                 maxLines = 1,
@@ -329,91 +371,26 @@ fun UpsertTaskView(
             /**
              * Row for dotoo additional fields
              * **/
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                //set priority
-                Row(
-                    modifier = Modifier
-                        .clickable(
-                            onClick = {
-                                closeSheet()
-                                keyBoardController?.hide()
-                                currentBottomSheet = EnumCreateTaskSheetType.SELECT_PRIORITY
-                                openSheet()
-                            }
-                        ),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Outlined.Done,
-                        contentDescription = "Button to set priority",
-                        tint = LightAppBarIconsColor
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        text = uiState.priority.name,
-                        color = LightAppBarIconsColor,
-                        fontFamily = AlataFontFamily(),
-                        fontSize = 16.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+            PriorityAndDescriptionButton(
+                modifier = Modifier.fillMaxHeight(0.2f),
+                onPriorityClicked = {
+                    closeSheet()
+                    keyBoardController?.hide()
+                    currentBottomSheet = EnumCreateTaskSheetType.SELECT_PRIORITY
+                    openSheet()
+                },
+                onKeyBoardController = {
+                    keyBoardController?.show()
+                    descriptionFocusRequester.requestFocus()
+                },
+                showDescription = uiState.showDescription,
+                clearProjectDescription = {
+                    onScreenEvent(CreateTaskScreenEvent.TaskDescriptionChanged(""))
+                },
+                toggleDescriptionVisibility = {
+                    onScreenEvent(CreateTaskScreenEvent.ToggleDescriptionVisibility)
                 }
-
-                //toggle description
-                Row(
-                    modifier = Modifier
-                        .clickable(
-                            onClick = {
-                                onScreenEvent(CreateTaskScreenEvent.ToggleDescriptionVisibility)
-                                if (uiState.showDescription) {
-                                    closeSheet()
-                                    focusScope.launch {
-                                        delay(300)
-                                        keyBoardController?.show()
-                                        descriptionFocusRequester.requestFocus()
-                                    }
-                                } else {
-                                    closeSheet()
-                                    onScreenEvent(CreateTaskScreenEvent.TaskDescriptionChanged(""))
-                                    descriptionFocusRequester.freeFocus()
-                                }
-                            }
-                        ),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        if (uiState.showDescription) {
-                            Icons.Outlined.Done
-                        } else {
-                            Icons.AutoMirrored.Default.List
-                        },
-                        contentDescription = "Button to set due date for this task.",
-                        tint = LightAppBarIconsColor
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        text = if (uiState.showDescription) {
-                            "Clear Description"
-                        } else {
-                            "Add Description"
-                        },
-                        color = LightAppBarIconsColor,
-                        fontFamily = AlataFontFamily(),
-                        fontSize = 16.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
             /**
@@ -662,13 +639,10 @@ fun UpsertTaskView(
                 }
             }
 
-            LaunchedEffect(composedForFirstTime) {
+            LaunchedEffect(key1 = Unit) {
                 keyBoardController?.show()
                 delay(500)
                 titleFocusRequester.requestFocus()
-                composedForFirstTime.value = false
-            }
-            LaunchedEffect(Unit) {
                 getData()
             }
         }

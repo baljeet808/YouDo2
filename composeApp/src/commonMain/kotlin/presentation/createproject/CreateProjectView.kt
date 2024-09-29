@@ -98,7 +98,7 @@ fun CreateProjectView(
             onPreviewClicked = {
 
             },
-            onkeyBoardController = {
+            onKeyBoardController = {
                 keyBoardController?.show()
                 descriptionFocusRequester.requestFocus()
             },

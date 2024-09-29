@@ -1,4 +1,4 @@
-package presentation.createproject.components
+package presentation.create_task.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,15 +23,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.breaking_news_24
 
 
 @Composable
-fun ProjectPreviewAndDescriptionButton(
-    onPreviewClicked: () -> Unit = {},
+fun PriorityAndDescriptionButton(
+    onPriorityClicked: () -> Unit = {},
+    selectedPriority: String = "",
     onKeyBoardController: () -> Unit = {},
     showDescription: Boolean = false,
     clearProjectDescription: () -> Unit = {},
@@ -51,7 +55,7 @@ fun ProjectPreviewAndDescriptionButton(
 
         TextButton(
             onClick = {
-                onPreviewClicked()
+                onPriorityClicked()
             },
             modifier = Modifier
                 .border(
@@ -65,8 +69,8 @@ fun ProjectPreviewAndDescriptionButton(
                 )
         ) {
             Icon(
-                Icons.Outlined.Menu,
-                contentDescription = "Button to see the project preview.",
+                painter = painterResource(Res.drawable.breaking_news_24),
+                contentDescription = "Button to set priority",
                 tint = LightAppBarIconsColor,
                 modifier = Modifier
                     .width(30.dp)
@@ -74,7 +78,7 @@ fun ProjectPreviewAndDescriptionButton(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Preview",
+                text = selectedPriority,
                 color = LightAppBarIconsColor,
                 fontFamily = AlataFontFamily(),
                 fontSize = 16.sp,
