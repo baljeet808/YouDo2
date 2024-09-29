@@ -1,10 +1,10 @@
 package presentation.project.helpers
 
 import common.EnumRoles
-import data.local.entities.ProjectEntity
-import data.local.entities.TaskEntity
-import data.local.entities.UserEntity
 import domain.dto_helpers.DataError
+import domain.models.Project
+import domain.models.Task
+import domain.models.User
 
 data class ProjectScreenState(
     val isLoading : Boolean = false,
@@ -13,8 +13,8 @@ data class ProjectScreenState(
     val userId : String = "",
     val userEmail : String = "",
     val userAvatarUrl : String = "",
-    val project : ProjectEntity = ProjectEntity(),
-    val tasks : List<TaskEntity> = emptyList(),
-    val users : List<UserEntity> = emptyList(),
+    val project : Project = Project(),
+    val tasks : List<Task> = emptyList(),
+    val users : List<User> = emptyList(),
     val role : EnumRoles = EnumRoles.Viewer
 )

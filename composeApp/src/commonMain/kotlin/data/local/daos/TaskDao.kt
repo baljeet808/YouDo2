@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
 
+    @Transaction
     @Upsert
     suspend fun upsertAll(tasks: List<TaskEntity>)
 

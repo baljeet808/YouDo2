@@ -32,7 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.getColor
-import data.local.relations.TaskWithProject
+import domain.models.TaskWithProject
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getDarkThemeColor
 
@@ -95,7 +95,7 @@ fun DoTooItemView(
                         Icons.Outlined.CheckCircle
                     },
                     contentDescription = "Checked circular icon",
-                    tint = doToo.projectEntity.color.getColor(),
+                    tint = doToo.project.color.getColor(),
                     modifier = Modifier
                         .height(if(usingForDemo){ 20.dp }else {30.dp})
                         .width(if(usingForDemo){ 20.dp }else {30.dp})
@@ -126,7 +126,7 @@ fun DoTooItemView(
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription ="Navigate to chat button",
-                tint = doToo.projectEntity.color.getColor(),
+                tint = doToo.project.color.getColor(),
                 modifier = Modifier
                     .height(if(usingForDemo){ 20.dp }else {30.dp})
                     .width(if(usingForDemo){ 20.dp }else {30.dp})

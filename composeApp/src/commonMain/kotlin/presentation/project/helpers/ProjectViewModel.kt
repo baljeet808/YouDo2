@@ -8,14 +8,15 @@ import androidx.lifecycle.viewModelScope
 import data.local.entities.TaskEntity
 import data.local.mappers.toProject
 import data.local.mappers.toProjectEntity
+import data.local.mappers.toTask
 import data.local.mappers.toTaskEntity
+import data.local.mappers.toUser
 import data.local.mappers.toUserEntity
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
 import domain.models.Project
 import domain.models.Task
-import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.project_use_cases.DeleteProjectUseCase
 import domain.use_cases.project_use_cases.GetProjectByIdAsFlowUseCase
 import domain.use_cases.project_use_cases.UpsertProjectUseCase
@@ -23,31 +24,25 @@ import domain.use_cases.task_use_cases.DeleteTaskUseCase
 import domain.use_cases.task_use_cases.GetProjectTasksAsFlowUseCase
 import domain.use_cases.task_use_cases.UpsertTasksUseCase
 import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
-import domain.use_cases.user_use_cases.GetUsersByIdsUseCase
 import domain.use_cases.user_use_cases.GetUsersUseCase
 import domain.use_cases.user_use_cases.UpsertUserUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class ProjectViewModel(
     private val upsertDoToosUseCase: UpsertTasksUseCase,
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val deleteDoToosUseCase: DeleteTaskUseCase,
     private val getProjectByIdAsFlowUseCase: GetProjectByIdAsFlowUseCase,
-    private val getUsersByIdsUseCase: GetUsersByIdsUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val getUserByIdAsFlowUseCase: GetUserByIdAsFlowUseCase,
     private val getProjectTasksAsFlowUseCase: GetProjectTasksAsFlowUseCase,
     private val upsertProjectUseCase: UpsertProjectUseCase,
     private val upsertUserUseCase: UpsertUserUseCase,
 ) : ViewModel(), KoinComponent {
-
-    private val dataStoreRepository: DataStoreRepository by inject<DataStoreRepository>()
 
     var uiState by mutableStateOf(ProjectScreenState())
         private set
@@ -113,7 +108,7 @@ class ProjectViewModel(
             }
             //show the users which are in local database first
             withContext(Dispatchers.Main) {
-                uiState = uiState.copy(users = usersFoundFromLocalDB)
+                uiState = uiState.copy(users = usersFoundFromLocalDB.map { it.toUser() })
             }
 
             //filter the users that are not in the local database
@@ -132,7 +127,7 @@ class ProjectViewModel(
                 upsertUserUseCase(listOf(user.toUserEntity()))
                 //keep adding the users one by one to the uiState
                 withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(users = usersFoundFromLocalDB.plus(user.toUserEntity()))
+                    uiState = uiState.copy(users = usersFoundFromLocalDB.map { it.toUser() }.plus(user))
                 }
             }
         }
@@ -194,7 +189,7 @@ class ProjectViewModel(
         try {
             getProjectByIdAsFlowUseCase(projectID).collect { project ->
                 withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(project = project)
+                    uiState = uiState.copy(project = project.toProject())
                 }
             }
         } catch (e: Exception) {
@@ -208,13 +203,14 @@ class ProjectViewModel(
         try{
             getProjectTasksAsFlowUseCase(projectID).collect{ tasks ->
                 withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(tasks = tasks)
+                    uiState = uiState.copy(tasks = tasks.map { it.toTask() })
                 }
             }
         }catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
             }
+            e.printStackTrace()
         }
     }
 

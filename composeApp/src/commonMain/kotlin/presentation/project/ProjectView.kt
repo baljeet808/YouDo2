@@ -44,8 +44,8 @@ import common.getRandomColor
 import common.maxTitleCharsAllowed
 import data.local.mappers.toProject
 import data.local.mappers.toUser
-import data.local.relations.TaskWithProject
 import domain.models.Project
+import domain.models.TaskWithProject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.onboarding.components.NextButton
@@ -128,8 +128,8 @@ fun ProjectView(
          *Top Project Card
          * **/
         ProjectCardWithProfiles(
-            project = uiState.project.toProject(),
-            users = uiState.users.map { it.toUser() },
+            project = uiState.project,
+            users = uiState.users,
             onItemDeleteClick = deleteProject,
             updateProjectTitle = { _ ->
 
@@ -186,7 +186,7 @@ fun ProjectView(
                 tasks = uiState.tasks.map { task ->
                     TaskWithProject(
                         task = task,
-                        projectEntity = uiState.project
+                        project = uiState.project
                     )
                 }.toCollection(ArrayList()),
                 onToggleDoToo = { task ->
@@ -289,7 +289,7 @@ fun ProjectView(
                 onCancel = {
                     showBlur = false
                 },
-                themeColor = taskToEdit.value?.projectEntity?.color?.getColor()
+                themeColor = taskToEdit.value?.project?.color?.getColor()
                     ?: getRandomColor().getColor(),
                 lines = 2
             )
