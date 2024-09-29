@@ -38,10 +38,10 @@ import presentation.theme.getDarkThemeColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DoTooItemView(
-    doToo: TaskWithProject,
+fun TaskView(
+    taskWithProject: TaskWithProject,
     navigateToTaskEdit: () -> Unit,
-    navigateToQuickEditDotoo : () -> Unit,
+    navigateToQuickEditTask : () -> Unit,
     onToggleDone: () -> Unit,
     usingForDemo : Boolean = false
 ) {
@@ -65,7 +65,7 @@ fun DoTooItemView(
                 .combinedClickable(
                     onClick = navigateToTaskEdit,
                     onLongClick = {
-                        navigateToQuickEditDotoo()
+                        navigateToQuickEditTask()
                     }
                 )
                 .padding(
@@ -89,13 +89,13 @@ fun DoTooItemView(
                     .padding(0.dp),
             ) {
                 Icon(
-                    if (doToo.task.done) {
+                    if (taskWithProject.task.done) {
                         Icons.Filled.CheckCircle
                     } else {
                         Icons.Outlined.CheckCircle
                     },
                     contentDescription = "Checked circular icon",
-                    tint = doToo.project.color.getColor(),
+                    tint = taskWithProject.project.color.getColor(),
                     modifier = Modifier
                         .height(if(usingForDemo){ 20.dp }else {30.dp})
                         .width(if(usingForDemo){ 20.dp }else {30.dp})
@@ -104,7 +104,7 @@ fun DoTooItemView(
             Spacer(modifier = Modifier.width(10.dp))
 
             Text(
-                text = doToo.task.title,
+                text = taskWithProject.task.title,
                 color = if (isSystemInDarkTheme()) {
                     Color.White
                 } else {
@@ -114,7 +114,7 @@ fun DoTooItemView(
                 fontSize = if(usingForDemo){ 13.sp }else {18.sp},
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                style = if (doToo.task.done) {
+                style = if (taskWithProject.task.done) {
                     TextStyle(textDecoration = TextDecoration.LineThrough)
                 } else {
                     TextStyle()
@@ -126,7 +126,7 @@ fun DoTooItemView(
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription ="Navigate to chat button",
-                tint = doToo.project.color.getColor(),
+                tint = taskWithProject.project.color.getColor(),
                 modifier = Modifier
                     .height(if(usingForDemo){ 20.dp }else {30.dp})
                     .width(if(usingForDemo){ 20.dp }else {30.dp})

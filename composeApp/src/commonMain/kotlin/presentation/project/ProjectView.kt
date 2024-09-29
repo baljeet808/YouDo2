@@ -8,6 +8,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,40 +38,37 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import common.EnumProjectColors
 import common.EnumRoles
 import common.getColor
 import common.getRandomColor
+import common.getRole
 import common.maxTitleCharsAllowed
-import data.local.mappers.toProject
-import data.local.mappers.toUser
-import domain.models.Project
+import data.local.mappers.toProjectEntity
 import domain.models.TaskWithProject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.onboarding.components.NextButton
-import presentation.project.components.DoTooItemsLazyColumn
+import presentation.project.components.TasksLazyColumn
+import presentation.project.helpers.ProjectScreenEvent
 import presentation.project.helpers.ProjectScreenState
 import presentation.shared.ProjectCardWithProfiles
 import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooRed
-import presentation.theme.getDarkThemeColor
+import presentation.theme.getLightThemeColor
+import presentation.theme.getNightDarkColor
+import presentation.theme.getNightLightColor
 import presentation.theme.getTextColor
 
 @Composable
 fun ProjectView(
     fetchScreenData: () -> Unit = {},
     uiState: ProjectScreenState,
-    onToggle: (TaskWithProject) -> Unit = {},
     navigateToCreateTask: () -> Unit = {},
-    deleteTask: (TaskWithProject) -> Unit = {},
-    deleteProject: () -> Unit = {},
-    upsertProject: (Project) -> Unit = {},
     onClickInvite: () -> Unit,
     navigateToEditTask: (task: TaskWithProject) -> Unit,
     navigateToChat: () -> Unit,
-    updateTaskTitle: (task: TaskWithProject, title: String) -> Unit
+    onEvent: (ProjectScreenEvent) -> Unit = {},
 ) {
 
 
@@ -111,7 +109,7 @@ fun ProjectView(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = getDarkThemeColor().copy(alpha = 0.7f)
+                color = getLightThemeColor()
             )
             .blur(
                 radius = if (showBlur) {
@@ -130,17 +128,21 @@ fun ProjectView(
         ProjectCardWithProfiles(
             project = uiState.project,
             users = uiState.users,
-            onItemDeleteClick = deleteProject,
-            updateProjectTitle = { _ ->
-
+            onItemDeleteClick = {
+                onEvent(ProjectScreenEvent.DeleteProject(uiState.project))
             },
-            updateProjectDescription = { _ ->
-
+            updateProject = { project ->
+                onEvent(ProjectScreenEvent.UpdateProject(project))
             },
-            toggleNotificationSetting = {},
             onClickInvite = onClickInvite,
             showDialogBackgroundBlur = {
                 showBlur = it
+            },
+            taskCount = uiState.tasks.size,
+            role = getRole(project = uiState.project.toProjectEntity(), userId = uiState.userId),
+            showProjectDetail = uiState.showProjectDetail,
+            onProjectDetailClick = {
+                onEvent(ProjectScreenEvent.ToggleProjectDetail)
             }
         )
 
@@ -150,7 +152,7 @@ fun ProjectView(
         ) {
             TextButton(
                 onClick = {
-
+                    navigateToChat()
                 },
                 modifier = Modifier.padding(end = 10.dp)
             ) {
@@ -167,7 +169,7 @@ fun ProjectView(
                 )
 
             }
-            if (uiState.role == EnumRoles.Admin) {
+            if (uiState.role == EnumRoles.Blocked) {
                 Icon(
                     Icons.Default.Lock,
                     contentDescription = "Lock icon",
@@ -182,33 +184,33 @@ fun ProjectView(
             /**
              * List of tasks form this project
              * **/
-            DoTooItemsLazyColumn(
+            TasksLazyColumn(
                 tasks = uiState.tasks.map { task ->
                     TaskWithProject(
                         task = task,
                         project = uiState.project
                     )
                 }.toCollection(ArrayList()),
-                onToggleDoToo = { task ->
+                onToggleTask = { taskWithProject ->
                     if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
                         showBlur = true
                         showViewerPermissionDialog.value = true
                     } else {
-                        onToggle(task)
+                        onEvent(ProjectScreenEvent.ToggleTask(taskWithProject.task))
                     }
                 },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 0.dp),
-                onItemDelete = { task ->
+                onItemDelete = { taskWithProject ->
                     if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
                         showBlur = true
                         showViewerPermissionDialog.value = true
                     } else {
                         if (true) {
-                            deleteTask(task)
+                            onEvent(ProjectScreenEvent.DeleteTask(taskWithProject.task))
                         } else {
-                            taskToDelete.value = task
+                            taskToDelete.value = taskWithProject
                             showBlur = true
                             showDeleteConfirmationDialog.value = true
                         }
@@ -278,7 +280,7 @@ fun ProjectView(
                     .focusRequester(focusRequester),
                 onSubmit = { title ->
                     taskToEdit.value?.let {
-                        updateTaskTitle(it, title)
+                        onEvent(ProjectScreenEvent.UpdateTask(it.task.copy(title = title)))
                     }
                     keyBoardController?.hide()
                     showBlur = false
@@ -302,7 +304,7 @@ fun ProjectView(
         contentAlignment = Alignment.BottomEnd
     ) {
         NextButton(
-            backgroundColor = EnumProjectColors.Blue.getColor(),
+            backgroundColor = uiState.project.color.getColor(),
             label = "Add Task",
             onClick = {
                 navigateToCreateTask()

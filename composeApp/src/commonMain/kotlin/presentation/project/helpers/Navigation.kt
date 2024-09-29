@@ -66,23 +66,12 @@ fun NavGraphBuilder.addProjectViewDestination(
                 }
             },
             uiState = uiState,
-            onToggle = { task ->
-                val updatedTask = task.task.copy()
-                updatedTask.done = task.task.done.not()
-            },
             navigateToCreateTask = {
                 navController.navigate(
                     "create_task/${projectId}/${userId}"
                 )
             },
-            deleteTask = { task ->
 
-            },
-            deleteProject = {
-
-            },
-            upsertProject = { updatedProject ->
-            },
             onClickInvite = {
             },
             navigateToEditTask = {
@@ -90,8 +79,8 @@ fun NavGraphBuilder.addProjectViewDestination(
             navigateToChat = {
 
             },
-            updateTaskTitle = { task, title ->
-
+            onEvent = {
+                viewModel.onEvent(it)
             }
         )
 

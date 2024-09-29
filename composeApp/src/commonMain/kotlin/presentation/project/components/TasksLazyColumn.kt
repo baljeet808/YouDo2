@@ -35,12 +35,12 @@ import presentation.theme.LightAppBarIconsColor
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun DoTooItemsLazyColumn(
+fun TasksLazyColumn(
     tasks: ArrayList<TaskWithProject>,
-    onToggleDoToo: (doToo: TaskWithProject) -> Unit,
+    onToggleTask: (taskWithProject: TaskWithProject) -> Unit,
     navigateToQuickEditTask : (task: TaskWithProject) -> Unit,
     navigateToEditTask : (task : TaskWithProject) -> Unit,
-    onItemDelete: (doToo: TaskWithProject) -> Unit,
+    onItemDelete: (taskWithProject: TaskWithProject) -> Unit,
     modifier: Modifier
 ) {
     LazyColumn(
@@ -49,12 +49,12 @@ fun DoTooItemsLazyColumn(
             .background(color = Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(tasks, key = {it.task.id}) { dotoo ->
+        items(tasks, key = {it.task.id}) { taskWithProject ->
 
             val state = rememberDismissState(
                 confirmStateChange = {
                     if (it == DismissValue.DismissedToStart) {
-                        onItemDelete(dotoo)
+                        onItemDelete(taskWithProject)
                     }
                     true
                 }
@@ -99,16 +99,16 @@ fun DoTooItemsLazyColumn(
                 }
             },
                 dismissContent = {
-                    DoTooItemView(
-                        doToo = dotoo,
+                    TaskView(
+                        taskWithProject = taskWithProject,
                         onToggleDone = {
-                            onToggleDoToo(dotoo)
+                            onToggleTask(taskWithProject)
                         },
-                        navigateToQuickEditDotoo = {
-                            navigateToQuickEditTask(dotoo)
+                        navigateToQuickEditTask = {
+                            navigateToQuickEditTask(taskWithProject)
                         },
                         navigateToTaskEdit = {
-                            navigateToEditTask(dotoo)
+                            navigateToEditTask(taskWithProject)
                         }
                     )
                 },
@@ -118,7 +118,6 @@ fun DoTooItemsLazyColumn(
             )
 
         }
-
         item {
             Spacer(modifier = Modifier.height(80.dp))
         }

@@ -41,7 +41,6 @@ import common.EnumRoles
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
-import data.local.entities.TaskEntity
 import domain.models.Project
 import domain.models.User
 import presentation.shared.editboxs.EditOnFlyBox
@@ -55,18 +54,14 @@ fun ProjectCardWithProfiles(
     project: Project,
     users: List<User> = emptyList(),
     onItemDeleteClick: () -> Unit = {},
-    updateProjectTitle: (title: String) -> Unit = {},
-    updateProjectDescription: (title: String) -> Unit = {},
-    toggleNotificationSetting: () -> Unit = {},
+    updateProject: (project : Project) -> Unit = {},
     onClickInvite: () -> Unit = {},
-    showFullCardInitially : Boolean = true,
     showDialogBackgroundBlur : (showBlur : Boolean) -> Unit = {},
     role : EnumRoles = EnumRoles.Viewer,
+    taskCount : Int = 0,
+    showProjectDetail : Boolean = false,
+    onProjectDetailClick : () -> Unit = {}
 ) {
-
-    var showAll by remember {
-        mutableStateOf(showFullCardInitially)
-    }
 
     val showViewerPermissionDialog = remember {
         mutableStateOf(false)
@@ -107,8 +102,6 @@ fun ProjectCardWithProfiles(
             .background(color = project.color.getColor()),
         verticalArrangement = Arrangement.SpaceAround
     ) {
-
-        var themeColor = project.color.getColor()
 
         Canvas(modifier = Modifier.fillMaxWidth(), onDraw = {
             drawCircle(
@@ -159,7 +152,7 @@ fun ProjectCardWithProfiles(
             }
         })
 
-        AnimatedVisibility(visible = showAll) {
+        AnimatedVisibility(visible = showProjectDetail) {
             ProjectTopBar(
                 notificationsState = true,
                 onNotificationItemClicked = { /*TODO*/ },
@@ -170,7 +163,7 @@ fun ProjectCardWithProfiles(
             )
         }
 
-        AnimatedVisibility(visible = showAll) {
+        AnimatedVisibility(visible = showProjectDetail) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -220,7 +213,8 @@ fun ProjectCardWithProfiles(
                     EditOnFlyBox(
                         modifier = Modifier,
                         onSubmit = { desc ->
-                           updateProjectDescription(desc)
+                            val projectCopy = project.copy(description = desc)
+                            updateProject(projectCopy)
                             showEditDescriptionBox = false
                         },
                         placeholder = project.description ,
@@ -274,7 +268,8 @@ fun ProjectCardWithProfiles(
                 EditOnFlyBox(
                     modifier = Modifier,
                     onSubmit = { title ->
-                        updateProjectTitle(title)
+                        val projectCopy = project.copy(name = title)
+                        updateProject(projectCopy)
                         showEditTitleBox = false
                     },
                     placeholder = project.name ,
@@ -294,7 +289,7 @@ fun ProjectCardWithProfiles(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = emptyList<TaskEntity>().size.toString().plus(" Tasks"),
+                    text = taskCount.toString().plus(" Tasks"),
                     modifier = Modifier
                         .padding(start = 5.dp, end = 5.dp),
                     color = LessTransparentWhiteColor,
@@ -304,11 +299,11 @@ fun ProjectCardWithProfiles(
                 )
 
                 TextButton(
-                    onClick = { showAll = showAll.not() },
+                    onClick = { onProjectDetailClick() },
                     modifier = Modifier.padding(end = 10.dp)
                 ) {
                     Text(
-                        text = if (showAll) {
+                        text = if (showProjectDetail) {
                             "Show less"
                         } else {
                             "Show more"
@@ -317,7 +312,7 @@ fun ProjectCardWithProfiles(
                         color = Color.White
                     )
                     Icon(
-                        if (showAll) {
+                        if (showProjectDetail) {
                             Icons.Default.KeyboardArrowUp
                         } else {
                             Icons.Default.KeyboardArrowDown
@@ -360,9 +355,6 @@ fun ProjectTopBar(
             /**
              * Role
              * **/
-            /**
-             * Role
-             * **/
             Text(
                 text = "You are ".plus(role.name),
                 modifier = Modifier
@@ -375,10 +367,6 @@ fun ProjectTopBar(
 
 
             Spacer(modifier = Modifier.weight(.2f))
-
-            /**
-             * Button to add more person to the project
-             * **/
 
             /**
              * Button to add more person to the project
@@ -398,9 +386,6 @@ fun ProjectTopBar(
                 /**
                  * Delete the project
                  * **/
-                /**
-                 * Delete the project
-                 * **/
                 IconButton(
                     onClick = {
                         onDeleteItemClicked()
@@ -415,10 +400,6 @@ fun ProjectTopBar(
                     )
                 }
             }
-
-            /**
-             * Silent Notification for this project
-             * **/
 
             /**
              * Silent Notification for this project

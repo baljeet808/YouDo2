@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import common.getRole
 import data.local.entities.TaskEntity
 import data.local.mappers.toProject
 import data.local.mappers.toProjectEntity
@@ -60,6 +61,32 @@ class ProjectViewModel(
     private suspend fun hideLoading() {
         withContext(Dispatchers.Main){
             uiState = uiState.copy(isLoading = false, error = null)
+        }
+    }
+
+
+    fun onEvent(event: ProjectScreenEvent){
+        when(event){
+            is ProjectScreenEvent.DeleteProject -> {
+                deleteProjectOnServer(event.project.id)
+                deleteProjectLocally(event.project)
+            }
+            is ProjectScreenEvent.DeleteTask -> {
+                deleteTaskOnServer(event.task, uiState.project)
+                deleteTaskLocally(event.task.toTaskEntity())
+            }
+            is ProjectScreenEvent.UpdateProject -> {
+                updateProjectOnSever(event.project)
+            }
+            is ProjectScreenEvent.UpdateTask -> {
+                updateTaskOnServer(event.task, uiState.project)
+            }
+            is ProjectScreenEvent.ToggleTask -> {
+                updateTaskOnServer(event.task.copy(done = event.task.done.not()), uiState.project)
+            }
+            is ProjectScreenEvent.ToggleProjectDetail -> {
+                uiState = uiState.copy(showProjectDetail = uiState.showProjectDetail.not())
+            }
         }
     }
 
@@ -189,7 +216,7 @@ class ProjectViewModel(
         try {
             getProjectByIdAsFlowUseCase(projectID).collect { project ->
                 withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(project = project.toProject())
+                    uiState = uiState.copy(project = project.toProject(), role = getRole(project = project, userId = uiState.userId))
                 }
             }
         } catch (e: Exception) {
@@ -214,7 +241,7 @@ class ProjectViewModel(
         }
     }
 
-    private fun updateTaskOnServer(task: TaskEntity, project: Project) =
+    private fun updateTaskOnServer(task: Task, project: Project) =
         viewModelScope.launch(Dispatchers.IO) {
             projectsReference
                 .document(project.id)
@@ -242,7 +269,7 @@ class ProjectViewModel(
         deleteProjectUseCase(project = project.toProjectEntity())
     }
 
-    private fun deleteTaskOnServer(task: TaskEntity, project: Project) =
+    private fun deleteTaskOnServer(task: Task, project: Project) =
         viewModelScope.launch(Dispatchers.IO) {
             projectsReference
                 .document(project.id)
