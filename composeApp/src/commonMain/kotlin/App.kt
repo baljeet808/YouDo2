@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -45,6 +46,11 @@ import presentation.theme.getNightLightColor
 @Preview
 fun App(
 ) {
+
+    val viewModel = koinViewModel<AppViewModel>()
+
+    val userState = viewModel.userState
+
     val retryApiCall = remember { mutableStateOf(false) }
     val openAlertDialog = remember { mutableStateOf(false) }
 
@@ -67,9 +73,7 @@ fun App(
 
     val navAnimationDuration = 300 //millis
 
-    val viewModel = koinViewModel<AppViewModel>()
 
-    val userState = viewModel.userState
 
     val startDestination = if (userState.isUserLoggedIn) {
         DESTINATION_DASHBOARD_ROUTE

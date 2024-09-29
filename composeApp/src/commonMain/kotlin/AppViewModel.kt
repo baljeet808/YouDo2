@@ -88,11 +88,10 @@ class AppViewModel(
             withContext(Dispatchers.Main) {
                 userState = userState.copy(userId = it)
             }
-            syncDataFromFirebase(it)
         }
     }
 
-    private fun syncDataFromFirebase(userId : String) = viewModelScope.launch(Dispatchers.IO){
+    fun syncDataFromFirebase(userId : String) = viewModelScope.launch(Dispatchers.IO){
         try {
             Firebase.firestore.collection("projects")
                 .where { "ownerId" equalTo userId }
@@ -100,26 +99,10 @@ class AppViewModel(
                     val projects = projectsQuerySnapshot.documents.map { documentSnapshot ->
                         documentSnapshot.data<Project>()
                     }
-                    updateProjectsLocally(projects)
-                    for (project in projects){
-                        Firebase.firestore.document("projects/${project.id}")
-                            .collection("tasks")
-                            .snapshots.collect{ tasksQuerySnapshot ->
-                                val tasks = tasksQuerySnapshot.documents.map { documentSnapshot ->
-                                    documentSnapshot.data<Task>()
-                                }
-                                updateTasksLocally(tasks = tasks, project = project)
-                            }
-
-                        Firebase.firestore.document("projects/${project.id}")
-                            .collection("messages")
-                            .snapshots.collect{ messagesQuerySnapshot ->
-                                val messages = messagesQuerySnapshot.documents.map { documentSnapshot ->
-                                    documentSnapshot.data<Message>()
-                                }
-                                updateMessagesLocally(messages, project = project)
-                            }
-                        updateUsersLocally(project)
+                    projects.forEach { project ->
+                        launch { syncTasksForProject(project) }
+                        launch { syncMessagesForProject(project) }
+                        launch { updateUsersLocally(project) }
                     }
                 }
         }catch (e : Exception){
@@ -127,15 +110,51 @@ class AppViewModel(
         }
     }
 
-    private fun updateUsersLocally(project : Project) = viewModelScope.launch(Dispatchers.IO){
-        val combineCollaboratorsAndViewersIds = project.collaboratorIds + project.viewerIds
-        combineCollaboratorsAndViewersIds.forEach { userId ->
-            val userEntity = getUserByIdUseCase(userId)
-            if(userEntity == null){
-                val userSnapShot = Firebase.firestore.collection("users").document(userId).get()
-                val user = userSnapShot.data<domain.models.User>()
-                upsertUserUseCase(listOf(user.toUserEntity()))
+    private suspend fun syncTasksForProject(project: Project) {
+        try {
+            Firebase.firestore.collection("projects")
+                .document(project.id)
+                .collection("tasks")
+                .snapshots.collect{ tasksQuerySnapshot ->
+                    val tasks = tasksQuerySnapshot.documents.map { documentSnapshot ->
+                        documentSnapshot.data<Task>()
+                    }
+                    updateTasksLocally(tasks = tasks, project = project)
+                }
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
+    }
+
+    private suspend fun syncMessagesForProject(project: Project) {
+        try {
+        Firebase.firestore.collection("projects")
+            .document(project.id)
+            .collection("messages")
+            .snapshots.collect{ messagesQuerySnapshot ->
+                val messages = messagesQuerySnapshot.documents.map { documentSnapshot ->
+                    documentSnapshot.data<Message>()
+                }
+                updateMessagesLocally(messages, project = project)
             }
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
+    }
+
+    private suspend fun updateUsersLocally(project : Project){
+        try {
+            val combineCollaboratorsAndViewersIds = project.collaboratorIds + project.viewerIds
+            combineCollaboratorsAndViewersIds.forEach { userId ->
+                val userEntity = getUserByIdUseCase(userId)
+                if(userEntity == null){
+                    val userSnapShot = Firebase.firestore.collection("users").document(userId).get()
+                    val user = userSnapShot.data<domain.models.User>()
+                    upsertUserUseCase(listOf(user.toUserEntity()))
+                }
+            }
+        }catch (e : Exception){
+            e.printStackTrace()
         }
     }
 
@@ -166,18 +185,6 @@ class AppViewModel(
         upsertTasksUseCase(tasks.map { it.toTaskEntity() })
     }
 
-    private fun updateProjectsLocally(projects : List<Project>) = viewModelScope.launch(Dispatchers.IO){
-        val localProjects = getProjectsUseCase()
-        val projectsToDelete = localProjects.filter { localProject ->
-            projects.none { project ->
-                project.id == localProject.id
-            }
-        }
-        projectsToDelete.forEach {
-            deleteProjectUseCase(it)
-        }
-        upsertProjectUseCase(projects.map { it.toProjectEntity() })
-    }
 
 }
 

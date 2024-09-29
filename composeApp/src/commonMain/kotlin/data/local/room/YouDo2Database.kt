@@ -29,7 +29,7 @@ import data.local.entities.UserEntity
         ColorPaletteEntity::class,
         MessageEntity::class
     ],
-    version = 3
+    version = 1
 )
 @TypeConverters(NotificationTypeConverter::class)
 abstract class YouDo2Database : RoomDatabase(), ClearAllTableFix {
