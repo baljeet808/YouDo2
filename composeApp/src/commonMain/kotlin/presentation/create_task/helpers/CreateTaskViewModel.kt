@@ -16,10 +16,12 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
 import domain.models.Project
+import domain.models.Task
 import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.project_use_cases.GetProjectByIdAsFlowUseCase
 import domain.use_cases.project_use_cases.UpsertProjectUseCase
 import domain.use_cases.task_use_cases.UpsertTasksUseCase
+import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -34,10 +36,23 @@ class CreateTaskViewModel(
     private val dataStoreRepository: DataStoreRepository,
     private val upsertTasksUseCase: UpsertTasksUseCase,
     private val upsertProjectUseCase: UpsertProjectUseCase,
+    private val getUserByIdAsFlowUseCase: GetUserByIdAsFlowUseCase,
 ) : ViewModel(), KoinComponent {
 
     var uiState by mutableStateOf(CreateTaskUiState())
         private set
+
+    private suspend fun showLoading() {
+        withContext(Dispatchers.Main){
+            uiState = uiState.copy(isLoading = true, error = null)
+        }
+    }
+
+    private suspend fun hideLoading() {
+        withContext(Dispatchers.Main){
+            uiState = uiState.copy(isLoading = false, error = null)
+        }
+    }
 
     fun onScreenEvent(event: CreateTaskScreenEvent) {
         when (event) {
@@ -85,55 +100,56 @@ class CreateTaskViewModel(
         }
     }
 
+    fun getScreenData(userId: String, projectId: String) = viewModelScope.launch(Dispatchers.IO) {
+        launch { showLoading() }
+        launch { fetchCurrentUser(uid = userId) }
+        launch { getProject(projectId = projectId) }
+        launch { hideLoading() }
+    }
 
-    fun getUserDetails(projectId : String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.userIdAsFlow().collect {
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(
-                        userId = it
-                    )
+    private suspend fun fetchCurrentUser(uid: String) {
+        try {
+            getUserByIdAsFlowUseCase(uid).collect { user ->
+                user?.let {
+                    withContext(Dispatchers.Main) {
+                        uiState = uiState.copy(
+                            userId = user.id,
+                            userName = user.name,
+                            userEmail = user.email,
+                        )
+                    }
+                }?: kotlin.run {
+                    withContext(Dispatchers.Main) {
+                        uiState = uiState.copy(isLoading = false, error = DataError.Network.NOT_FOUND)
+                    }
                 }
             }
-            dataStoreRepository.userNameAsFlow().collect {
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(
-                        userName = it
-                    )
-                }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
             }
-            dataStoreRepository.userEmailAsFlow().collect {
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(
-                        userEmail = it
-                    )
-                }
-            }
-            getProject(projectId)
         }
     }
 
-    private fun getProject(projectId : String){
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                getProjectByIdAsFlowUseCase(projectId).collect {
-                    withContext(Dispatchers.Main) {
-                        uiState = uiState.copy(
-                            project = it.toProject()
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                 withContext(Dispatchers.Main) {
+    private suspend fun getProject(projectId : String){
+        try {
+            getProjectByIdAsFlowUseCase(projectId).collect {
+                withContext(Dispatchers.Main) {
                     uiState = uiState.copy(
-                        error = DataError.Network.ALL_OTHER,
+                        project = it.toProject()
                     )
                 }
-            } finally {
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(isLoading = false)
-                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(
+                    error = DataError.Network.ALL_OTHER,
+                )
+            }
+        } finally {
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(isLoading = false)
             }
         }
     }
@@ -144,7 +160,7 @@ class CreateTaskViewModel(
 
 
     fun createTask() {
-        val newTask = TaskEntity(
+        val newTask = Task(
             id = getRandomId(),
             title = uiState.taskName,
             description = uiState.taskDescription,
@@ -152,14 +168,14 @@ class CreateTaskViewModel(
             dueDate = uiState.dueDate.getExactDate().toInstant(TimeZone.currentSystemDefault())
                 .toEpochMilliseconds(),
             createDate = getSampleDateInLong(),
-            updatedBy = "",
+            updatedBy = "${uiState.userName} Created this task",
             done = false,
             projectId = uiState.project?.id ?: ""
         )
         createTask(newTask)
     }
 
-    private fun createTask(task: TaskEntity) {
+    private fun createTask(task: Task) {
         uiState.project?.let { project ->
             when (getRole(project.toProjectEntity(), uiState.userId)) {
                 EnumRoles.ProAdmin -> {
@@ -167,7 +183,7 @@ class CreateTaskViewModel(
                 }
 
                 EnumRoles.Admin -> {
-                    updateTaskLocally(task, project)
+                    updateTaskOnServer(task, project)
                 }
 
                 EnumRoles.Editor -> {
@@ -187,7 +203,7 @@ class CreateTaskViewModel(
         }
     }
 
-    private fun updateTaskOnServer(task: TaskEntity, project: Project) {
+    private fun updateTaskOnServer(task: Task, project: Project) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 projectsReference

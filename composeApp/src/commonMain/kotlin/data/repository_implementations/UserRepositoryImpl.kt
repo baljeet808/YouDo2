@@ -14,7 +14,11 @@ class UserRepositoryImpl(localDB: YouDo2Database) : UserRepository {
         return userDao.upsertAll(users)
     }
 
-    override fun getAllUsers(): Flow<List<UserEntity>> {
+    override fun getAllUsersAsFlow(): Flow<List<UserEntity>> {
+        return userDao.getAllUsersAsFlow()
+    }
+
+    override suspend fun getAllUsers(): List<UserEntity> {
         return userDao.getAllUsers()
     }
 

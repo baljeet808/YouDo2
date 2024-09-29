@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import data.local.entities.TaskEntity
 import data.local.mappers.toProject
 import data.local.mappers.toProjectEntity
+import data.local.mappers.toTaskEntity
+import data.local.mappers.toUserEntity
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
 import domain.models.Project
+import domain.models.Task
 import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.project_use_cases.DeleteProjectUseCase
 import domain.use_cases.project_use_cases.GetProjectByIdAsFlowUseCase
@@ -21,6 +24,8 @@ import domain.use_cases.task_use_cases.GetProjectTasksAsFlowUseCase
 import domain.use_cases.task_use_cases.UpsertTasksUseCase
 import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
 import domain.use_cases.user_use_cases.GetUsersByIdsUseCase
+import domain.use_cases.user_use_cases.GetUsersUseCase
+import domain.use_cases.user_use_cases.UpsertUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -35,9 +40,11 @@ class ProjectViewModel(
     private val deleteDoToosUseCase: DeleteTaskUseCase,
     private val getProjectByIdAsFlowUseCase: GetProjectByIdAsFlowUseCase,
     private val getUsersByIdsUseCase: GetUsersByIdsUseCase,
+    private val getUsersUseCase: GetUsersUseCase,
+    private val getUserByIdAsFlowUseCase: GetUserByIdAsFlowUseCase,
     private val getProjectTasksAsFlowUseCase: GetProjectTasksAsFlowUseCase,
     private val upsertProjectUseCase: UpsertProjectUseCase,
-    private val getUserByIdAsFlowUseCase: GetUserByIdAsFlowUseCase
+    private val upsertUserUseCase: UpsertUserUseCase,
 ) : ViewModel(), KoinComponent {
 
     private val dataStoreRepository: DataStoreRepository by inject<DataStoreRepository>()
@@ -49,29 +56,115 @@ class ProjectViewModel(
         .collection("projects")
 
 
-    private fun showLoading() {
-        uiState = uiState.copy(isLoading = true, error = null)
+    private suspend fun showLoading() {
+        withContext(Dispatchers.Main){
+            uiState = uiState.copy(isLoading = true, error = null)
+        }
     }
 
-    private var projectId = ""
-
-    fun fetchScreenData(projectID: String) = viewModelScope.launch(Dispatchers.IO) {
-        projectId = projectID
-        showLoading()
-        fetchUserId()
-        getProjectById()
-        getProjectTasks()
-        getUserProfiles()
+    private suspend fun hideLoading() {
+        withContext(Dispatchers.Main){
+            uiState = uiState.copy(isLoading = false, error = null)
+        }
     }
 
-    private fun fetchUserId() = viewModelScope.launch(Dispatchers.IO) {
-        dataStoreRepository.userIdAsFlow().collect {
-            fetchCurrentUser(uid = it)
+    fun fetchScreenData(projectID: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
+        launch { showLoading() }
+        launch { fetchCurrentUser(uid = userId) }
+        launch { syncProjectWithFirebase(projectID = projectID) }
+        launch { syncTasksForProject(projectID = projectID) }
+        launch { getProjectById(projectID = projectID) }
+        launch { getProjectTasks(projectID = projectID) }
+        launch { hideLoading() }
+    }
+
+    private suspend fun syncProjectWithFirebase(projectID: String) {
+        try {
+            projectsReference
+                .document(projectID)
+                .snapshots.collect { documentSnapshot ->
+                    val project = documentSnapshot.data<Project>()
+                    updateProjectLocally(project)
+                    getUserProfiles(project)
+                }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
+            }
+        }
+    }
+
+    private suspend fun updateProjectLocally(project: Project) {
+        upsertProjectUseCase(listOf(project.toProjectEntity()))
+    }
+
+    private suspend fun getUserProfiles(project: Project) {
+        try{
+            //extract ids of users collaborating on this project
+            //along with the project owner
+            val userIds = project.viewerIds + project.collaboratorIds + project.ownerId
+
+            //fetch all users from database
+            val localUsers = getUsersUseCase()
+
+            //filter the users that are already in the local database
+            val usersFoundFromLocalDB = localUsers.filter { user ->
+                userIds.contains(user.id)
+            }
+            //show the users which are in local database first
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(users = usersFoundFromLocalDB)
+            }
+
+            //filter the users that are not in the local database
+            val usersIdsNotInLocalDb = userIds.filter { id ->
+                localUsers.none { user ->
+                    user.id == id
+                }
+            }
+
+            //fetch the users from firebase which are not in the local database
+            usersIdsNotInLocalDb.forEach { userId ->
+                val userSnapShot = Firebase.firestore.collection("users")
+                    .document(userId)
+                    .get()
+                val user = userSnapShot.data<domain.models.User>()
+                upsertUserUseCase(listOf(user.toUserEntity()))
+                //keep adding the users one by one to the uiState
+                withContext(Dispatchers.Main) {
+                    uiState = uiState.copy(users = usersFoundFromLocalDB.plus(user.toUserEntity()))
+                }
+            }
+        }
+        catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(error = DataError.Network.ALL_OTHER)
+            }
+        }
+    }
+
+    private suspend fun syncTasksForProject(projectID: String) {
+        try {
+            Firebase.firestore.collection("projects")
+                .document(projectID)
+                .collection("tasks")
+                .snapshots.collect{ tasksQuerySnapshot ->
+                    val tasks = tasksQuerySnapshot.documents.map { documentSnapshot ->
+                        documentSnapshot.data<Task>()
+                    }
+                    updateTasksLocally(tasks = tasks)
+                }
+        }catch (e : Exception){
+            e.printStackTrace()
         }
     }
 
 
-    private fun fetchCurrentUser(uid: String) = viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun updateTasksLocally(tasks: List<Task>) {
+        upsertDoToosUseCase(tasks.map { it.toTaskEntity() })
+    }
+
+    private suspend fun fetchCurrentUser(uid: String) {
         try {
             getUserByIdAsFlowUseCase(uid).collect { user ->
                 user?.let {
@@ -97,9 +190,9 @@ class ProjectViewModel(
     }
 
 
-    private fun getProjectById() = viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun getProjectById(projectID: String) {
         try {
-            getProjectByIdAsFlowUseCase(projectId).collect { project ->
+            getProjectByIdAsFlowUseCase(projectID).collect { project ->
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(project = project)
                 }
@@ -111,9 +204,9 @@ class ProjectViewModel(
         }
     }
 
-    private fun getProjectTasks() = viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun getProjectTasks(projectID: String) {
         try{
-            getProjectTasksAsFlowUseCase(projectId).collect{ tasks ->
+            getProjectTasksAsFlowUseCase(projectID).collect{ tasks ->
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(tasks = tasks)
                 }
@@ -125,25 +218,6 @@ class ProjectViewModel(
         }
     }
 
-    private fun getUserProfiles() = viewModelScope.launch(Dispatchers.IO) {
-        try{
-            val userIds = uiState.project.toProject().viewerIds
-            userIds.plus(uiState.project.toProject().collaboratorIds)
-                .plus(uiState.project.toProject().ownerId)
-            getUsersByIdsUseCase(userIds).collect { users ->
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(users = users, isLoading = false)
-                }
-            }
-        }
-        catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
-            }
-        }
-    }
-
-
     private fun updateTaskOnServer(task: TaskEntity, project: Project) =
         viewModelScope.launch(Dispatchers.IO) {
             projectsReference
@@ -153,12 +227,6 @@ class ProjectViewModel(
                 .set(task)
         }
 
-    private fun updateTaskLocally(task: TaskEntity, project: Project) {
-        CoroutineScope(Dispatchers.IO).launch {
-            upsertDoToosUseCase(listOf(task))
-            // updateProject(project)
-        }
-    }
 
 
     private fun updateProjectOnSever(project: Project) = viewModelScope.launch(Dispatchers.IO) {
@@ -167,22 +235,15 @@ class ProjectViewModel(
             .set(project)
     }
 
-    private fun updateProjectLocally(project: Project) {
-        CoroutineScope(Dispatchers.IO).launch {
-            upsertProjectUseCase(listOf(project.toProjectEntity()))
-        }
-    }
 
-    private fun deleteProjectOnServer() = viewModelScope.launch(Dispatchers.IO) {
+    private fun deleteProjectOnServer(projectID: String) = viewModelScope.launch(Dispatchers.IO) {
         projectsReference
-            .document("")
+            .document(projectID)
             .delete()
     }
 
-    private fun deleteProjectLocally(project: Project) {
-        CoroutineScope(Dispatchers.IO).launch {
-            deleteProjectUseCase(project = project.toProjectEntity())
-        }
+    private fun deleteProjectLocally(project: Project) = viewModelScope.launch(Dispatchers.IO) {
+        deleteProjectUseCase(project = project.toProjectEntity())
     }
 
     private fun deleteTaskOnServer(task: TaskEntity, project: Project) =
@@ -194,13 +255,8 @@ class ProjectViewModel(
                 .delete()
         }
 
-    private fun deleteTaskLocally(task: TaskEntity, project: Project) {
-        CoroutineScope(Dispatchers.IO).launch {
-            deleteDoToosUseCase(task)
-            //updateProject(project)
-        }
+    private fun deleteTaskLocally(task: TaskEntity)= viewModelScope.launch(Dispatchers.IO) {
+        deleteDoToosUseCase(task)
     }
-
-
 }
 

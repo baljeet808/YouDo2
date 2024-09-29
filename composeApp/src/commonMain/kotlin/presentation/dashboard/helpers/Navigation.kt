@@ -69,7 +69,7 @@ fun NavGraphBuilder.addDashboardDestination(
                 viewModel.getCurrentUser()
             },
             navigateToProject = { projectId ->
-                navController.navigate(DESTINATION_PROJECT_ROUTE.plus("/${projectId}"))
+                navController.navigate(DESTINATION_PROJECT_ROUTE.plus("/${projectId}/${uiState.userId}"))
             }
         )
     }

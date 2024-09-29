@@ -15,7 +15,7 @@ import presentation.project.ProjectView
 
 
 const val DESTINATION_PROJECT_ROUTE = "project"
-const val DESTINATION_PROJECT_ROUTE_RELATIVE_PATH = "/{projectId}"
+const val DESTINATION_PROJECT_ROUTE_RELATIVE_PATH = "/{projectId}/{userId}"
 
 
 @OptIn(KoinExperimentalAPI::class)
@@ -30,11 +30,15 @@ fun NavGraphBuilder.addProjectViewDestination(
         arguments = listOf(
             navArgument("projectId") {
                 type = NavType.StringType
+            },
+            navArgument("userId") {
+                type = NavType.StringType
             }
         )
     ) { backStackEntry ->
 
         val projectId = backStackEntry.arguments?.getString("projectId")
+        val userId = backStackEntry.arguments?.getString("userId")
 
         val viewModel = koinViewModel<ProjectViewModel>()
         val uiState = viewModel.uiState
@@ -43,7 +47,7 @@ fun NavGraphBuilder.addProjectViewDestination(
         LaunchedEffect (key1 = retryApiCall.value) {
             if(retryApiCall.value){
                 projectId?.let {
-                    viewModel.fetchScreenData(projectId)
+                    viewModel.fetchScreenData(projectID = projectId, userId = userId!!)
                 }
             }
         }
@@ -58,7 +62,7 @@ fun NavGraphBuilder.addProjectViewDestination(
         ProjectView(
             fetchScreenData = {
                 projectId?.let {
-                    viewModel.fetchScreenData(projectId)
+                    viewModel.fetchScreenData(projectID = projectId, userId = userId!!)
                 }
             },
             uiState = uiState,
@@ -68,7 +72,7 @@ fun NavGraphBuilder.addProjectViewDestination(
             },
             navigateToCreateTask = {
                 navController.navigate(
-                    "create_task/".plus(projectId)
+                    "create_task/${projectId}/${userId}"
                 )
             },
             deleteTask = { task ->

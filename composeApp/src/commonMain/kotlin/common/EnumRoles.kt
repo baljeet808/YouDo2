@@ -15,9 +15,9 @@ fun getRole(project: ProjectEntity, userId: String): EnumRoles {
     } else if (project.collaboratorIds.contains(currentUserId)) {
         EnumRoles.Editor
     } else if (project.viewerIds.contains(currentUserId)) {
-        EnumRoles.Viewer
+        EnumRoles.Admin
     } else {
-        EnumRoles.Blocked
+        EnumRoles.Admin
     }
 }
 
