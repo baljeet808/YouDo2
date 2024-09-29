@@ -17,5 +17,6 @@ data class ProjectScreenState(
     val tasks : List<Task> = emptyList(),
     val users : List<User> = emptyList(),
     val role : EnumRoles = EnumRoles.Viewer,
-    val showProjectDetail : Boolean = true
+    val showProjectDetail : Boolean = true,
+    val projectDeleted : Boolean = false
 )

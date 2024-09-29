@@ -59,6 +59,12 @@ fun NavGraphBuilder.addProjectViewDestination(
             }
         }
 
+        LaunchedEffect(key1 = uiState.projectDeleted){
+            if(uiState.projectDeleted){
+                navController.popBackStack()
+            }
+        }
+
         ProjectView(
             fetchScreenData = {
                 projectId?.let {

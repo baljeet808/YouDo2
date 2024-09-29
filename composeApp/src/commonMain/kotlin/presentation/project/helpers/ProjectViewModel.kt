@@ -68,6 +68,7 @@ class ProjectViewModel(
     fun onEvent(event: ProjectScreenEvent){
         when(event){
             is ProjectScreenEvent.DeleteProject -> {
+                uiState = uiState.copy(showProjectDetail = uiState.showProjectDetail.not())
                 deleteProjectOnServer(event.project.id)
                 deleteProjectLocally(event.project)
             }
