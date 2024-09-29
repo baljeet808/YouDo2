@@ -273,7 +273,7 @@ class ProjectViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             projectsReference
                 .document(project.id)
-                .collection("todos")
+                .collection("tasks")
                 .document(task.id)
                 .delete()
         }
