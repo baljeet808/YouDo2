@@ -21,6 +21,7 @@ import domain.dto_helpers.DataError
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import presentation.chat.addChatViewDestination
 import presentation.complete_profile.helpers.addCompleteProfileDestination
 import presentation.create_task.addCreateTaskViewDestination
 import presentation.createproject.helpers.addCreateProjectViewDestination
@@ -206,6 +207,7 @@ fun App(
                     },
                     retryApiCall = retryApiCall
                 )
+                addChatViewDestination(navController = navController)
             }
         }
     }

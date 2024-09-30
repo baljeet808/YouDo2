@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.compose.LazyPagingItems
 import common.getColor
 import common.getRandomColor
 import data.local.entities.MessageEntity
@@ -41,7 +40,7 @@ import presentation.theme.getLightThemeColor
 @Composable
 fun ChatViewMainContent(
     participants : List<UserEntity>,
-    messages: LazyPagingItems<MessageEntity>,
+    messages: List<MessageEntity>,
     project : Project?,
     openEmoticons: (message: MessageEntity) -> Unit,
     openCollaboratorsScreen: () -> Unit,
@@ -82,16 +81,14 @@ fun ChatViewMainContent(
 
                 if(participants.isNotEmpty()) {
                     items(
-                        count = messages.itemCount,
-                        key = messages.itemKey { message -> message.id },
-                        contentType = messages.itemContentType { "Messages" }
+                        count = messages.size
                     ) { index: Int ->
 
-                        val message: MessageEntity? = messages[index]
+                        val message: MessageEntity = messages[index]
 
-                        message?.let {
+                        message.let {
 
-                            val nextMessage = if (messages[messages.itemCount - 1] == message) {
+                            val nextMessage = if (messages[messages.size - 1] == message) {
                                 null
                             } else {
                                 messages[index + 1]

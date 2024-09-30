@@ -10,7 +10,9 @@ import androidx.navigation.navArgument
 import data.local.entities.MessageEntity
 import data.local.entities.UserEntity
 import data.local.mappers.toProject
+import domain.models.Project
 import org.koin.compose.viewmodel.koinViewModel
+
 import org.koin.core.annotation.KoinExperimentalAPI
 
 
@@ -32,19 +34,19 @@ fun NavGraphBuilder.addChatViewDestination(navController: NavController){
 
         val viewModel = koinViewModel<ChatViewModel>()
 
-        val lazyPagedMessages : LazyPagingItems<MessageEntity> = viewModel.getAllMessagesOfThisProject().collectAsLazyPagingItems()
+       // val lazyPagedMessages : List<MessageEntity> = viewModel.getAllMessagesOfThisProject().collectAsLazyPagingItems()
 
-        val project by viewModel.getProjectById().collectAsState(initial = null)
+      /*  val project by viewModel.getProjectById().collectAsState(initial = null)
 
         val participants : List<UserEntity> = project?.let {
             viewModel.getUsersOFProject(it.toProject()).collectAsState(initial = listOf())
         }?.value?: listOf()
-
+*/
 
 
         ChatView(
-            participants = participants,
-            messages = lazyPagedMessages,
+            participants = emptyList<UserEntity>(),
+            messages = emptyList<MessageEntity>(),
             showAttachment = {
                 navController.navigate(  "attachment_viewer/".plus(it.id))
             },
@@ -57,7 +59,7 @@ fun NavGraphBuilder.addChatViewDestination(navController: NavController){
             onClose={
                 navController.popBackStack()
             },
-            project = project?.toProject()
+            project = Project()
         )
     }
 }

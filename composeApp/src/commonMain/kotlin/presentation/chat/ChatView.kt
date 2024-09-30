@@ -45,7 +45,7 @@ import presentation.theme.getLightThemeColor
 @Composable
 fun ChatView(
     participants: List<UserEntity>,
-    messages: LazyPagingItems<MessageEntity>,
+    messages: List<MessageEntity>,
     showAttachment: (messages: MessageEntity) -> Unit,
     interactOnMessage: (message: MessageEntity, emoticon: String) -> Unit,
     onClose : () -> Unit,

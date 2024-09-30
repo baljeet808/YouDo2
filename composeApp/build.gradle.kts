@@ -84,6 +84,7 @@ kotlin {
             //Room
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.runtime)
             implementation(libs.androidx.paging.compose.android)
             implementation(libs.sqlite.bundled)
 

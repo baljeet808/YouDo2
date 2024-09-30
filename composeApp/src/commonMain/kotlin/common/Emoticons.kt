@@ -66,39 +66,32 @@ enum class Emoticon(val fileName : String, val drawableId : DrawableResource){
     Wink("wink", Res.drawable.wink),
     Yummy("yummy", Res.drawable.yummy);
 
-    fun getDrawableId() : DrawableResource{
-        return drawableId
-    }
-
-    fun getFileName() : String{
-        return fileName
-    }
 }
 
 
 fun getDrawableIdByFileName(fileName : String) : DrawableResource{
     return when(fileName){
-        "amazed" -> Amazed.getDrawableId()
-        "anger" -> Anger.getDrawableId()
-        "crying_face" -> CryingFace.getDrawableId()
-        "cute_face" -> CuteFace.getDrawableId()
-        "devil" -> Devil.getDrawableId()
-        "feeling_good" -> FeelingGood.getDrawableId()
-        "hi" -> Hi.getDrawableId()
-        "loving_it" -> LovingIt.getDrawableId()
-        "not_impressed" -> NotImpressed.getDrawableId()
-        "not_today" -> NotToday.getDrawableId()
-        "omg" -> Omg.getDrawableId()
-        "party" -> Party.getDrawableId()
-        "puzzled" -> Puzzled.getDrawableId()
-        "sad_face" -> SadFace.getDrawableId()
-        "scared" -> Scared.getDrawableId()
-        "sleeping" -> Sleeping.getDrawableId()
-        "thinking" -> Thinking.getDrawableId()
-        "wow" -> Wow.getDrawableId()
-        "wink" -> Wink.getDrawableId()
-        "yummy" -> Yummy.getDrawableId()
-        else -> Amazed.getDrawableId()
+        "amazed" -> Amazed.drawableId
+        "anger" -> Anger.drawableId
+        "crying_face" -> CryingFace.drawableId
+        "cute_face" -> CuteFace.drawableId
+        "devil" -> Devil.drawableId
+        "feeling_good" -> FeelingGood.drawableId
+        "hi" -> Hi.drawableId
+        "loving_it" -> LovingIt.drawableId
+        "not_impressed" -> NotImpressed.drawableId
+        "not_today" -> NotToday.drawableId
+        "omg" -> Omg.drawableId
+        "party" -> Party.drawableId
+        "puzzled" -> Puzzled.drawableId
+        "sad_face" -> SadFace.drawableId
+        "scared" -> Scared.drawableId
+        "sleeping" -> Sleeping.drawableId
+        "thinking" -> Thinking.drawableId
+        "wow" -> Wow.drawableId
+        "wink" -> Wink.drawableId
+        "yummy" -> Yummy.drawableId
+        else -> Amazed.drawableId
     }
 }
 

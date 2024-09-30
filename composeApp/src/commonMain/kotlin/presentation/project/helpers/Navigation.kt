@@ -83,7 +83,9 @@ fun NavGraphBuilder.addProjectViewDestination(
             navigateToEditTask = {
             },
             navigateToChat = {
-
+                navController.navigate(
+                    "messages/${projectId}/${userId}"
+                )
             },
             onEvent = {
                 viewModel.onEvent(it)

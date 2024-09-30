@@ -28,7 +28,7 @@ class ChatViewModel(
         firestore.collection("projects")
 
 
-    fun getProjectById(): Flow<ProjectEntity> = getProjectByIdAsFlowUseCase(projectId)
+   /* fun getProjectById(): Flow<ProjectEntity> = getProjectByIdAsFlowUseCase(projectId)
 
 
     fun getUsersOFProject( project : Project) = getUsersByIdsUseCase(project.getUserIds())
@@ -38,17 +38,17 @@ class ChatViewModel(
     fun getAllMessagesOfThisProject() : Flow<PagingData<MessageEntity>> = getPagedMessagesOfProject(projectId)
         .cachedIn(viewModelScope)
 
-
+*/
     fun interactWithMessage(
         message: MessageEntity,
         emoticon: String
     ) {
         val newMessage = message.copy()
-        newMessage.updateInteraction(emoticon)
+       /* newMessage.updateInteraction(emoticon)
         chatRef
             .document(projectId)
             .collection("messages")
             .document(message.id)
-            .set(newMessage.toMessage())
+            .set(newMessage.toMessage())*/
     }
 }

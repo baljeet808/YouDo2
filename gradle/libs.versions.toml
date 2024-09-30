@@ -16,7 +16,6 @@ firebase-bom = "33.1.2"
 androidx-room = "2.7.0-alpha05"
 kotlinxDatastorePreferences = "1.0.0"
 materialIconsCore = "1.6.8"
-pagingComposeAndroid = "3.3.1"
 androidx-paging = "3.3.1"
 ksp = "2.0.0-1.0.23"
 sqlite = "2.5.0-alpha05"
@@ -55,8 +54,10 @@ firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", versi
 android-firebase-bom = {group = "com.google.firebase", name = "firebase-bom", version.ref="firebase-bom" }
 
 #Room
+
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
-androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "pagingComposeAndroid" }
+androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "androidx-paging" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }

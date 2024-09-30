@@ -18,6 +18,7 @@ import presentation.createproject.helpers.CreateProjectViewModel
 import presentation.project.helpers.ProjectViewModel
 import presentation.create_task.helpers.CreateTaskViewModel
 import presentation.complete_profile.helpers.CompleteProfileViewModel
+import presentation.chat.ChatViewModel
 
 actual val platformModule= module {
     single<YouDo2Database> { getYouDo2Database(get()) }
@@ -31,5 +32,6 @@ actual val platformModule= module {
     viewModelOf(::CompleteProfileViewModel)
     viewModelOf(::ProjectViewModel)
     viewModelOf(::CreateTaskViewModel)
+    viewModelOf(::ChatViewModel)
     single<DataStore<Preferences>> { createDataStore(androidContext()) }
 }
