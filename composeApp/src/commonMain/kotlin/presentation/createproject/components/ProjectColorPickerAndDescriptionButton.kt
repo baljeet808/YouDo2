@@ -15,9 +15,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,19 +30,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
+import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
-import presentation.theme.getTextColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.baseline_description_add_24
+import youdo2.composeapp.generated.resources.baseline_description_remove_24
+import youdo2.composeapp.generated.resources.baseline_palette_24
 
 @Composable
-fun ProjectColorPicker(
+fun ProjectColorPickerAndDescriptionButton(
     selectedColor: EnumProjectColors,
     onColorSelected: (EnumProjectColors) -> Unit,
     showColorOptions: Boolean,
     toggleColorOptions: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    toggleDescriptionVisibility: () -> Unit = {},
+    clearProjectDescription: () -> Unit = {},
+    onKeyBoardController: () -> Unit = {},
+    showDescription: Boolean = false,
 ) {
     Row(
         modifier = modifier
@@ -47,16 +58,56 @@ fun ProjectColorPicker(
             .padding(start = 20.dp, end = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = "Select Project Color",
-            color = getTextColor(),
-            fontSize = 20.sp,
-            fontFamily = AlataFontFamily()
-        )
 
         ColorSelectionButton(selectedColor) {
             toggleColorOptions()
         }
+
+        TextButton(
+            onClick = {
+                toggleDescriptionVisibility()
+                if (showDescription) {
+                    onKeyBoardController()
+                }else{
+                    clearProjectDescription()
+                }
+            },
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = if (isSystemInDarkTheme()) {
+                        NightDotooFooterTextColor
+                    } else {
+                        LightDotooFooterTextColor
+                    },
+                    shape = RoundedCornerShape(30.dp)
+                )
+        ) {
+            Icon(
+                painter = if (showDescription) {
+                    painterResource(Res.drawable.baseline_description_remove_24)
+                } else {
+                    painterResource(Res.drawable.baseline_description_add_24)
+                },
+                contentDescription = "Button to set add description to project.",
+                tint = LightAppBarIconsColor
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = if (showDescription) {
+                    "Clear Description"
+                } else {
+                    "Add Description"
+                },
+                color = LightAppBarIconsColor,
+                fontFamily = AlataFontFamily(),
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+
     }
 
     AnimatedVisibility(visible = showColorOptions) {
@@ -79,7 +130,7 @@ fun ColorSelectionButton(selectedColor: EnumProjectColors, onClick: () -> Unit) 
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            Icons.Outlined.Edit,
+            painter = painterResource(Res.drawable.baseline_palette_24),
             contentDescription = "Button to set project color.",
             tint = selectedColor.getColor(),
             modifier = Modifier
@@ -161,7 +212,7 @@ fun ColorOptionItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            Icons.Outlined.Edit,
+            painter = painterResource(Res.drawable.baseline_palette_24),
             contentDescription = "Button to set project color.",
             tint = color.getColor(),
             modifier = Modifier

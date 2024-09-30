@@ -29,6 +29,8 @@ import presentation.theme.LightAppBarIconsColor
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
 import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.baseline_description_add_24
+import youdo2.composeapp.generated.resources.baseline_description_remove_24
 import youdo2.composeapp.generated.resources.breaking_news_24
 
 
@@ -109,10 +111,10 @@ fun PriorityAndDescriptionButton(
                 )
         ) {
             Icon(
-                if (showDescription) {
-                    Icons.Outlined.Menu
+                painter = if (showDescription) {
+                    painterResource(Res.drawable.baseline_description_remove_24)
                 } else {
-                    Icons.AutoMirrored.Outlined.List
+                    painterResource(Res.drawable.baseline_description_add_24)
                 },
                 contentDescription = "Button to set add description to project.",
                 tint = LightAppBarIconsColor

@@ -20,8 +20,7 @@ import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import presentation.createproject.components.NoBorderEditText
-import presentation.createproject.components.ProjectColorPicker
-import presentation.createproject.components.ProjectPreviewAndDescriptionButton
+import presentation.createproject.components.ProjectColorPickerAndDescriptionButton
 import presentation.createproject.helpers.CreateProjectScreenEvent
 import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.LoadingDialog
@@ -80,7 +79,7 @@ fun CreateProjectView(
         /**
          * Row for preview and project color button
          * **/
-        ProjectColorPicker(
+        ProjectColorPickerAndDescriptionButton(
             selectedColor = uiState.projectColor,
             onColorSelected = { color ->
                 onScreenEvent(CreateProjectScreenEvent.ProjectColorChanged(color))
@@ -89,15 +88,7 @@ fun CreateProjectView(
             toggleColorOptions = {
                 onScreenEvent(CreateProjectScreenEvent.ToggleColorOptions)
             },
-            modifier = Modifier.padding(top = 10.dp)
-        )
-
-
-        ProjectPreviewAndDescriptionButton(
-            modifier = Modifier.fillMaxHeight(0.2f),
-            onPreviewClicked = {
-
-            },
+            modifier = Modifier.padding(top = 10.dp),
             onKeyBoardController = {
                 keyBoardController?.show()
                 descriptionFocusRequester.requestFocus()
@@ -111,9 +102,8 @@ fun CreateProjectView(
             }
         )
 
-
         NoBorderEditText(
-            modifier = Modifier,
+            modifier = Modifier.padding(20.dp),
             text = uiState.projectName,
             updateText = {
                 onScreenEvent(CreateProjectScreenEvent.ProjectNameChanged(it))
@@ -141,7 +131,7 @@ fun CreateProjectView(
          * **/
         AnimatedVisibility(visible = uiState.showDescription) {
             NoBorderEditText(
-                modifier = Modifier.padding(top = 10.dp),
+                modifier = Modifier.padding(20.dp),
                 text = uiState.projectDescription,
                 updateText = {
                     onScreenEvent(CreateProjectScreenEvent.ProjectDescriptionChanged(it))
