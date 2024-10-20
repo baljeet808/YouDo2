@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,12 +34,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import common.getColor
+import common.getRandomAvatar
 import domain.models.Project
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import youdo2.composeapp.generated.resources.Res
-import youdo2.composeapp.generated.resources.baseline_person_add_24
+import youdo2.composeapp.generated.resources.app_icon
+import youdo2.composeapp.generated.resources.baseline_arrow_outward_24
+import youdo2.composeapp.generated.resources.baseline_castle_24
+import youdo2.composeapp.generated.resources.baseline_link_18
 import youdo2.composeapp.generated.resources.baseline_visibility_24
 import youdo2.composeapp.generated.resources.omg
 
@@ -56,7 +63,7 @@ fun ProjectCardView2024(
             .padding(10.dp),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(10.dp)
         ) {
             // Top Header with brand and icons
             Row(
@@ -65,17 +72,18 @@ fun ProjectCardView2024(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ){
                     Icon(
-                        imageVector = Icons.Default.Person,
+                        painter = painterResource(Res.drawable.baseline_castle_24),
                         contentDescription = "View Icon",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                     Text(
                         text = "Karandeep Kaur",
                         fontFamily = AlataFontFamily(),
-                        fontSize = 12.sp
+                        fontSize = 16.sp
                     )
                 }
 
@@ -90,7 +98,7 @@ fun ProjectCardView2024(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
-                        painter = painterResource(Res.drawable.baseline_person_add_24),
+                        painter = painterResource(Res.drawable.baseline_arrow_outward_24),
                         tint = Color.White,
                         contentDescription = "External Link Icon",
                         modifier = Modifier
@@ -105,16 +113,16 @@ fun ProjectCardView2024(
 
             // Title Section
             Text(
-                text = "Community",
+                text = "Development",
                 color = Color.Black,
                 fontFamily = AlataFontFamily(),
-                fontSize = 12.sp
+                fontSize = 16.sp
             )
             Text(
                 text = project.name,
                 fontWeight = FontWeight.Bold,
                 fontFamily = AlataFontFamily(),
-                fontSize = 22.sp
+                fontSize = 28.sp
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -186,10 +194,7 @@ fun ProjectCardView2024(
                     .fillMaxWidth()
                     .height(180.dp)
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.omg), // Replace with actual image
-                    contentDescription = "Card Image",
-                    contentScale = ContentScale.Crop,
+                CoilImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(
@@ -199,7 +204,52 @@ fun ProjectCardView2024(
                                 bottomStart = 40.dp,
                                 bottomEnd = 0.dp
                             )
-                        )
+                        ),
+                    imageModel = { "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y29kZXxlbnwwfHwwfHx8MA%3D%3D".ifEmpty { getRandomAvatar() } },
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center,
+                    ),
+                    loading = {
+                        Box(
+                            modifier = Modifier .fillMaxSize()
+                                .clip(
+                                    shape = RoundedCornerShape(
+                                        topEnd = 40.dp,
+                                        topStart = 40.dp,
+                                        bottomStart = 40.dp,
+                                        bottomEnd = 0.dp
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        }
+                    },
+                    failure = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(
+                                    shape = RoundedCornerShape(
+                                        topEnd = 40.dp,
+                                        topStart = 40.dp,
+                                        bottomStart = 40.dp,
+                                        bottomEnd = 0.dp
+                                    )
+                                )
+                                .background(Color.Gray.copy(alpha = 0.1f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painterResource(Res.drawable.app_icon),
+                                contentDescription = "avatarImage",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            )
+                        }
+                    }
+
                 )
 
                 // Floating URL Badge
@@ -212,13 +262,13 @@ fun ProjectCardView2024(
                         .padding(horizontal = 15.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "YourUrl.com",
+                        text = "StackOverflow.com",
                         fontFamily = AlataFontFamily(),
                         fontSize = 12.sp
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        painter = painterResource(Res.drawable.omg),
+                        painter = painterResource(Res.drawable.baseline_link_18),
                         tint = Color.Magenta,
                         contentDescription = "Link Icon",
                         modifier = Modifier.size(16.dp)

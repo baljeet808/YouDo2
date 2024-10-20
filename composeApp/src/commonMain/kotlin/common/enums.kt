@@ -60,6 +60,7 @@ enum class ChatScreenBottomSheetTypes() {
 
 enum class EnumProjectColors{
     Green,
+    LightGreen,
     Pink,
     Blue,
     Red,
@@ -80,6 +81,7 @@ enum class EnumDashboardTasksTabs{
 fun String.getColor(): Color {
     return when(this){
         EnumProjectColors.Green.name -> Color(0xFF006261)
+        EnumProjectColors.LightGreen.name -> Color(0xFFD0E9BC)
         EnumProjectColors.Pink.name -> Color(0xFFFF69B4)
         EnumProjectColors.Blue.name -> Color(0xff363CB5)
         EnumProjectColors.Red.name -> Color(0xFFF53C4F)
@@ -100,6 +102,7 @@ fun String.getColor(): Color {
 fun EnumProjectColors.getColor(): Color {
     return when(this){
         EnumProjectColors.Green -> Color(0xFF006261)
+        EnumProjectColors.LightGreen -> Color(0xFFD0E9BC)
         EnumProjectColors.Pink -> Color(0xFFFF69B4)
         EnumProjectColors.Blue -> Color(0xff363CB5)
         EnumProjectColors.Red -> Color(0xFFF53C4F)

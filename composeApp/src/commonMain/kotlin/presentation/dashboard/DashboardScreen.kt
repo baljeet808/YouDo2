@@ -220,8 +220,8 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Top
                     ) {
                         LazyColumn (
-                            modifier = Modifier.fillMaxWidth().padding(10.dp ),
-                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.fillMaxWidth().padding(2.dp ),
+                            verticalArrangement = Arrangement.spacedBy(5.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             item {
