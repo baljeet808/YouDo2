@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,6 +58,7 @@ import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
+import presentation.project.components.ProjectCardView2024
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
@@ -196,7 +198,7 @@ fun DashboardScreen(
                     )
                     .scale(animatedState.scale)
                     .background(
-                        color = getLightThemeColor(),
+                        color = Color.Black,
                         shape = RoundedCornerShape(animatedState.roundness)
                     )
                     .clip(shape = RoundedCornerShape(animatedState.roundness)),
@@ -217,51 +219,16 @@ fun DashboardScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top
                     ) {
-                        LazyRow (
-                            modifier = Modifier.fillMaxWidth().padding(top = 20.dp ),
-                            horizontalArrangement = Arrangement.spacedBy(15.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        LazyColumn (
+                            modifier = Modifier.fillMaxWidth().padding(10.dp ),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             item {
                                 Spacer(modifier = Modifier.width(5.dp))
                             }
                             items(items = uiState.projects, key = { it.id }) { project ->
-                                Column(
-                                    modifier = Modifier
-                                        .width(240.dp)
-                                        .height(150.dp)
-                                        .background(
-                                            color = EnumProjectColors.DarkBlack.getColor(),
-                                            shape = RoundedCornerShape(20.dp)
-                                        )
-                                        .padding(15.dp)
-                                        .clickable {
-                                            navigateToProject(project.id)
-                                        }
-                                ){
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalAlignment = Alignment.Top,
-                                        horizontalArrangement = Arrangement.Center
-                                    ){
-                                        Text(
-                                            text = project.name,
-                                            modifier = Modifier
-                                                .width(150.dp),
-                                            fontFamily = AlataFontFamily(),
-                                            fontSize = 28.sp,
-                                            color = Color.White,
-                                            lineHeight = TextUnit(39f, TextUnitType.Sp)
-                                        )
-                                        CircularPictureViewWithProgress(
-                                            backgroundColor = project.color.getColor(),
-                                            noImage = true,
-                                            progress = 1f,
-                                            showProgress = true,
-                                            size = 30
-                                        )
-                                    }
-                                }
+                                ProjectCardView2024(project = project)
                             }
                             item {
                                 Spacer(modifier = Modifier.width(20.dp))

@@ -33,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import common.getColor
+import domain.models.Project
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import youdo2.composeapp.generated.resources.Res
@@ -41,12 +43,14 @@ import youdo2.composeapp.generated.resources.baseline_visibility_24
 import youdo2.composeapp.generated.resources.omg
 
 @Composable
-fun ProjectCardView2024() {
+fun ProjectCardView2024(
+    project: Project
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color.White,
+                color = project.color.getColor(),
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(10.dp),
@@ -107,7 +111,7 @@ fun ProjectCardView2024() {
                 fontSize = 12.sp
             )
             Text(
-                text = "Productive routine.",
+                text = project.name,
                 fontWeight = FontWeight.Bold,
                 fontFamily = AlataFontFamily(),
                 fontSize = 22.sp
