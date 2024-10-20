@@ -3,8 +3,6 @@ package presentation.chat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import data.local.entities.MessageEntity
 import data.local.entities.ProjectEntity
 import data.local.mappers.toMessage
