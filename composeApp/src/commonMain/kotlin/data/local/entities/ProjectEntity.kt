@@ -11,11 +11,16 @@ data class ProjectEntity(
     var id : String = "",
     var name : String = "",
     var description : String = "",
+    var ownerName : String = "",
     var ownerId : String = "",
     var update : String = "",
     var color : String = getRandomColor().name,
     var collaboratorIds : String = "",
     var viewerIds: String = "",
     var updatedAt : Long = 0L,
-    var hideFromDashboard : Boolean = false
+    var hideFromDashboard : Boolean = false,
+    var category : String = "",
+    var photoUrl : String = "",
+    var extraUrl : String = "",
+    var projectLikeIds : String = "",
 )

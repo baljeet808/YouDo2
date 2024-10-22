@@ -14,7 +14,11 @@ fun Project.toProjectEntity() : ProjectEntity {
         color = color,
         collaboratorIds = collaboratorIds.joinToString ( "," ),
         viewerIds = viewerIds.joinToString (","),
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        category = category,
+        photoUrl = photoUrl,
+        extraUrl = extraUrl,
+        projectLikeIds = projectLikeIds.joinToString ( "," ),
     )
 }
 
@@ -37,6 +41,14 @@ fun ProjectEntity.toProject(): Project{
         },
         update = update,
         color = color,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        category = category,
+        photoUrl = photoUrl,
+        extraUrl = extraUrl,
+        projectLikeIds = if(projectLikeIds.isNotBlank()) {
+            projectLikeIds.split(",")
+        }else{
+            listOf()
+        }
     )
 }
