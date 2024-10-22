@@ -15,6 +15,7 @@ import presentation.createproject.helpers.CreateProjectViewModel
 import presentation.complete_profile.helpers.CompleteProfileViewModel
 import presentation.create_task.helpers.CreateTaskViewModel
 import presentation.project.helpers.ProjectViewModel
+import presentation.shared.colorPicker.helper.ColorPickerViewModel
 import presentation.chat.ChatViewModel
 import AppViewModel
 import data.local.preferences.createDataStore
@@ -33,5 +34,6 @@ actual val platformModule= module {
     singleOf(::ProjectViewModel)
     singleOf(::CreateTaskViewModel)
     singleOf(::ChatViewModel)
+    singleOf(::ColorPickerViewModel)
     single<DataStore<Preferences>>{ createDataStore() }
 }

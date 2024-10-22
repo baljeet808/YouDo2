@@ -9,8 +9,5 @@ data class ColorPaletteEntity(
     @PrimaryKey
     var id : String,
     var paletteName : String,
-    var nightDark : Long,
-    var nightLight : Long,
-    var dayDark: Long,
-    var dayLight: Long
+    var colorLongValue : Long,
 )

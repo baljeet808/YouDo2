@@ -38,46 +38,38 @@ fun TopHeadingWithCloseButton(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(top = 10.dp, start = 20.dp, end = 20.dp, bottom = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
 
         Text(
             text = heading,
             modifier = Modifier
-                .padding(5.dp)
                 .weight(1f),
             fontFamily = AlataFontFamily(),
-            fontSize = 28.sp,
+            fontSize = 20.sp,
             color = getTextColor()
         )
-
 
         IconButton(
             onClick = onClose,
             modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
+                .padding(end = 5.dp)
+                .height(30.dp)
+                .width(30.dp)
                 .border(
                     width = 2.dp,
-                    color = if (isSystemInDarkTheme()) {
-                        NightDotooFooterTextColor
-                    } else {
-                        LightDotooFooterTextColor
-                    },
-                    shape = RoundedCornerShape(40.dp)
+                    color = Color.White,
+                    shape = RoundedCornerShape(20.dp)
                 )
         ) {
             Icon(
                 Icons.Default.Close,
                 contentDescription = "Button to close side drawer.",
-                tint = if (isSystemInDarkTheme()) {
-                    NightDotooTextColor
-                } else {
-                    Color.Black
-                }
+                tint = Color.White,
+                modifier = Modifier.width(20.dp).height(20.dp)
             )
         }
     }

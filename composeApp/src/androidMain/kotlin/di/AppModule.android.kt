@@ -18,6 +18,7 @@ import presentation.createproject.helpers.CreateProjectViewModel
 import presentation.project.helpers.ProjectViewModel
 import presentation.create_task.helpers.CreateTaskViewModel
 import presentation.complete_profile.helpers.CompleteProfileViewModel
+import presentation.shared.colorPicker.helper.ColorPickerViewModel
 import presentation.chat.ChatViewModel
 
 actual val platformModule= module {
@@ -33,5 +34,6 @@ actual val platformModule= module {
     viewModelOf(::ProjectViewModel)
     viewModelOf(::CreateTaskViewModel)
     viewModelOf(::ChatViewModel)
+    viewModelOf(::ColorPickerViewModel)
     single<DataStore<Preferences>> { createDataStore(androidContext()) }
 }

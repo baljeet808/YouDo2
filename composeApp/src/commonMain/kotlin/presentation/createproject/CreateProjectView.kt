@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
+import domain.models.ColorPalette
 import presentation.createproject.components.NoBorderEditText
 import presentation.createproject.components.ProjectColorPickerAndDescriptionButton
 import presentation.createproject.helpers.CreateProjectScreenEvent
@@ -26,6 +28,7 @@ import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.TopHeadingWithCloseButton
+import presentation.shared.colorPicker.ColorPicker
 import presentation.theme.getLightThemeColor
 
 @Composable
@@ -74,6 +77,14 @@ fun CreateProjectView(
                 navigateBack()
             },
             modifier = Modifier.fillMaxHeight(0.12f)
+        )
+
+        ColorPicker(
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+            initiallySelectedColor = null,
+            onColorSelected = { color ->
+
+            },
         )
 
         /**
