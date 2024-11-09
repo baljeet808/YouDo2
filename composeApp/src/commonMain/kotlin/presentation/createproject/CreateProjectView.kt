@@ -20,9 +20,8 @@ import androidx.compose.ui.unit.dp
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
-import domain.models.ColorPalette
 import presentation.createproject.components.NoBorderEditText
-import presentation.createproject.components.ProjectColorPickerAndDescriptionButton
+import presentation.createproject.components.SuggestionButtonRow
 import presentation.createproject.helpers.CreateProjectScreenEvent
 import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.LoadingDialog
@@ -87,32 +86,6 @@ fun CreateProjectView(
             },
         )
 
-        /**
-         * Row for preview and project color button
-         * **/
-        ProjectColorPickerAndDescriptionButton(
-            selectedColor = uiState.projectColor,
-            onColorSelected = { color ->
-                onScreenEvent(CreateProjectScreenEvent.ProjectColorChanged(color))
-            },
-            showColorOptions = uiState.showColorOptions,
-            toggleColorOptions = {
-                onScreenEvent(CreateProjectScreenEvent.ToggleColorOptions)
-            },
-            modifier = Modifier.padding(top = 10.dp),
-            onKeyBoardController = {
-                keyBoardController?.show()
-                descriptionFocusRequester.requestFocus()
-            },
-            showDescription = uiState.showDescription,
-            clearProjectDescription = {
-                onScreenEvent(CreateProjectScreenEvent.ProjectDescriptionChanged(""))
-            },
-            toggleDescriptionVisibility = {
-                onScreenEvent(CreateProjectScreenEvent.ToggleDescriptionVisibility)
-            }
-        )
-
         NoBorderEditText(
             modifier = Modifier.padding(20.dp),
             text = uiState.projectName,
@@ -137,10 +110,18 @@ fun CreateProjectView(
         )
 
 
+// In your Composable function
+        SuggestionButtonRow(
+            onActionButtonClicked = { /* Handle Add Description click */ },
+            onSkipClick = { /* Handle Skip click */ },
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+            suggestionText = "Add Description"
+        )
+
         /**
          * Text field for adding description
          * **/
-        AnimatedVisibility(visible = uiState.showDescription) {
+        AnimatedVisibility(visible = uiState.projectName.count() > 1 ) {
             NoBorderEditText(
                 modifier = Modifier.padding(20.dp),
                 text = uiState.projectDescription,
