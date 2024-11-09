@@ -1,5 +1,7 @@
 package presentation.shared.ai
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +29,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import youdo2.composeapp.generated.resources.Res
@@ -50,9 +57,16 @@ fun SuggestionButtonRow(
     sideIconPainterRes : DrawableResource = Res.drawable.baseline_auto_awesome_24
 ) {
 
+    var closingScope = rememberCoroutineScope()
+
+    var expanded by remember { mutableStateOf(false) }
+    val rowWidth by animateDpAsState(targetValue = if (expanded) 300.dp else 40.dp) // Adjust expanded width as needed
+
     var animatedProgress by remember { mutableStateOf(suggestionText.length.toFloat()) }
 
     LaunchedEffect(key1 = Unit) {
+        delay(1500)
+        expanded = true
         while (animatedProgress >= 0) {
             animatedProgress -= textAnimationSpeed // Adjust animation speed
             delay(delayBetweenChars) // Adjust animation delay
@@ -71,7 +85,8 @@ fun SuggestionButtonRow(
 
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier.then(Modifier.fillMaxWidth())
+        modifier = modifier
+            .width(rowWidth) // Animate width
             .background(
                 color = rowBackgroundColor,
                 shape = RoundedCornerShape(15.dp)
@@ -87,21 +102,31 @@ fun SuggestionButtonRow(
             tint = sideIconColor
         )
 
-        Button(
-            onClick = onActionButtonClicked,
-            modifier = Modifier.height(34.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = suggestionButtonBackgroundColor)
-        ) {
-            Text(animatedText)
+        if(expanded){
+            Button(
+                onClick = onActionButtonClicked,
+                modifier = Modifier.height(34.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = suggestionButtonBackgroundColor)
+            ) {
+                Text(animatedText)
+            }
+
+
+            Button(
+                onClick = {
+                    closingScope.launch {
+                        expanded = false // Collapse the row when Skip is clicked
+                        delay(1000)
+                        onSkipClick()
+                    }
+                },
+                modifier = Modifier.height(34.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = skipButtonBackgroundColor)
+            ) {
+                Text("Skip", fontSize = 12.sp, color = skipButtonTextColor)
+            }
         }
 
 
-        Button(
-            onClick = onSkipClick,
-            modifier = Modifier.height(34.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = skipButtonBackgroundColor)
-        ) {
-            Text("Skip", fontSize = 12.sp, color = skipButtonTextColor)
-        }
     }
 }

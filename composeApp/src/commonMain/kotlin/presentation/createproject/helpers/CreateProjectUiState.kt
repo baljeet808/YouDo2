@@ -10,6 +10,7 @@ data class CreateProjectUiState (
     val projectColor : EnumProjectColors =  getRandomColorEnum(),
     val showColorOptions : Boolean = false,
     val showDescription : Boolean = false,
+    val showSuggestion : Boolean = false,
     val userId : String = "",
     val userName : String = "",
     val userEmail : String = "",

@@ -61,6 +61,9 @@ class CreateProjectViewModel(
         when (event) {
             is CreateProjectScreenEvent.ProjectNameChanged -> {
                 val isNameValid = event.name.isNotBlank()
+                if(event.name.length > 2 && !uiState.showSuggestion){
+                    uiState = uiState.copy(showSuggestion = true)
+                }
                 val descriptionValid =
                     if (uiState.showDescription) uiState.projectDescription.isNotBlank() else true
                 uiState = uiState.copy(
@@ -100,6 +103,10 @@ class CreateProjectViewModel(
 
             is CreateProjectScreenEvent.CreateProject -> {
                 createProject()
+            }
+
+            CreateProjectScreenEvent.ToggleSuggestion -> {
+                uiState = uiState.copy(showSuggestion = !uiState.showSuggestion)
             }
         }
     }

@@ -109,19 +109,24 @@ fun CreateProjectView(
             label = "Name",
         )
 
-
-// In your Composable function
-        SuggestionButtonRow(
-            onActionButtonClicked = { /* Handle Add Description click */ },
-            onSkipClick = { /* Handle Skip click */ },
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-            suggestionText = "Add Description"
-        )
+        AnimatedVisibility(visible = uiState.showSuggestion){
+            SuggestionButtonRow(
+                onActionButtonClicked = {
+                    onScreenEvent(CreateProjectScreenEvent.ToggleDescriptionVisibility)
+                    onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
+                },
+                onSkipClick = {
+                    onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
+                },
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                suggestionText = "Add Description"
+            )
+        }
 
         /**
          * Text field for adding description
          * **/
-        AnimatedVisibility(visible = uiState.projectName.count() > 1 ) {
+        AnimatedVisibility(visible = uiState.showDescription ) {
             NoBorderEditText(
                 modifier = Modifier.padding(20.dp),
                 text = uiState.projectDescription,
