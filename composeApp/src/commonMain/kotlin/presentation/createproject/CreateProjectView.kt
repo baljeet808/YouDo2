@@ -21,7 +21,7 @@ import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import presentation.createproject.components.NoBorderEditText
-import presentation.createproject.components.SuggestionButtonRow
+import presentation.shared.ai.SuggestionButtonRow
 import presentation.createproject.helpers.CreateProjectScreenEvent
 import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.LoadingDialog

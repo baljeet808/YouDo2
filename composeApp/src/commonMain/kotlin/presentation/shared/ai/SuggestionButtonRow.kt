@@ -1,4 +1,4 @@
-package presentation.createproject.components
+package presentation.shared.ai
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.baseline_auto_awesome_24
@@ -36,40 +37,34 @@ fun SuggestionButtonRow(
     onActionButtonClicked: () -> Unit,
     onSkipClick: () -> Unit,
     modifier: Modifier,
-    suggestionText : String = "Suggestion"
+    suggestionText : String = "Suggestion",
+    textAnimationSpeed : Float = 0.5f,
+    delayBetweenChars : Long = 50,
+    rowBackgroundColor : Color = Color.White.copy(alpha = 0.2f),
+    suggestionButtonBackgroundColor: Color = Color.White,
+    suggestionTextAnimateColorTo : Color = Color(4294930718),
+    suggestionTextAnimateColorFrom : Color = Color.Black,
+    skipButtonBackgroundColor : Color = Color.Black,
+    skipButtonTextColor : Color = Color.White,
+    sideIconColor : Color = Color.White,
+    sideIconPainterRes : DrawableResource = Res.drawable.baseline_auto_awesome_24
 ) {
 
-    var animatedProgress by remember { mutableStateOf(1f) }
-    var isAnimatingForward by remember { mutableStateOf(false) }
+    var animatedProgress by remember { mutableStateOf(suggestionText.length.toFloat()) }
 
     LaunchedEffect(key1 = Unit) {
-        while (true) {
-            if (isAnimatingForward) {
-                if (animatedProgress < suggestionText.length) {
-                    animatedProgress += 0.5f // Adjust animation speed
-                    delay(50) // Adjust animation delay
-                } else {
-                    isAnimatingForward = false
-                    delay(5000) // Delay before reversing
-                }
-            } else {
-                if (animatedProgress > 0) {
-                    animatedProgress -= 0.5f // Adjust animation speed
-                    delay(50) // Adjust animation delay
-                } else {
-                    isAnimatingForward = true
-                    delay(5000) // Delay before restarting
-                }
-            }
+        while (animatedProgress >= 0) {
+            animatedProgress -= textAnimationSpeed // Adjust animation speed
+            delay(delayBetweenChars) // Adjust animation delay
         }
     }
 
     val animatedText = buildAnnotatedString {
         val numCharsToColor = animatedProgress.toInt()
-        withStyle(style = SpanStyle(color =Color(4294930718))) {
+        withStyle(style = SpanStyle(color = suggestionTextAnimateColorTo)) {
             append(suggestionText.substring(0, (suggestionText.length - numCharsToColor).coerceAtLeast(0)))
         }
-        withStyle(style = SpanStyle(color = Color.Black)) {
+        withStyle(style = SpanStyle(color = suggestionTextAnimateColorFrom)) {
             append(suggestionText.substring((suggestionText.length - numCharsToColor).coerceAtLeast(0)))
         }
     }
@@ -78,7 +73,7 @@ fun SuggestionButtonRow(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = modifier.then(Modifier.fillMaxWidth())
             .background(
-                color = Color.White.copy(alpha = 0.2f),
+                color = rowBackgroundColor,
                 shape = RoundedCornerShape(15.dp)
             ).padding(top = 10.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -86,16 +81,16 @@ fun SuggestionButtonRow(
     ) {
 
         Icon(
-            painter = painterResource(Res.drawable.baseline_auto_awesome_24),
+            painter = painterResource(sideIconPainterRes),
             contentDescription = "Suggestion icon",
             modifier = Modifier.height(20.dp).width(20.dp),
-            tint = Color.White
+            tint = sideIconColor
         )
 
         Button(
             onClick = onActionButtonClicked,
             modifier = Modifier.height(34.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+            colors = ButtonDefaults.buttonColors(containerColor = suggestionButtonBackgroundColor)
         ) {
             Text(animatedText)
         }
@@ -104,8 +99,9 @@ fun SuggestionButtonRow(
         Button(
             onClick = onSkipClick,
             modifier = Modifier.height(34.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = skipButtonBackgroundColor)
         ) {
-            Text("Skip", fontSize = 12.sp)
+            Text("Skip", fontSize = 12.sp, color = skipButtonTextColor)
         }
     }
 }
