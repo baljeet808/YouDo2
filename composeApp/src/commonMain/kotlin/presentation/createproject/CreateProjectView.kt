@@ -27,6 +27,7 @@ import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.TopHeadingWithCloseButton
+import presentation.shared.ai.SuggestionButtonsColumn
 import presentation.shared.colorPicker.ColorPicker
 import presentation.theme.getLightThemeColor
 
@@ -110,7 +111,7 @@ fun CreateProjectView(
         )
 
         AnimatedVisibility(visible = uiState.showSuggestion){
-            SuggestionButtonRow(
+           /* SuggestionButtonRow(
                 onActionButtonClicked = {
                     onScreenEvent(CreateProjectScreenEvent.ToggleDescriptionVisibility)
                     onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
@@ -120,6 +121,17 @@ fun CreateProjectView(
                 },
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp),
                 suggestionText = "Add Description"
+            )*/
+            SuggestionButtonsColumn(
+                onSuggestionClicked = {
+                    onScreenEvent(CreateProjectScreenEvent.ToggleDescriptionVisibility)
+                    onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
+                },
+                onSkipClick = {
+                    onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
+                },
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                suggestions = listOf("Add Description", "Add Category", "Add A Link", "Add Image")
             )
         }
 
