@@ -1,11 +1,9 @@
 package presentation.shared.ai
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -29,13 +27,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import presentation.shared.fonts.AlataFontFamily
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.baseline_auto_awesome_24
 
@@ -56,9 +52,7 @@ fun SuggestionButtonRow(
     sideIconColor : Color = Color.White,
     sideIconPainterRes : DrawableResource = Res.drawable.baseline_auto_awesome_24
 ) {
-
-    var closingScope = rememberCoroutineScope()
-
+    val closingScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
     val rowWidth by animateDpAsState(targetValue = if (expanded) 300.dp else 40.dp) // Adjust expanded width as needed
 
@@ -94,7 +88,6 @@ fun SuggestionButtonRow(
         verticalAlignment = Alignment.CenterVertically,
 
     ) {
-
         Icon(
             painter = painterResource(sideIconPainterRes),
             contentDescription = "Suggestion icon",
@@ -108,9 +101,11 @@ fun SuggestionButtonRow(
                 modifier = Modifier.height(34.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = suggestionButtonBackgroundColor)
             ) {
-                Text(animatedText)
+                Text(
+                    animatedText,
+                    fontFamily = AlataFontFamily()
+                )
             }
-
 
             Button(
                 onClick = {
@@ -123,7 +118,12 @@ fun SuggestionButtonRow(
                 modifier = Modifier.height(34.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = skipButtonBackgroundColor)
             ) {
-                Text("Skip", fontSize = 12.sp, color = skipButtonTextColor)
+                Text(
+                    "Skip",
+                    fontSize = 12.sp,
+                    color = skipButtonTextColor,
+                    fontFamily = AlataFontFamily()
+                )
             }
         }
 
