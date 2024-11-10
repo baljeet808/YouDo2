@@ -26,9 +26,10 @@ kotlin {
 
     tasks.create("testClasses")
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
         }
     }
     
@@ -52,8 +53,6 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
-            //Room
-            implementation(libs.androidx.room.paging)
 
             //Koin
             implementation(libs.koin.android)
@@ -165,13 +164,7 @@ room {
 dependencies{
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.places)
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 }
-tasks.withType<KotlinJvmCompile>().configureEach {
-    if (name != "kspCommonMainKotlinMetadata" ) {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
-
 
 

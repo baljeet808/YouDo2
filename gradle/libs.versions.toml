@@ -14,8 +14,6 @@ firebase-bom = "33.1.2"
 
 #Room
 androidx-room = "2.7.0-alpha05"
-kotlinxDatastorePreferences = "1.0.0"
-materialIconsCore = "1.6.8"
 ksp = "2.0.0-1.0.23"
 sqlite = "2.5.0-alpha05"
 
@@ -41,8 +39,6 @@ landscapistCoil3 = "2.3.6"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsCore" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 #Firebase
@@ -52,9 +48,7 @@ firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", versi
 android-firebase-bom = {group = "com.google.firebase", name = "firebase-bom", version.ref="firebase-bom" }
 
 #Room
-
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
-androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
