@@ -45,7 +45,6 @@ abstract class YouDo2Database : RoomDatabase(), ClearAllTableFix {
         clearAllTables()
     }
 }
-
 interface ClearAllTableFix {
     fun clearAllTables()
 }

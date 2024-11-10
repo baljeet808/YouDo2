@@ -4,6 +4,8 @@ import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import platform.Foundation.NSHomeDirectory
 
+import kotlinx.coroutines.*
+
 fun getYouDo2Database(): YouDo2Database {
     val dbFile = NSHomeDirectory() + "/YouDo2.db"
     return Room.databaseBuilder<YouDo2Database>(

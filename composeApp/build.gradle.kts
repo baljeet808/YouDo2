@@ -19,12 +19,7 @@ plugins {
 
 kotlin {
 
-    sourceSets.commonMain {
-        kotlin.srcDir("build/generated/ksp/metadata")
-    }
 
-
-    tasks.create("testClasses")
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -32,9 +27,7 @@ kotlin {
             }
         }
     }
-    
-    jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -47,7 +40,6 @@ kotlin {
     }
     
     sourceSets {
-        val desktopMain by getting
         
         androidMain.dependencies {
             implementation(compose.preview)
@@ -102,9 +94,9 @@ kotlin {
             //coil
             implementation(libs.landscapist.coil3)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-        }
+    }
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
     }
 }
 
@@ -115,6 +107,7 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    sourceSets["main"].kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 
     defaultConfig {
         applicationId = "com.baljeet.youdo2"
@@ -145,16 +138,29 @@ android {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.baljeet.youdo2"
-            packageVersion = "1.0.0"
-        }
-    }
+tasks.named("kspDebugKotlinAndroid").configure {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
+}
+
+tasks.named("kspDebugAndroidTestKotlinAndroid").configure {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
+}
+
+tasks.named("kspKotlinIosArm64").configure {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
+}
+
+tasks.named("kspKotlinIosSimulatorArm64").configure {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
+}
+
+tasks.named("kspKotlinIosX64").configure {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
+}
+
+tasks.named("kspReleaseKotlinAndroid").configure {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
 }
 
 room {
@@ -166,5 +172,3 @@ dependencies{
     implementation(libs.places)
     ksp(libs.androidx.room.compiler)
 }
-
-
