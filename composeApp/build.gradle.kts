@@ -77,9 +77,7 @@ kotlin {
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.analytics)
 
-            implementation (libs.androidx.material.icons.extended)
 
-            implementation (libs.androidx.foundation)
 
             //Room
             implementation(libs.androidx.room.runtime)
@@ -99,9 +97,6 @@ kotlin {
             api(libs.datastore.preferences)
             api(libs.datastore)
 
-            //Icons
-            implementation(libs.androidx.material.icons.core)
-
             //datetime
             implementation(libs.kotlinx.datetime)
 
@@ -116,7 +111,7 @@ kotlin {
 
 android {
     namespace = "com.baljeet.youdo2"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdkVersion(libs.versions.android.compileSdk.get().toInt())
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
