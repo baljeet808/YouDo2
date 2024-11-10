@@ -1,5 +1,4 @@
 import androidx.compose.ui.window.ComposeUIViewController
-import common.createDatastore
 import di.initKoin
 
 fun MainViewController() = ComposeUIViewController(
@@ -7,8 +6,5 @@ fun MainViewController() = ComposeUIViewController(
         initKoin()
     }
 ) {
-    val preferences = createDatastore()
-    App(
-        prefs = preferences
-    )
+    App()
 }
