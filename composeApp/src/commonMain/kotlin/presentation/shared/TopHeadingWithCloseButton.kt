@@ -1,7 +1,6 @@
 package presentation.shared
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,9 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
-import presentation.theme.LightDotooFooterTextColor
-import presentation.theme.NightDotooFooterTextColor
-import presentation.theme.NightDotooTextColor
 import presentation.theme.getTextColor
 
 @ExperimentalResourceApi

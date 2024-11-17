@@ -5,7 +5,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
-import youdo2.composeapp.generated.resources.ReenieBeanie
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.alata
 

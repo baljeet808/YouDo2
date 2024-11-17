@@ -22,7 +22,6 @@ import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
-import presentation.shared.ai.SuggestionButtonRow
 import presentation.createproject.helpers.CreateProjectScreenEvent
 import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.LoadingDialog
