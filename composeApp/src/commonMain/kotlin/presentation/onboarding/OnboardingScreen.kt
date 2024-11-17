@@ -26,12 +26,14 @@ import androidx.compose.ui.unit.dp
 import common.getOnboardingPagerContentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.onboarding.components.NextButton
 import presentation.onboarding.components.OnboardingPager
 import presentation.onboarding.components.PageCountIndicatorView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.NightTransparentWhiteColor
 
+@ExperimentalResourceApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(

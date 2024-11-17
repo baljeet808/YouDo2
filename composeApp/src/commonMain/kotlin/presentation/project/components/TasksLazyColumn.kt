@@ -29,10 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.models.TaskWithProject
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 
-
+@ExperimentalResourceApi
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun TasksLazyColumn(

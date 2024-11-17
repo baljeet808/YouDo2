@@ -36,11 +36,12 @@ import domain.models.Project
 import presentation.chat.components.ChatViewMainContent
 import presentation.chat.components.EmoticonsControllerView
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.theme.LessTransparentBlueColor
 import presentation.theme.NightTransparentWhiteColor
 import presentation.theme.getLightThemeColor
 
-
+@ExperimentalResourceApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatView(

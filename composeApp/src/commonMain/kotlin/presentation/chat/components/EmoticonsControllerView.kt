@@ -16,8 +16,10 @@ import androidx.compose.ui.unit.dp
 import common.Emoticon
 import common.getDrawableIdByFileName
 import data.local.entities.MessageEntity
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+@ExperimentalResourceApi
 @Composable
 fun EmoticonsControllerView(
     onItemSelected : (emoticonName : String, message : MessageEntity) -> Unit,

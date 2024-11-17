@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
@@ -36,6 +37,8 @@ import youdo2.composeapp.generated.resources.baseline_description_add_24
 import youdo2.composeapp.generated.resources.baseline_description_remove_24
 import youdo2.composeapp.generated.resources.baseline_palette_24
 
+
+@ExperimentalResourceApi
 @Composable
 fun ProjectColorPickerAndDescriptionButton(
     selectedColor: EnumProjectColors,
@@ -111,6 +114,8 @@ fun ProjectColorPickerAndDescriptionButton(
     }
 }
 
+
+@ExperimentalResourceApi
 @Composable
 fun ColorSelectionButton(selectedColor: EnumProjectColors, onClick: () -> Unit) {
     Row(
@@ -145,6 +150,7 @@ fun ColorSelectionButton(selectedColor: EnumProjectColors, onClick: () -> Unit) 
     }
 }
 
+@ExperimentalResourceApi
 @Composable
 fun ColorOptionsList(selectedColor: EnumProjectColors, onColorSelected: (EnumProjectColors) -> Unit) {
     LazyRow(
@@ -168,6 +174,8 @@ fun ColorOptionsList(selectedColor: EnumProjectColors, onColorSelected: (EnumPro
     }
 }
 
+
+@ExperimentalResourceApi
 @Composable
 fun ColorOptionItem(
     color: EnumProjectColors,

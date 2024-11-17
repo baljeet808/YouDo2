@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import domain.dto_helpers.DataError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.project.ProjectView
@@ -17,7 +18,7 @@ import presentation.project.ProjectView
 const val DESTINATION_PROJECT_ROUTE = "project"
 const val DESTINATION_PROJECT_ROUTE_RELATIVE_PATH = "/{projectId}/{userId}"
 
-
+@ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addProjectViewDestination(
     navController: NavController,

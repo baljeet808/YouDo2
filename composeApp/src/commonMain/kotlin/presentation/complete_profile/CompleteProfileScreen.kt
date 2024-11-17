@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.avatars
 import common.getColor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.createproject.components.NoBorderEditText
 import presentation.drawer.components.CircularPictureViewWithProgress
@@ -43,6 +44,7 @@ import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.NightTransparentWhiteColor
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun CompleteProfileScreen(
     title : String = "Complete Your \nProfile",

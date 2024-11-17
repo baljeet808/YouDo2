@@ -43,12 +43,14 @@ import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import domain.models.Project
 import domain.models.User
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.editboxs.EditOnFlyBox
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooYellow
 import presentation.theme.LessTransparentWhiteColor
 import presentation.theme.NightTransparentWhiteColor
 
+@ExperimentalResourceApi
 @Composable
 fun ProjectCardWithProfiles(
     project: Project,
@@ -327,8 +329,7 @@ fun ProjectCardWithProfiles(
     }
 }
 
-
-
+@ExperimentalResourceApi
 @Composable
 fun ProjectTopBar(
     notificationsState : Boolean,

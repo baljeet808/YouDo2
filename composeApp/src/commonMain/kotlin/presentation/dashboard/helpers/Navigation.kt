@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import domain.dto_helpers.DataError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
@@ -17,6 +18,7 @@ import presentation.project.helpers.DESTINATION_PROJECT_ROUTE
 
 const val DESTINATION_DASHBOARD_ROUTE = "dashboard"
 
+@ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addDashboardDestination(
     navController: NavController,

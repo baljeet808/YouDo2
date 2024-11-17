@@ -1,21 +1,22 @@
 [versions]
-agp = "8.3.2"
+agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.3"
-compose-plugin = "1.7.0"
+androidx-activityCompose = "1.9.0"
+compose = "1.6.6"
+compose-plugin = "1.6.2"
 firebaseAuth = "1.13.0"
 foundation = "1.6.8"
-kotlin = "2.0.21"
+kotlin = "1.9.23"
 gservices = "4.4.2"
 firebase-bom = "33.1.2"
 
 
 #Room
-androidx-room = "2.7.0-alpha05"
-ksp = "2.0.0-1.0.23"
-sqlite = "2.5.0-alpha05"
+room = "2.7.0-alpha01"
+ksp = "1.9.23-1.0.19"
+sqlite = "2.5.0-SNAPSHOT"
 
 #Koin
 koin = "3.6.0-Beta4"
@@ -39,6 +40,8 @@ landscapistCoil3 = "2.3.6"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 #Firebase
@@ -48,8 +51,9 @@ firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", versi
 android-firebase-bom = {group = "com.google.firebase", name = "firebase-bom", version.ref="firebase-bom" }
 
 #Room
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 #Koin
@@ -77,12 +81,11 @@ landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 
 #Room
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-room = { id = "androidx.room", version.ref = "androidx-room" }
+room = { id = "androidx.room", version.ref = "room" }
 
 #Firebase-Auth
 googleServices = {id = "com.google.gms.google-services", version.ref ="gservices"}

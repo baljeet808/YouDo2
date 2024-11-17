@@ -9,11 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import common.EnumProjectColors
 import common.getColor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_icon
 
 
+@ExperimentalResourceApi
 @Composable
 fun SplashScreenView() {
     Box(

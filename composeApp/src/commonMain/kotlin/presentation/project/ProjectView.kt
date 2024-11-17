@@ -47,6 +47,7 @@ import data.local.mappers.toProjectEntity
 import domain.models.TaskWithProject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.onboarding.components.NextButton
 import presentation.project.components.TasksLazyColumn
 import presentation.project.helpers.ProjectScreenEvent
@@ -60,6 +61,7 @@ import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun ProjectView(
     fetchScreenData: () -> Unit = {},

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.onboarding.components.PreviousButton
 import presentation.shared.LoadingDialog
@@ -38,6 +39,7 @@ import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.signup.helpers.SignupUIState
 
+@ExperimentalResourceApi
 @Composable
 fun SignupScreen(
     uiState: SignupUIState = SignupUIState(),

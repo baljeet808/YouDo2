@@ -32,10 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.ReenieBeanieFontFamily
 import presentation.theme.getLightThemeColor
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun AppCustomDialog(
     onDismiss: () -> Unit,

@@ -24,13 +24,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumPriorities
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooBrightBlue
 import presentation.theme.NightDotooFooterTextColor
 import presentation.theme.getDarkThemeColor
 
-
+@ExperimentalResourceApi
 @Composable
 fun PrioritySheet(
     priority: EnumPriorities,

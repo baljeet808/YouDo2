@@ -36,11 +36,13 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.baseline_auto_awesome_24
 
+@ExperimentalResourceApi
 @Composable
 fun SuggestionButtonsColumn(
     suggestions: List<String>,

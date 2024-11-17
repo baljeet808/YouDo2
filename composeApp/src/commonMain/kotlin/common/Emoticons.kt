@@ -22,6 +22,7 @@ import common.Emoticon.Wow
 import common.Emoticon.Yummy
 import domain.models.Interaction
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.amazed
 import youdo2.composeapp.generated.resources.anger
@@ -44,6 +45,7 @@ import youdo2.composeapp.generated.resources.wink
 import youdo2.composeapp.generated.resources.wow
 import youdo2.composeapp.generated.resources.yummy
 
+@ExperimentalResourceApi
 enum class Emoticon(val fileName : String, val drawableId : DrawableResource){
     Amazed("amazed", Res.drawable.amazed),
     Anger("anger", Res.drawable.anger),
@@ -69,6 +71,7 @@ enum class Emoticon(val fileName : String, val drawableId : DrawableResource){
 }
 
 
+@ExperimentalResourceApi
 fun getDrawableIdByFileName(fileName : String) : DrawableResource{
     return when(fileName){
         "amazed" -> Amazed.drawableId

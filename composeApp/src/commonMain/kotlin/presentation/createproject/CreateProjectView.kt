@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.shared.ai.SuggestionButtonRow
 import presentation.createproject.helpers.CreateProjectScreenEvent
@@ -31,6 +32,7 @@ import presentation.shared.ai.SuggestionButtonsColumn
 import presentation.shared.colorPicker.ColorPicker
 import presentation.theme.getLightThemeColor
 
+@ExperimentalResourceApi
 @Composable
 fun CreateProjectView(
     uiState: CreateProjectUiState = CreateProjectUiState(),

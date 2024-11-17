@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import domain.dto_helpers.DataError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.dashboard.helpers.DESTINATION_DASHBOARD_ROUTE
@@ -15,6 +16,7 @@ import presentation.signup.helpers.DESTINATION_SIGNUP_ROUTE
 
 const val DESTINATION_LOGIN_ROUTE = "login"
 
+@ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addLoginDestination(
     navController: NavController,

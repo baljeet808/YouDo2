@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import common.getRandomAvatar
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.theme.NightDotooBrightPink
 import youdo2.composeapp.generated.resources.Res
@@ -33,6 +34,8 @@ import youdo2.composeapp.generated.resources.app_icon
 /**
  * User Profile with Progress bar for total tasks completed
  * **/
+
+@ExperimentalResourceApi
 @Composable
 fun  CircularPictureViewWithProgress(
     avatarUrl : String = "",

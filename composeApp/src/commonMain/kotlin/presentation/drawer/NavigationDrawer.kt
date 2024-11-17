@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.models.MenuItem
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.drawer.components.IconButtonView
 import presentation.drawer.components.MenuItemRow
 import presentation.drawer.components.CircularPictureViewWithProgress
@@ -39,6 +40,7 @@ import presentation.theme.NightTransparentWhiteColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
+@ExperimentalResourceApi
 @Composable
 fun NavigationDrawer(
     userEmail: String = "",

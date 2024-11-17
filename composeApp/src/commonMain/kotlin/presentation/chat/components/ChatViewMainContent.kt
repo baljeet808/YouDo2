@@ -34,9 +34,11 @@ import common.getRandomColor
 import data.local.entities.MessageEntity
 import data.local.entities.UserEntity
 import domain.models.Project
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getLightThemeColor
 
+@ExperimentalResourceApi
 @Composable
 fun ChatViewMainContent(
     participants : List<UserEntity>,

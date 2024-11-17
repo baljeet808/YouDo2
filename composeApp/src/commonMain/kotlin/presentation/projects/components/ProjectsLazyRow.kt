@@ -13,8 +13,10 @@ import androidx.compose.ui.unit.dp
 import common.EnumRoles
 import data.local.entities.ProjectEntity
 import data.local.relations.ProjectWithTasks
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 
+@ExperimentalResourceApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProjectsLazyRow(

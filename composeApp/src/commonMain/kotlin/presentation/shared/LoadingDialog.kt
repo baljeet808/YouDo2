@@ -23,9 +23,11 @@ import common.EnumProjectColors
 import common.getColor
 import common.getRandomLoadingMessage
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.onboarding.components.PageCountIndicatorView
 import presentation.shared.fonts.AlataFontFamily
 
+@ExperimentalResourceApi
 @Composable
 fun LoadingDialog(
 ){
@@ -55,6 +57,7 @@ fun LoadingDialog(
     }
 }
 
+@ExperimentalResourceApi
 @Composable
 fun LoadingDialogContent(
     backgroundColor: Color,

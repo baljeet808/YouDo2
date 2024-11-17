@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import domain.dto_helpers.DataError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -45,6 +46,7 @@ import presentation.theme.getNightLightColor
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 @Preview
+@ExperimentalResourceApi
 fun App(
 ) {
 

@@ -31,11 +31,13 @@ import common.getInteractions
 import common.toNiceDateTimeFormat
 import data.local.entities.MessageEntity
 import data.local.entities.UserEntity
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooLightBlue
 import presentation.theme.DotooBlue
 
 
+@ExperimentalResourceApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ThereMessageBubbleView(

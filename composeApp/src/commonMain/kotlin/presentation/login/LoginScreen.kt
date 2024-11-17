@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
 import presentation.login.helpers.LoginUIState
@@ -40,6 +41,7 @@ import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.DotooPink
 
+@ExperimentalResourceApi
 @Composable
 fun LoginScreen(
     navigateToPolicy: () -> Unit = {},

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.Roboto_Black
@@ -19,7 +20,7 @@ import youdo2.composeapp.generated.resources.Roboto_Regular
 import youdo2.composeapp.generated.resources.Roboto_Thin
 import youdo2.composeapp.generated.resources.Roboto_ThinItalic
 
-
+@ExperimentalResourceApi
 @Composable
 fun RobotoFontFamily() = FontFamily(
     listOf(

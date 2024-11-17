@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.local.entities.ProjectEntity
 import data.local.relations.TaskWithProject
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.projects.components.DialogState
 import presentation.projects.components.ProjectsLazyRow
 import presentation.projects.helpers.ProjectsUIState
@@ -49,6 +50,7 @@ import presentation.theme.getDarkThemeColor
 import presentation.theme.getLightThemeColor
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun ProjectsView(
     navigateToDoToos: (project: ProjectEntity) -> Unit = {},

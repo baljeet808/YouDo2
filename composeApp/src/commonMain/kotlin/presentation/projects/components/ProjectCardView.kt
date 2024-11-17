@@ -35,11 +35,12 @@ import common.EnumRoles
 import common.getColor
 import data.local.entities.ProjectEntity
 import data.local.relations.ProjectWithTasks
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getDarkThemeColor
 import presentation.theme.getTextColor
 
-
+@ExperimentalResourceApi
 @Composable
 fun ProjectCardView(
     project: ProjectWithTasks,

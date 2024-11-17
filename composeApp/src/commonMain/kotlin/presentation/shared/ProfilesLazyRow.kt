@@ -26,10 +26,12 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import common.getRandomAvatar
 import domain.models.User
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooYellow
 import presentation.theme.getLightThemeColor
 
+@ExperimentalResourceApi
 @Composable
 fun ProfilesLazyRow(
     profiles: List<User>,

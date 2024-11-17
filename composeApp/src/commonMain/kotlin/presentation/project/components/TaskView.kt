@@ -33,9 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.getColor
 import domain.models.TaskWithProject
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getDarkThemeColor
 
+@ExperimentalResourceApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskView(

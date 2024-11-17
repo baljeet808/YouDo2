@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.maxTitleCharsAllowedForProject
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooRed
@@ -48,6 +49,7 @@ import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.baseline_visibility_24
 import youdo2.composeapp.generated.resources.baseline_visibility_off_24
 
+@ExperimentalResourceApi
 @Composable
 fun NoBorderEditText(
     text: String = "",

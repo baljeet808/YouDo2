@@ -17,9 +17,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.OnBoardPagerContent
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.RobotoFontFamily
 
+@ExperimentalResourceApi
 @Composable
 fun OnboardingPager(
     pagerContent: OnBoardPagerContent,

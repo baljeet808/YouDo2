@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import common.getColor
 import common.getRandomColor
 import domain.models.Project
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getDarkThemeColor
@@ -47,6 +48,7 @@ import youdo2.composeapp.generated.resources.baseline_attach_file_24
 import youdo2.composeapp.generated.resources.baseline_camera_alt_24
 import youdo2.composeapp.generated.resources.baseline_person_add_24
 
+@ExperimentalResourceApi
 @Composable
 fun MessageBoxView(
     openCollaboratorsScreen: () -> Unit,

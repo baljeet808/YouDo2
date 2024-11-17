@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightDotooFooterTextColor
 import presentation.theme.NightDotooFooterTextColor
 import presentation.theme.NightDotooTextColor
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun TopHeadingWithCloseButton(
     onClose : () -> Unit = {},

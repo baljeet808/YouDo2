@@ -49,6 +49,7 @@ import common.EnumProjectColors
 import common.getColor
 import common.menuItems
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.dashboard.components.SearchBoxView
 import presentation.dashboard.helpers.DashboardScreenState
@@ -64,6 +65,7 @@ import presentation.theme.getLightThemeColor
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
+@ExperimentalResourceApi
 @Composable
 fun DashboardScreen(
     uiState: DashboardUIState = DashboardUIState(),

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
@@ -34,6 +35,7 @@ import youdo2.composeapp.generated.resources.baseline_description_remove_24
 import youdo2.composeapp.generated.resources.breaking_news_24
 
 
+@ExperimentalResourceApi
 @Composable
 fun PriorityAndDescriptionButton(
     onPriorityClicked: () -> Unit = {},

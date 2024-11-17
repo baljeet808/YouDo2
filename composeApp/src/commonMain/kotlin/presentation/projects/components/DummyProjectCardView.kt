@@ -36,11 +36,12 @@ import androidx.compose.ui.unit.sp
 import common.getColor
 import common.getRandomColor
 import data.local.relations.ProjectWithTasks
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.ReenieBeanieFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.NightAppBarIconsColor
 
-
+@ExperimentalResourceApi
 @Composable
 fun DummyProjectCardView(
     project: ProjectWithTasks,

@@ -1,7 +1,5 @@
 package presentation.chat
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -9,15 +7,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import data.local.entities.MessageEntity
 import data.local.entities.UserEntity
-import data.local.mappers.toProject
 import domain.models.Project
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
-
 import org.koin.core.annotation.KoinExperimentalAPI
 
 
 const val DestinationMessageRoute = "messages/{projectId}/{userId}"
 
+@ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addChatViewDestination(navController: NavController){
     composable(

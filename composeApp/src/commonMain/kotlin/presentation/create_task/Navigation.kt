@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.create_task.helpers.CreateTaskViewModel
@@ -13,7 +14,7 @@ import presentation.create_task.helpers.CreateTaskViewModel
 
 const val DestinationCreateTaskRoute = "create_task/{projectId}/{userId}"
 
-
+@ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addCreateTaskViewDestination(
     navController: NavController

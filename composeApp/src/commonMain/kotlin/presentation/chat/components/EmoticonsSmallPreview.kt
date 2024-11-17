@@ -15,10 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.getDrawableIdByFileName
 import domain.models.Interaction
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun EmoticonsSmallPreview(
     interactions : ArrayList<Interaction>,

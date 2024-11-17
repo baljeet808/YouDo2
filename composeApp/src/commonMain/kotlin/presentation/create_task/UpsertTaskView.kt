@@ -68,6 +68,7 @@ import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.create_task.components.PriorityAndDescriptionButton
 import presentation.create_task.helpers.CreateTaskScreenEvent
@@ -89,6 +90,7 @@ import youdo2.composeapp.generated.resources.baseline_calendar_month_24
 import youdo2.composeapp.generated.resources.baseline_topic_24
 
 @OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalResourceApi
 @Composable
 fun UpsertTaskView(
     uiState: CreateTaskUiState = CreateTaskUiState(),

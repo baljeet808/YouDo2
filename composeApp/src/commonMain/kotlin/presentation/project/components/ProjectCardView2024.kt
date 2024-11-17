@@ -39,6 +39,7 @@ import com.skydoves.landscapist.coil3.CoilImage
 import common.getColor
 import common.getRandomAvatar
 import domain.models.Project
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import youdo2.composeapp.generated.resources.Res
@@ -49,6 +50,7 @@ import youdo2.composeapp.generated.resources.baseline_link_18
 import youdo2.composeapp.generated.resources.baseline_visibility_24
 import youdo2.composeapp.generated.resources.omg
 
+@ExperimentalResourceApi
 @Composable
 fun ProjectCardView2024(
     project: Project

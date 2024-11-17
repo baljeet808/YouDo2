@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.Color
 import domain.models.MenuItem
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
 import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
 import youdo2.composeapp.generated.resources.Res
@@ -55,6 +56,7 @@ data class OnBoardPagerContent(
 )
 
 
+@ExperimentalResourceApi
 fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
     return listOf(
         OnBoardPagerContent(

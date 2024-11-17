@@ -31,10 +31,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooRed
 import presentation.theme.getDayLightColor
 
+@ExperimentalResourceApi
 @Composable
 fun EditOnFlyBox(
     modifier: Modifier,

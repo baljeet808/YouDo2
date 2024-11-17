@@ -15,9 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.models.MenuItem
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.LessTransparentWhiteColor
 
+@ExperimentalResourceApi
 @Composable
    fun MenuItemRow(menuItem: MenuItem, onMenuItemClick: (MenuItem) -> Unit) {
        Row(

@@ -25,9 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumProjectColors
 import common.getColor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getTextColor
 
+@ExperimentalResourceApi
 @Composable
 fun SaveButtonView(
     containerModifier: Modifier = Modifier

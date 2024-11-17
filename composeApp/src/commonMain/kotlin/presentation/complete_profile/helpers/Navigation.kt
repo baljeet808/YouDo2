@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import domain.dto_helpers.DataError
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.complete_profile.CompleteProfileScreen
@@ -17,6 +18,7 @@ const val DESTINATION_COMPLETE_PROFILE_ROUTE = "complete_profile"
 const val DESTINATION_COMPLETE_PROFILE_ROUTE_RELATIVE_PATH = "/{uid}/{email}/{navigatedFromSignup}"
 
 
+@ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addCompleteProfileDestination(
     navController: NavController,

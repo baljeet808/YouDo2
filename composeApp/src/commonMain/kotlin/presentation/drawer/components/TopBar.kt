@@ -25,12 +25,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.NightDotooBrightPink
 import presentation.theme.getTextColor
 
-
+@ExperimentalResourceApi
 @Composable
 fun TopBar(
     onMenuItemClick: () -> Unit,
