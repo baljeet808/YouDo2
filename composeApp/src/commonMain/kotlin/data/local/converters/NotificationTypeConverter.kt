@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import common.EnumNotificationType
 
 
-class NotificationTypeConverter {
+object NotificationTypeConverter {
     @TypeConverter
     fun notificationTypToInt(value: EnumNotificationType): Int {
         return when (value) {

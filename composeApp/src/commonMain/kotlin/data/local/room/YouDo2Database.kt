@@ -46,6 +46,10 @@ abstract class YouDo2Database : RoomDatabase(), ClearAllTableFix {
     override fun clearAllTables() {
         clearAllTables()
     }
+
+    companion object {
+        const val DB_NAME = "youdo2.db"
+    }
 }
 interface ClearAllTableFix {
     fun clearAllTables()

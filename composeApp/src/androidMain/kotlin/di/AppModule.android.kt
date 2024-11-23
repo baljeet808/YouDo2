@@ -4,25 +4,24 @@ import AppViewModel
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import data.local.preferences.createDataStore
-import data.local.room.YouDo2Database
-import data.local.room.getYouDo2Database
+import data.local.room.DatabaseFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
+import presentation.chat.ChatViewModel
+import presentation.complete_profile.helpers.CompleteProfileViewModel
+import presentation.create_task.helpers.CreateTaskViewModel
+import presentation.createproject.helpers.CreateProjectViewModel
 import presentation.dashboard.helpers.DashboardViewModel
 import presentation.login.helpers.LoginViewModel
-import presentation.projects.helpers.ProjectsViewModel
-import presentation.signup.helpers.SignupViewModel
 import presentation.onboarding.helpers.OnBoardingViewModel
-import presentation.createproject.helpers.CreateProjectViewModel
 import presentation.project.helpers.ProjectViewModel
-import presentation.create_task.helpers.CreateTaskViewModel
-import presentation.complete_profile.helpers.CompleteProfileViewModel
+import presentation.projects.helpers.ProjectsViewModel
 import presentation.shared.colorPicker.helper.ColorPickerViewModel
-import presentation.chat.ChatViewModel
+import presentation.signup.helpers.SignupViewModel
 
 actual val platformModule= module {
-    single<YouDo2Database> { getYouDo2Database(get()) }
+    single{ DatabaseFactory(androidContext()) }
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignupViewModel)
     viewModelOf(::DashboardViewModel)

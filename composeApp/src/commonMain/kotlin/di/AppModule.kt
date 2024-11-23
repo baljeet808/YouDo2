@@ -1,23 +1,25 @@
 package di
 
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import data.local.room.DatabaseFactory
 import data.repository_implementations.AuthRepositoryImpl
 import data.repository_implementations.ColorPaletteRepositoryImpl
 import data.repository_implementations.DatabaseOperationsRepositoryImpl
-import data.repository_implementations.TaskRepositoryImpl
 import data.repository_implementations.InvitationsRepositoryImpl
 import data.repository_implementations.MessageRepositoryImpl
 import data.repository_implementations.NotificationRepositoryImpl
 import data.repository_implementations.ProjectRepositoryImpl
+import data.repository_implementations.TaskRepositoryImpl
 import data.repository_implementations.UserRepositoryImpl
 import domain.repository_interfaces.AuthRepository
 import domain.repository_interfaces.ColorPaletteRepository
 import domain.repository_interfaces.DataStoreRepository
 import domain.repository_interfaces.DatabaseOperationsRepository
-import domain.repository_interfaces.TaskRepository
 import domain.repository_interfaces.InvitationsRepository
 import domain.repository_interfaces.MessageRepository
 import domain.repository_interfaces.NotificationRepository
 import domain.repository_interfaces.ProjectRepository
+import domain.repository_interfaces.TaskRepository
 import domain.repository_interfaces.UserRepository
 import domain.use_cases.auth_use_cases.GetCurrentUserIdUseCase
 import domain.use_cases.auth_use_cases.GetCurrentUserUseCase
@@ -27,21 +29,6 @@ import domain.use_cases.auth_use_cases.SignOutUseCase
 import domain.use_cases.auth_use_cases.SignupUseCase
 import domain.use_cases.auth_use_cases.UpdateCurrentUserUseCase
 import domain.use_cases.database_operations_use_cases.DeleteAllTablesUseCase
-import domain.use_cases.task_use_cases.DeleteTaskUseCase
-import domain.use_cases.task_use_cases.DeleteTasksByProjectIdUseCase
-import domain.use_cases.task_use_cases.GetAllOtherTasksUseCase
-import domain.use_cases.task_use_cases.GetAllTasksUseCase
-import domain.use_cases.task_use_cases.GetAllTasksWithProjectAsFlowUseCase
-import domain.use_cases.task_use_cases.GetAllTasksWithProjectUseCase
-import domain.use_cases.task_use_cases.GetTaskByIdUseCase
-import domain.use_cases.task_use_cases.GetPendingTasksUseCase
-import domain.use_cases.task_use_cases.GetProjectTasksAsFlowUseCase
-import domain.use_cases.task_use_cases.GetProjectTasksUseCase
-import domain.use_cases.task_use_cases.GetTaskByIdAsFlowUseCase
-import domain.use_cases.task_use_cases.GetTodayTasksUseCase
-import domain.use_cases.task_use_cases.GetTomorrowTasksUseCase
-import domain.use_cases.task_use_cases.GetYesterdayTasksUseCase
-import domain.use_cases.task_use_cases.UpsertTasksUseCase
 import domain.use_cases.invitation_use_cases.DeleteAllInvitationsByProjectIdUseCase
 import domain.use_cases.invitation_use_cases.DeleteInvitationUseCase
 import domain.use_cases.invitation_use_cases.GetAllInvitationsByProjectIdUseCase
@@ -78,6 +65,21 @@ import domain.use_cases.project_use_cases.GetProjectsUseCase
 import domain.use_cases.project_use_cases.GetProjectsWithDoToosUseCase
 import domain.use_cases.project_use_cases.SearchProjectsUseCase
 import domain.use_cases.project_use_cases.UpsertProjectUseCase
+import domain.use_cases.task_use_cases.DeleteTaskUseCase
+import domain.use_cases.task_use_cases.DeleteTasksByProjectIdUseCase
+import domain.use_cases.task_use_cases.GetAllOtherTasksUseCase
+import domain.use_cases.task_use_cases.GetAllTasksUseCase
+import domain.use_cases.task_use_cases.GetAllTasksWithProjectAsFlowUseCase
+import domain.use_cases.task_use_cases.GetAllTasksWithProjectUseCase
+import domain.use_cases.task_use_cases.GetPendingTasksUseCase
+import domain.use_cases.task_use_cases.GetProjectTasksAsFlowUseCase
+import domain.use_cases.task_use_cases.GetProjectTasksUseCase
+import domain.use_cases.task_use_cases.GetTaskByIdAsFlowUseCase
+import domain.use_cases.task_use_cases.GetTaskByIdUseCase
+import domain.use_cases.task_use_cases.GetTodayTasksUseCase
+import domain.use_cases.task_use_cases.GetTomorrowTasksUseCase
+import domain.use_cases.task_use_cases.GetYesterdayTasksUseCase
+import domain.use_cases.task_use_cases.UpsertTasksUseCase
 import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
 import domain.use_cases.user_use_cases.GetUserByIdUseCase
 import domain.use_cases.user_use_cases.GetUsersByIdsUseCase
@@ -192,12 +194,21 @@ val databaseOperationsCasesModule = module {
     single<DeleteAllTablesUseCase>{ DeleteAllTablesUseCase(get())}
 }
 
+val sharedModule = module {
+    single {
+        get<DatabaseFactory>().create()
+            .setDriver(BundledSQLiteDriver())
+            .build()
+    }
+}
+
 expect val platformModule: Module
 
 fun initKoin(config: KoinAppDeclaration? = null) =
     startKoin {
         config?.invoke(this)
         modules(
+            sharedModule,
             platformModule,
             repositoriesModule,
             projectUseCasesModule,
