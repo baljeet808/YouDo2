@@ -1,15 +1,16 @@
 package data.local.room
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import data.local.converters.NotificationTypeConverter
 import data.local.daos.ColorPaletteDao
-import data.local.daos.TaskDao
 import data.local.daos.InvitationDao
 import data.local.daos.MessageDao
 import data.local.daos.NotificationDao
 import data.local.daos.ProjectDao
+import data.local.daos.TaskDao
 import data.local.daos.UserDao
 import data.local.entities.ColorPaletteEntity
 import data.local.entities.InvitationEntity
@@ -32,6 +33,7 @@ import data.local.entities.UserEntity
     version = 1
 )
 @TypeConverters(NotificationTypeConverter::class)
+@ConstructedBy(YouDo2DatabaseConstructor::class)
 abstract class YouDo2Database : RoomDatabase(), ClearAllTableFix {
     abstract fun projectDao() : ProjectDao
     abstract fun userDao() : UserDao

@@ -1,25 +1,24 @@
-import org.jetbrains.kotlin.config.JvmTarget
+
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
-    //Room
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     //firebase
     alias(libs.plugins.googleServices)
-    //navigation
-    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
@@ -33,15 +32,17 @@ kotlin {
             isStatic = true
         }
     }
-    
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     sourceSets {
 
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.compose.ui.tooling.preview)
 
-            //Koin
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
 
@@ -54,28 +55,30 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
             implementation(compose.material3)
+            implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.jetbrains.compose.navigation)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
+
+            implementation(libs.bundles.coil)
 
             //firebase
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.analytics)
             implementation(libs.firebase.auth)
-
-            //Room
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
-
-            //Koin
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.lifecycle.viewmodel)
-            implementation(libs.navigation.compose)
 
             //DataStore
             api(libs.datastore.preferences)
@@ -84,8 +87,12 @@ kotlin {
             //datetime
             implementation(libs.kotlinx.datetime)
 
-            //coil
-            implementation(libs.landscapist.coil3)
+        }
+
+        dependencies {
+            implementation(libs.firebase.crashlytics.buildtools)
+            implementation(libs.places)
+            ksp(libs.androidx.room.compiler)
         }
     }
 }
@@ -115,18 +122,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    dependencies {
-        debugImplementation(libs.compose.ui.tooling)
-    }
 }
 
-
-room {
-    schemaDirectory("$projectDir/schemas")
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
 
-dependencies{
-    implementation(libs.firebase.crashlytics.buildtools)
-    implementation(libs.places)
-    ksp(libs.room.compiler)
-}

@@ -194,7 +194,7 @@ fun CompleteProfileScreen(
             .padding(30.dp),
         contentAlignment = Alignment.TopEnd
     ) {
-        androidx.compose.material.Text(
+        Text(
             text = "Skip",
             color = Color.White,
             modifier = Modifier
