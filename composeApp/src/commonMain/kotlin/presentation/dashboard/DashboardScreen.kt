@@ -52,7 +52,7 @@ import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
-import presentation.shared.ProjectCardWithProfiles
+import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 

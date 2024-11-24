@@ -19,6 +19,7 @@ fun Project.toProjectEntity() : ProjectEntity {
         photoUrl = photoUrl,
         extraUrl = extraUrl,
         projectLikeIds = projectLikeIds.joinToString ( "," ),
+        numberOfTasks = numberOfTasks
     )
 }
 
@@ -49,6 +50,7 @@ fun ProjectEntity.toProject(): Project{
             projectLikeIds.split(",")
         }else{
             listOf()
-        }
+        },
+        numberOfTasks = numberOfTasks
     )
 }

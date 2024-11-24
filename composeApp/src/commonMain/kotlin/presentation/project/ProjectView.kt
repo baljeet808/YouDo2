@@ -51,7 +51,7 @@ import presentation.onboarding.components.NextButton
 import presentation.project.components.TasksLazyColumn
 import presentation.project.helpers.ProjectScreenEvent
 import presentation.project.helpers.ProjectScreenState
-import presentation.shared.ProjectCardWithProfiles
+import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
 import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.DoTooRed

@@ -33,7 +33,7 @@ import common.getColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.onboarding.components.PreviousButton
-import presentation.shared.LoadingDialog
+import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily

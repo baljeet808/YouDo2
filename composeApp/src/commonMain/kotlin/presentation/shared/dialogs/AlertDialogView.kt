@@ -1,4 +1,4 @@
-package presentation.shared
+package presentation.shared.dialogs
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon

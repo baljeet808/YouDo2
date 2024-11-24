@@ -35,7 +35,7 @@ import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
 import presentation.login.helpers.LoginUIState
 import presentation.onboarding.components.NextButton
-import presentation.shared.LoadingDialog
+import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily

@@ -23,4 +23,5 @@ data class ProjectEntity(
     var photoUrl : String = "",
     var extraUrl : String = "",
     var projectLikeIds : String = "",
+    var numberOfTasks : Int = 0,
 )

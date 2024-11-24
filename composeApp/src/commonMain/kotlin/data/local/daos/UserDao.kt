@@ -27,7 +27,10 @@ interface UserDao {
     fun getUserByIdAsAFlow(userId : String) : Flow<UserEntity?>
 
     @Query("SELECT * FROM users where id IN (:userIds)")
-    fun getAllUsersOfTheseIds(userIds : List<String>) : Flow<List<UserEntity>>
+    fun getAllUsersOfTheseIdsAsFlow(userIds : List<String>) : Flow<List<UserEntity>>
+
+    @Query("SELECT * FROM users where id IN (:userIds)")
+    suspend fun getAllUsersOfTheseIds(userIds : List<String>) : List<UserEntity>
 
     @Delete
     suspend fun delete(user : UserEntity)

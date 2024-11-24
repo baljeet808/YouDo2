@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.createproject.helpers.CreateProjectScreenEvent
 import presentation.createproject.helpers.CreateProjectUiState
-import presentation.shared.LoadingDialog
+import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.TopHeadingWithCloseButton
 import presentation.shared.ai.SuggestionButtonsColumn

@@ -10,6 +10,7 @@ interface UserRepository {
      suspend fun getAllUsers(): List<UserEntity>
      suspend fun getUserById(userId : String): UserEntity?
      fun getUserByIdAsAFlow(userId : String): Flow<UserEntity?>
-     fun getAllUsersOfTheseIds(userIds : List<String>) : Flow<List<UserEntity>>
+     suspend fun getAllUsersOfTheseIds(userIds : List<String>) : List<UserEntity>
+     fun getAllUsersOfTheseIdsAsFlow(userIds : List<String>) : Flow<List<UserEntity>>
      suspend fun delete(user : UserEntity)
 }

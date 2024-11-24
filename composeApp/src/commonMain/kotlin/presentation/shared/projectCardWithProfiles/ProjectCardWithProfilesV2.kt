@@ -1,32 +1,30 @@
-package presentation.shared
+package presentation.shared.projectCardWithProfiles
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,47 +42,56 @@ import common.maxTitleCharsAllowed
 import domain.models.Project
 import domain.models.User
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.koin.compose.viewmodel.koinViewModel
+import presentation.shared.ProfilesLazyRow
+import presentation.shared.dialogs.AlertDialogView
+import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.editboxs.EditOnFlyBox
 import presentation.shared.fonts.AlataFontFamily
+import presentation.shared.projectCardWithProfiles.components.ProjectTopBar
+import presentation.shared.projectCardWithProfiles.helpers.ProjectCardWithProfilesEvent
+import presentation.shared.projectCardWithProfiles.helpers.ProjectCardWithProfilesViewModel
 import presentation.theme.DoTooYellow
 import presentation.theme.LessTransparentWhiteColor
 import presentation.theme.NightTransparentWhiteColor
 
 @ExperimentalResourceApi
 @Composable
-fun ProjectCardWithProfiles(
+fun ProjectCardWithProfilesV2(
     project: Project,
-    users: List<User> = emptyList(),
-    onItemDeleteClick: () -> Unit = {},
-    updateProject: (project : Project) -> Unit = {},
     onClickInvite: () -> Unit = {},
-    showDialogBackgroundBlur : (showBlur : Boolean) -> Unit = {},
-    role : EnumRoles = EnumRoles.Viewer,
-    taskCount : Int = 0,
-    showProjectDetail : Boolean = false,
-    onProjectDetailClick : () -> Unit = {}
+    showProjectDetailInitially : Boolean = true,
+    openProject : () -> Unit = {},
+    currentUser : User
 ) {
 
-    val showViewerPermissionDialog = remember {
-        mutableStateOf(false)
-    }
+    val viewModel = koinViewModel<ProjectCardWithProfilesViewModel>()
+    val uiState = viewModel.uiState
 
-    var showEditTitleBox by remember {
-        mutableStateOf(false)
-    }
-    var showEditDescriptionBox by remember {
-        mutableStateOf(false)
-    }
 
-    if (showViewerPermissionDialog.value){
+    AnimatedVisibility(
+        visible = uiState.showViewerPermissionDialog,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
         AppCustomDialog(
             onDismiss = {
-                showDialogBackgroundBlur(false)
-                showViewerPermissionDialog.value = false
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnTogglePermissionDialogVisibility)
             },
             onConfirm = {
-                showDialogBackgroundBlur(false)
-                showViewerPermissionDialog.value = false
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnTogglePermissionDialogVisibility)
             },
             title = "Permission Issue! 😣",
             description = "Sorry, only project owner can edit project details.",
@@ -92,6 +99,72 @@ fun ProjectCardWithProfiles(
             onChecked = {  },
             showCheckbox = false,
             modifier = Modifier
+        )
+    }
+
+    AnimatedVisibility(
+        visible = uiState.showConfirmProjectDeletionDialog,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
+        AlertDialogView(
+            onDismissRequest = {
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleProjectDeletionDialogVisibility)
+            },
+            onConfirmation = {
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnDeleteProject)
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleProjectDeletionDialogVisibility)
+            },
+            dialogTitle = "Are you sure?",
+            dialogText = "This will permanently delete the project.",
+            icon = Icons.Default.Delete,
+            showDismissButton = true,
+            showConfirmButton = true,
+        )
+    }
+
+    AnimatedVisibility(
+        visible = uiState.showConfirmExitProjectDialog,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
+        AlertDialogView(
+            onDismissRequest = {
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleExitProjectDialogVisibility)
+            },
+            onConfirmation = {
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnExitProject)
+                viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleExitProjectDialogVisibility)
+            },
+            dialogTitle = "Are you sure?",
+            dialogText = "Project will be no longer accessible and visible to you.",
+            icon = Icons.Default.Warning,
+            showDismissButton = true,
+            showConfirmButton = true,
         )
     }
 
@@ -154,18 +227,20 @@ fun ProjectCardWithProfiles(
             }
         })
 
-        AnimatedVisibility(visible = showProjectDetail) {
+        AnimatedVisibility(visible = uiState.showProjectDetail) {
             ProjectTopBar(
                 notificationsState = true,
                 onNotificationItemClicked = { /*TODO*/ },
-                onDeleteItemClicked = onItemDeleteClick,
+                onDeleteItemClicked = {
+                    viewModel.onEvent(ProjectCardWithProfilesEvent.OnRequestToExitOrDeleteProject)
+                },
                 onClickInvite = onClickInvite,
                 modifier = Modifier,
-                role = role
+                role = uiState.userRoleInProject
             )
         }
 
-        AnimatedVisibility(visible = showProjectDetail) {
+        AnimatedVisibility(visible = uiState.showProjectDetail) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -174,7 +249,7 @@ fun ProjectCardWithProfiles(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ProfilesLazyRow(
-                    profiles = users,
+                    profiles = uiState.usersInProject,
                     onTapProfiles = {
                         //TODO: show profiles card
                     },
@@ -183,10 +258,10 @@ fun ProjectCardWithProfiles(
                     spaceBetween = 8,
                     lightColor = DoTooYellow
                 )
-                AnimatedVisibility(visible = showEditDescriptionBox.not()) {
+                AnimatedVisibility(visible = uiState.showEditDescriptionBox) {
                     Text(
                         text = project.description.ifBlank {
-                            if (role == EnumRoles.ProAdmin || role == EnumRoles.Admin){
+                            if (uiState.userRoleInProject == EnumRoles.ProAdmin || uiState.userRoleInProject == EnumRoles.Admin){
                                 "Add Description here..."
                             }else{
                                 ""
@@ -196,12 +271,7 @@ fun ProjectCardWithProfiles(
                             .fillMaxWidth()
                             .clickable(
                                 onClick = {
-                                    if(role == EnumRoles.ProAdmin || role == EnumRoles.Admin) {
-                                        showEditDescriptionBox = true
-                                    }else{
-                                        showDialogBackgroundBlur(true)
-                                        showViewerPermissionDialog.value = true
-                                    }
+                                    viewModel.onEvent(ProjectCardWithProfilesEvent.OnRequestToOpenProjectDescriptionEditBox)
                                 }
                             )
                             .padding(start = 5.dp, end = 5.dp),
@@ -211,19 +281,18 @@ fun ProjectCardWithProfiles(
                         letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
                     )
                 }
-                AnimatedVisibility(visible = showEditDescriptionBox) {
+                AnimatedVisibility(visible = uiState.showEditDescriptionBox) {
                     EditOnFlyBox(
                         modifier = Modifier,
                         onSubmit = { desc ->
-                            val projectCopy = project.copy(description = desc)
-                            updateProject(projectCopy)
-                            showEditDescriptionBox = false
+                            viewModel.onEvent(ProjectCardWithProfilesEvent.OnSaveProjectDescriptionChange(description = desc))
+                            viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleDescriptionEditBoxVisibility)
                         },
                         placeholder = project.description ,
                         label = "Project Description",
                         maxCharLength = maxDescriptionCharsAllowed,
                         onCancel = {
-                            showEditDescriptionBox = false
+                            viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleDescriptionEditBoxVisibility)
                         },
                         themeColor = project.color.getColor(),
                         lines = 3
@@ -238,10 +307,10 @@ fun ProjectCardWithProfiles(
                 .padding(10.dp),
             horizontalAlignment = Alignment.End
         ) {
-            AnimatedVisibility(visible = showEditTitleBox.not()) {
+            AnimatedVisibility(visible = uiState.showEditTitleBox) {
                 Text(
                     text = project.name.ifBlank {
-                        if(role == EnumRoles.ProAdmin || role == EnumRoles.Admin){
+                        if(uiState.userRoleInProject == EnumRoles.ProAdmin || uiState.userRoleInProject == EnumRoles.Admin){
                             "Add title here..."
                         }else{
                             "No title yet 🤪"
@@ -251,12 +320,7 @@ fun ProjectCardWithProfiles(
                         .padding(5.dp)
                         .clickable(
                             onClick = {
-                                if(role == EnumRoles.ProAdmin || role == EnumRoles.Admin) {
-                                    showEditTitleBox = true
-                                }else{
-                                    showDialogBackgroundBlur(true)
-                                    showViewerPermissionDialog.value = true
-                                }
+                                viewModel.onEvent(ProjectCardWithProfilesEvent.OnRequestToOpenProjectNameEditBox)
                             }
                         )
                         .fillMaxWidth(),
@@ -266,19 +330,18 @@ fun ProjectCardWithProfiles(
                     lineHeight = TextUnit(49f, TextUnitType.Sp)
                 )
             }
-            AnimatedVisibility(visible = showEditTitleBox) {
+            AnimatedVisibility(visible = uiState.showEditTitleBox) {
                 EditOnFlyBox(
                     modifier = Modifier,
                     onSubmit = { title ->
-                        val projectCopy = project.copy(name = title)
-                        updateProject(projectCopy)
-                        showEditTitleBox = false
+                        viewModel.onEvent(ProjectCardWithProfilesEvent.OnSaveProjectNameChange(name = title))
+                        viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleTitleEditBoxVisibility)
                     },
                     placeholder = project.name ,
                     label = "Project Title",
                     maxCharLength = maxTitleCharsAllowed,
                     onCancel = {
-                        showEditTitleBox = false
+                        viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleTitleEditBoxVisibility)
                     },
                     themeColor = project.color.getColor(),
                     lines = 2
@@ -291,7 +354,7 @@ fun ProjectCardWithProfiles(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = taskCount.toString().plus(" Tasks"),
+                    text = project.numberOfTasks.toString().plus(" Tasks"),
                     modifier = Modifier
                         .padding(start = 5.dp, end = 5.dp),
                     color = LessTransparentWhiteColor,
@@ -301,11 +364,13 @@ fun ProjectCardWithProfiles(
                 )
 
                 TextButton(
-                    onClick = { onProjectDetailClick() },
+                    onClick = {
+                        viewModel.onEvent(ProjectCardWithProfilesEvent.OnToggleDetailVisibility)
+                    },
                     modifier = Modifier.padding(end = 10.dp)
                 ) {
                     Text(
-                        text = if (showProjectDetail) {
+                        text = if (uiState.showProjectDetail) {
                             "Show less"
                         } else {
                             "Show more"
@@ -314,7 +379,7 @@ fun ProjectCardWithProfiles(
                         color = Color.White
                     )
                     Icon(
-                        if (showProjectDetail) {
+                        if (uiState.showProjectDetail) {
                             Icons.Default.KeyboardArrowUp
                         } else {
                             Icons.Default.KeyboardArrowDown
@@ -327,106 +392,15 @@ fun ProjectCardWithProfiles(
             }
         }
     }
-}
 
-@ExperimentalResourceApi
-@Composable
-fun ProjectTopBar(
-    notificationsState : Boolean,
-    onNotificationItemClicked: () -> Unit,
-    onDeleteItemClicked: () -> Unit,
-    onClickInvite: () -> Unit,
-    role : EnumRoles,
-    modifier: Modifier
-) {
-
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            /**
-             * Role
-             * **/
-            Text(
-                text = "You are ".plus(role.name),
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 5.dp),
-                color = LessTransparentWhiteColor,
-                fontSize = 14.sp,
-                fontFamily = AlataFontFamily(),
-                letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
+    LaunchedEffect(key1 = Unit){
+        viewModel.onEvent(
+            ProjectCardWithProfilesEvent.OnFetchUIData(
+                project = project,
+                showProjectDetailInitially = showProjectDetailInitially,
+                currentUser = currentUser
             )
-
-
-            Spacer(modifier = Modifier.weight(.2f))
-
-            /**
-             * Button to add more person to the project
-             * **/
-            if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) {
-                IconButton(
-                    onClick = onClickInvite,
-                    modifier = Modifier
-                        .weight(0.2f)
-                ) {
-                    Icon(
-                        Icons.Outlined.Add,
-                        contentDescription = "Button to add more person to the project",
-                        tint = Color.White
-                    )
-                }
-                /**
-                 * Delete the project
-                 * **/
-                IconButton(
-                    onClick = {
-                        onDeleteItemClicked()
-                    },
-                    modifier = Modifier
-                        .weight(0.2f)
-                ) {
-                    Icon(
-                        Icons.Outlined.Delete,
-                        contentDescription = "Button to Delete the project",
-                        tint = Color.White
-                    )
-                }
-            }
-
-            /**
-             * Silent Notification for this project
-             * **/
-            IconButton(
-                onClick = {
-                    onNotificationItemClicked()
-                },
-                modifier = Modifier
-                    .weight(0.2f)
-            ) {
-                Icon(
-
-                    if (notificationsState){
-                        Icons.Default.KeyboardArrowDown
-                    }else{
-                        Icons.Default.KeyboardArrowUp
-                    },
-                    contentDescription = "Button to Delete the project",
-                    tint = Color.White
-                )
-            }
-
-        }
-
+        )
     }
-
 
 }

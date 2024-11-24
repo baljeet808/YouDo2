@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.createproject.components.NoBorderEditText
 import presentation.drawer.components.CircularPictureViewWithProgress
-import presentation.shared.LoadingDialog
+import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily

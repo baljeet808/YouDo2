@@ -33,7 +33,7 @@ import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
 import presentation.onboarding.helpers.addOnboardingDestination
 import presentation.project.helpers.addProjectViewDestination
 import presentation.projects.helpers.addProjectsViewDestination
-import presentation.shared.AlertDialogView
+import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.BackgroundCircles
 import presentation.signup.helpers.addSignupDestination
 import presentation.splash.DESTINATION_SPLASH_ROUTE

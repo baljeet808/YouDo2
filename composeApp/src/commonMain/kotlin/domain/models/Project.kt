@@ -18,4 +18,5 @@ data class Project(
     var photoUrl : String = "",
     var extraUrl : String = "",
     var projectLikeIds : List<String> = emptyList(),
+    var numberOfTasks : Int = 0,
 )

@@ -2,13 +2,12 @@ package domain.use_cases.user_use_cases
 
 import data.local.entities.UserEntity
 import domain.repository_interfaces.UserRepository
-import kotlinx.coroutines.flow.Flow
 
 
 class GetUsersByIdsUseCase (
     private val repository: UserRepository
 ){
-    operator fun invoke(ids : List<String>): Flow<List<UserEntity>> {
+    suspend operator fun invoke(ids : List<String>): List<UserEntity> {
         return repository.getAllUsersOfTheseIds(ids)
     }
 }

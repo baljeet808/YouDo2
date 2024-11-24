@@ -30,8 +30,12 @@ class UserRepositoryImpl(localDB: YouDo2Database) : UserRepository {
         return userDao.getUserByIdAsAFlow(userId)
     }
 
-    override fun getAllUsersOfTheseIds(userIds: List<String>): Flow<List<UserEntity>> {
+    override suspend fun getAllUsersOfTheseIds(userIds: List<String>): List<UserEntity> {
         return userDao.getAllUsersOfTheseIds(userIds)
+    }
+
+    override fun getAllUsersOfTheseIdsAsFlow(userIds: List<String>): Flow<List<UserEntity>> {
+        return userDao.getAllUsersOfTheseIdsAsFlow(userIds)
     }
 
     override suspend fun delete(user: UserEntity) {

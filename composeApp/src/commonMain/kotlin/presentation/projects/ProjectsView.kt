@@ -43,7 +43,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.projects.components.DialogState
 import presentation.projects.components.ProjectsLazyRow
 import presentation.projects.helpers.ProjectsUIState
-import presentation.shared.AppCustomDialog
+import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LightAppBarIconsColor
 import presentation.theme.getDarkThemeColor
