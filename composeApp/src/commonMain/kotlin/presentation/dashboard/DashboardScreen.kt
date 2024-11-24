@@ -52,7 +52,7 @@ import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
-import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
+import presentation.shared.projectCardWithProfiles.ProjectCardWithProfilesV2
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
@@ -221,11 +221,14 @@ fun DashboardScreen(
                                 Spacer(modifier = Modifier.width(5.dp))
                             }
                             items(items = uiState.projects, key = { it.id }) { project ->
-                                //ProjectCardView2024(project = project)
-                                ProjectCardWithProfiles(
-                                    project = project,
-                                    showProjectDetail = true,
 
+                                ProjectCardWithProfilesV2(
+                                    project = project,
+                                    showProjectDetailInitially = true,
+                                    currentUser = uiState.currentUser,
+                                    openProject = {
+
+                                    }
                                 )
                             }
                             item {

@@ -83,6 +83,7 @@ import domain.use_cases.task_use_cases.UpsertTasksUseCase
 import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
 import domain.use_cases.user_use_cases.GetUserByIdUseCase
 import domain.use_cases.user_use_cases.GetUsersByIdsAsFlowUseCase
+import domain.use_cases.user_use_cases.GetUsersByIdsUseCase
 import domain.use_cases.user_use_cases.GetUsersUseCase
 import domain.use_cases.user_use_cases.UpsertUserUseCase
 import org.koin.core.context.startKoin
@@ -130,6 +131,7 @@ val usersUseCasesModule = module {
     single<GetUsersByIdsAsFlowUseCase>{ GetUsersByIdsAsFlowUseCase(get())}
     single<GetUserByIdUseCase>{ GetUserByIdUseCase(get())}
     single<GetUserByIdAsFlowUseCase>{ GetUserByIdAsFlowUseCase(get())}
+    single<GetUsersByIdsUseCase>{ GetUsersByIdsUseCase(get())}
 }
 
 val palettesUseCasesModule = module {

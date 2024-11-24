@@ -2,6 +2,7 @@ package presentation.dashboard.helpers
 
 import domain.dto_helpers.DataError
 import domain.models.Project
+import domain.models.User
 
 
 data class DashboardUIState(
@@ -13,4 +14,5 @@ data class DashboardUIState(
     val userAvatarUrl : String = "",
     val isLoggedOut : Boolean = false,
     val projects : List<Project> = emptyList(),
+    val currentUser : User = User()
 )

@@ -79,6 +79,7 @@ class DashboardViewModel(
             Firebase.firestore.collection("users").document(uid).snapshots.collect{ documentSnapshot ->
                 val user = documentSnapshot.data<User>()
                 launch { upsertUserLocally(user) }
+                updateUserState(user)
             }
         }catch (e : Exception){
             withContext(Dispatchers.Main) {
@@ -89,6 +90,14 @@ class DashboardViewModel(
 
     private suspend fun upsertUserLocally(user : User){
         upsertUserUseCase(listOf(user.toUserEntity()))
+    }
+
+    private suspend fun updateUserState(currentUser : User) {
+        withContext(Dispatchers.Main){
+            uiState = uiState.copy(
+                currentUser = currentUser
+            )
+        }
     }
 
     private fun liveSyncAllProjectsFromFirebase(userId : String) = viewModelScope.launch(Dispatchers.IO){
