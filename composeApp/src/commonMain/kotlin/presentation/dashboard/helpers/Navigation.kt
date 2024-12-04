@@ -25,7 +25,7 @@ const val DESTINATION_DASHBOARD_ROUTE_RELATIVE_PATH = "/{uid}"
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addDashboardDestination(
     navController: NavController,
-    showErrorAlertDialog : (error : DataError.Network?) -> Unit = {},
+    showErrorAlertDialog : (error : DataError?) -> Unit = {},
     retryApiCall : MutableState<Boolean> = mutableStateOf(false)
 ){
     composable(

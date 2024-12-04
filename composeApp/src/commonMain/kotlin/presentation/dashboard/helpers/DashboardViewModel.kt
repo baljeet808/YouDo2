@@ -79,7 +79,10 @@ fun fetchData(userId : String) = viewModelScope.launch(Dispatchers.IO){
             }
         }catch (e : Exception){
             withContext(Dispatchers.Main) {
-                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
+                uiState = uiState.copy(
+                    isLoading = false,
+                    error = DataError.CustomException( "liveSyncCurrentUserFromFirebase : "+(e.message ?: "An Error occurred while trying to liveSyncCurrentUserFromFirebase"))
+                )
             }
         }
     }
@@ -108,6 +111,12 @@ fun fetchData(userId : String) = viewModelScope.launch(Dispatchers.IO){
                 }
         }catch (e : Exception){
             e.printStackTrace()
+            withContext(Dispatchers.Main) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    error = DataError.CustomException( "liveSyncAllProjectsFromFirebase : "+(e.message ?: "An Error occurred while trying to liveSyncAllProjectsFromFirebase"))
+                )
+            }
         }
     }
 

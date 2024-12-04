@@ -7,7 +7,7 @@ import domain.models.User
 
 data class DashboardUIState(
     val isLoading : Boolean = false,
-    val error: DataError.Network? = null,
+    val error: DataError? = null,
     val userName : String = "",
     val userId : String = "",
     val userEmail : String = "",

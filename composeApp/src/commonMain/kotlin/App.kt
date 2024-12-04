@@ -57,7 +57,7 @@ fun App(
     val retryApiCall = remember { mutableStateOf(false) }
     val openAlertDialog = remember { mutableStateOf(false) }
 
-    val errorType = remember { mutableStateOf<DataError.Network?>(null) }
+    val errorType = remember { mutableStateOf<DataError?>(null) }
 
     val navController = rememberNavController()
 
