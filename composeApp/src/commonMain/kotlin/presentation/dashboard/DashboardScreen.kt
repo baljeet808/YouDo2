@@ -41,7 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import common.EnumProjectColors
 import common.getColor
+import common.getRole
 import common.menuItems
+import data.local.mappers.toProjectEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
@@ -52,7 +54,7 @@ import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
-import presentation.shared.projectCardWithProfiles.ProjectCardWithProfilesV2
+import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
@@ -222,13 +224,10 @@ fun DashboardScreen(
                             }
                             items(items = uiState.projects, key = { it.id }) { project ->
 
-                                ProjectCardWithProfilesV2(
+                                ProjectCardWithProfiles(
                                     project = project,
-                                    showProjectDetailInitially = true,
-                                    currentUser = uiState.currentUser,
-                                    openProject = {
-
-                                    }
+                                    role = getRole(project= project.toProjectEntity(), userId = uiState.userId),
+                                    showProjectDetail = true
                                 )
                             }
                             item {
