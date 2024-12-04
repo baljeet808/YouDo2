@@ -14,5 +14,6 @@ data class DashboardUIState(
     val userAvatarUrl : String = "",
     val isLoggedOut : Boolean = false,
     val projects : List<Project> = emptyList(),
-    val currentUser : User = User()
+    val currentUser : User = User(),
+    val allProjectUsers : List<User> = emptyList()
 )
