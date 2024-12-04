@@ -9,6 +9,8 @@ data class Project(
     var name : String = "",
     var description : String = "",
     var ownerId : String = "",
+    var ownerName : String = "",
+    var ownerAvatarUrl : String = "",
     var collaboratorIds : List<String> = emptyList(),
     var viewerIds: List<String> = emptyList(),
     var update : String = "",

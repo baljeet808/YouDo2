@@ -48,7 +48,6 @@ import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.editboxs.EditOnFlyBox
 import presentation.shared.fonts.AlataFontFamily
-import presentation.shared.projectCardWithProfiles.components.ProjectTopBar
 import presentation.shared.projectCardWithProfiles.helpers.ProjectCardWithProfilesEvent
 import presentation.shared.projectCardWithProfiles.helpers.ProjectCardWithProfilesViewModel
 import presentation.theme.DoTooYellow
@@ -228,16 +227,7 @@ fun ProjectCardWithProfilesV2(
         })
 
         AnimatedVisibility(visible = uiState.showProjectDetail) {
-            ProjectTopBar(
-                notificationsState = true,
-                onNotificationItemClicked = { /*TODO*/ },
-                onDeleteItemClicked = {
-                    viewModel.onEvent(ProjectCardWithProfilesEvent.OnRequestToExitOrDeleteProject)
-                },
-                onClickInvite = onClickInvite,
-                modifier = Modifier,
-                role = uiState.userRoleInProject
-            )
+
         }
 
         AnimatedVisibility(visible = uiState.showProjectDetail) {

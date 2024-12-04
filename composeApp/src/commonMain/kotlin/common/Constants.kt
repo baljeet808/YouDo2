@@ -132,3 +132,5 @@ val loadingMessages = listOf(
     "In progress!",
     "Stay tuned!"
 )
+
+val PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH = 30

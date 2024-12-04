@@ -227,7 +227,7 @@ fun DashboardScreen(
                                 ProjectCardWithProfiles(
                                     project = project,
                                     role = getRole(project= project.toProjectEntity(), userId = uiState.userId),
-                                    showProjectDetail = true
+                                    showProjectDetailInitially = true
                                 )
                             }
                             item {

@@ -10,6 +10,8 @@ fun Project.toProjectEntity() : ProjectEntity {
         name = name,
         description = description,
         ownerId = ownerId,
+        ownerName = ownerName,
+        ownerAvatarUrl = ownerAvatarUrl,
         update = update,
         color = color,
         collaboratorIds = collaboratorIds.joinToString ( "," ),
@@ -30,6 +32,8 @@ fun ProjectEntity.toProject(): Project{
         name = name,
         description = description,
         ownerId = ownerId,
+        ownerName = ownerName,
+        ownerAvatarUrl = ownerAvatarUrl,
         collaboratorIds = if(collaboratorIds.isNotBlank()){
             collaboratorIds.split(",")
         }else{

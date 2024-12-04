@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -17,12 +20,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil3.CoilImage
 import common.EnumRoles
+import common.getRandomAvatar
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LessTransparentWhiteColor
@@ -35,7 +43,11 @@ fun ProjectTopBar(
     onDeleteItemClicked: () -> Unit,
     onClickInvite: () -> Unit,
     role : EnumRoles,
-    modifier: Modifier
+    modifier: Modifier,
+    adminId : String,
+    adminName : String,
+    adminAvatar : String,
+    imagesWidthAndHeight: Int = 30,
 ) {
 
 
@@ -54,15 +66,29 @@ fun ProjectTopBar(
             /**
              * Role
              * **/
-            Text(
-                text = "You are ".plus(role.name),
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 5.dp),
-                color = LessTransparentWhiteColor,
-                fontSize = 14.sp,
-                fontFamily = AlataFontFamily(),
-                letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
-            )
+            Row {
+                CoilImage(
+                    imageModel = { adminAvatar.ifEmpty { getRandomAvatar() } },
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center,
+                    ),
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 5.dp)
+                        .width(imagesWidthAndHeight.dp)
+                        .height(imagesWidthAndHeight.dp)
+                        .clip(shape = RoundedCornerShape(20.dp))
+                )
+                Text(
+                    text = if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) "You are Admin" else adminName,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 5.dp),
+                    color = LessTransparentWhiteColor,
+                    fontSize = 14.sp,
+                    fontFamily = AlataFontFamily(),
+                    letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
+                )
+            }
 
 
             Spacer(modifier = Modifier.weight(.2f))

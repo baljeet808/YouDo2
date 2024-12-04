@@ -51,9 +51,9 @@ import presentation.onboarding.components.NextButton
 import presentation.project.components.TasksLazyColumn
 import presentation.project.helpers.ProjectScreenEvent
 import presentation.project.helpers.ProjectScreenState
-import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
 import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
+import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
 import presentation.theme.DoTooRed
 import presentation.theme.getLightThemeColor
 import presentation.theme.getTextColor
@@ -139,10 +139,7 @@ fun ProjectView(
             },
             taskCount = uiState.tasks.size,
             role = getRole(project = uiState.project.toProjectEntity(), userId = uiState.userId),
-            showProjectDetail = uiState.showProjectDetail,
-            onProjectDetailClick = {
-                onEvent(ProjectScreenEvent.ToggleProjectDetail)
-            }
+            showProjectDetailInitially = uiState.showProjectDetail,
         )
 
 

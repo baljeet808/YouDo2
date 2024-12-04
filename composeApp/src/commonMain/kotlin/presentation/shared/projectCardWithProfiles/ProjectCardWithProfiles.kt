@@ -1,6 +1,10 @@
 package presentation.shared.projectCardWithProfiles
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,9 +15,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,14 +39,16 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.EnumRoles
+import common.PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import domain.models.Project
 import domain.models.User
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.ProfilesLazyRow
+import presentation.shared.dialogs.AlertDialogView
+import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.editboxs.EditOnFlyBox
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.projectCardWithProfiles.components.ProjectTopBar
@@ -59,12 +67,23 @@ fun ProjectCardWithProfiles(
     showDialogBackgroundBlur : (showBlur : Boolean) -> Unit = {},
     role : EnumRoles = EnumRoles.Viewer,
     taskCount : Int = 0,
-    showProjectDetail : Boolean = false,
-    onProjectDetailClick : () -> Unit = {}
+    showProjectDetailInitially : Boolean = false
 ) {
+
+    val showConfirmExitProjectDialog = remember {
+        mutableStateOf(false)
+    }
 
     val showViewerPermissionDialog = remember {
         mutableStateOf(false)
+    }
+
+    val showConfirmProjectDeletionDialog = remember {
+        mutableStateOf(false)
+    }
+
+    var showProjectDetail by remember {
+        mutableStateOf(showProjectDetailInitially)
     }
 
     var showEditTitleBox by remember {
@@ -74,14 +93,28 @@ fun ProjectCardWithProfiles(
         mutableStateOf(false)
     }
 
-    if (showViewerPermissionDialog.value){
+    AnimatedVisibility(
+        visible = showViewerPermissionDialog.value,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
         AppCustomDialog(
             onDismiss = {
-                showDialogBackgroundBlur(false)
                 showViewerPermissionDialog.value = false
             },
             onConfirm = {
-                showDialogBackgroundBlur(false)
                 showViewerPermissionDialog.value = false
             },
             title = "Permission Issue! 😣",
@@ -90,6 +123,72 @@ fun ProjectCardWithProfiles(
             onChecked = {  },
             showCheckbox = false,
             modifier = Modifier
+        )
+    }
+
+    AnimatedVisibility(
+        visible = showConfirmProjectDeletionDialog.value,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
+        AlertDialogView(
+            onDismissRequest = {
+                showConfirmProjectDeletionDialog.value = false
+            },
+            onConfirmation = {
+                //viewModel.onEvent(ProjectCardWithProfilesEvent.OnDeleteProject)
+                showConfirmProjectDeletionDialog.value = false
+            },
+            dialogTitle = "Are you sure?",
+            dialogText = "This will permanently delete the project.",
+            icon = Icons.Default.Delete,
+            showDismissButton = true,
+            showConfirmButton = true,
+        )
+    }
+
+    AnimatedVisibility(
+        visible = showConfirmExitProjectDialog.value,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
+        AlertDialogView(
+            onDismissRequest = {
+                showConfirmExitProjectDialog.value = false
+            },
+            onConfirmation = {
+                //viewModel.onEvent(ProjectCardWithProfilesEvent.OnExitProject)
+                showConfirmExitProjectDialog.value = false
+            },
+            dialogTitle = "Are you sure?",
+            dialogText = "Project will be no longer accessible and visible to you.",
+            icon = Icons.Default.Warning,
+            showDismissButton = true,
+            showConfirmButton = true,
         )
     }
 
@@ -159,7 +258,11 @@ fun ProjectCardWithProfiles(
                 onDeleteItemClicked = onItemDeleteClick,
                 onClickInvite = onClickInvite,
                 modifier = Modifier,
-                role = role
+                role = role,
+                adminId = project.ownerId,
+                adminName =  project.ownerName,
+                adminAvatar =  project.ownerAvatarUrl,
+                imagesWidthAndHeight = PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH
             )
         }
 
@@ -289,7 +392,7 @@ fun ProjectCardWithProfiles(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = taskCount.toString().plus(" Tasks"),
+                    text = project.numberOfTasks.toString().plus(" Tasks"),
                     modifier = Modifier
                         .padding(start = 5.dp, end = 5.dp),
                     color = LessTransparentWhiteColor,
@@ -299,7 +402,7 @@ fun ProjectCardWithProfiles(
                 )
 
                 TextButton(
-                    onClick = { onProjectDetailClick() },
+                    onClick = { showProjectDetail = showProjectDetail.not() },
                     modifier = Modifier.padding(end = 10.dp)
                 ) {
                     Text(
