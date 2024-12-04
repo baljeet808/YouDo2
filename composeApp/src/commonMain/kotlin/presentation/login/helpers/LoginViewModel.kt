@@ -94,7 +94,7 @@ class LoginViewModel(
     private fun saveUserToRoomDB(user: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
         upsertUserUseCase(listOf(user))
         withContext(Dispatchers.Main) {
-            uiState = uiState.copy(isLoading = false, error = null, loginSuccessful = true)
+            uiState = uiState.copy(isLoading = false, error = null, loginSuccessful = true, userId = user.id)
         }
     }
 }

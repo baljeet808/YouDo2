@@ -1,3 +1,4 @@
+
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -33,8 +34,8 @@ import presentation.onboarding.helpers.DESTINATION_ONBOARDING_ROUTE
 import presentation.onboarding.helpers.addOnboardingDestination
 import presentation.project.helpers.addProjectViewDestination
 import presentation.projects.helpers.addProjectsViewDestination
-import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.BackgroundCircles
+import presentation.shared.dialogs.AlertDialogView
 import presentation.signup.helpers.addSignupDestination
 import presentation.splash.DESTINATION_SPLASH_ROUTE
 import presentation.splash.addSplashDestination
@@ -78,7 +79,7 @@ fun App(
 
 
     val startDestination = if (userState.isUserLoggedIn) {
-        DESTINATION_DASHBOARD_ROUTE
+        DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
     } else {
         if(userState.resultFound){
             DESTINATION_ONBOARDING_ROUTE

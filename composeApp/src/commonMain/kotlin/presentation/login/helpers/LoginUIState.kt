@@ -15,5 +15,6 @@ data class LoginUIState(
     val heading : String = getRandomLoginHeading(),
     val passwordPlaceholder : String = getRandomPasswordPlaceholder(),
     val email : String = "",
-    val password : String = ""
+    val password : String = "",
+    val userId : String = ""
 )

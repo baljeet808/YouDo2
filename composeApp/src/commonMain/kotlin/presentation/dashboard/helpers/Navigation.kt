@@ -5,7 +5,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import domain.dto_helpers.DataError
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
@@ -17,6 +19,7 @@ import presentation.login.helpers.DESTINATION_LOGIN_ROUTE
 import presentation.project.helpers.DESTINATION_PROJECT_ROUTE
 
 const val DESTINATION_DASHBOARD_ROUTE = "dashboard"
+const val DESTINATION_DASHBOARD_ROUTE_RELATIVE_PATH = "/{uid}"
 
 @ExperimentalResourceApi
 @OptIn(KoinExperimentalAPI::class)
@@ -26,15 +29,26 @@ fun NavGraphBuilder.addDashboardDestination(
     retryApiCall : MutableState<Boolean> = mutableStateOf(false)
 ){
     composable(
-        route = DESTINATION_DASHBOARD_ROUTE
-    ){
+        route = DESTINATION_DASHBOARD_ROUTE.plus(DESTINATION_DASHBOARD_ROUTE_RELATIVE_PATH),
+        arguments = listOf(
+            navArgument("uid") {
+                type = NavType.StringType
+                defaultValue = ""
+            }
+        )
+    ){ backStackEntry ->
+
+        val userId = backStackEntry.arguments?.getString("uid")
+
         val viewModel = koinViewModel<DashboardViewModel>()
         val uiState = viewModel.uiState
 
         //retry api call triggers when user clicks retry button in error dialog
         LaunchedEffect (key1 = retryApiCall.value) {
             if(retryApiCall.value){
-                viewModel.getCurrentUser()
+                userId?.let {
+                    viewModel.fetchData(userId = it)
+                }
             }
         }
 
@@ -68,7 +82,9 @@ fun NavGraphBuilder.addDashboardDestination(
                 navController.navigate(DESTINATION_CREATE_PROJECT_ROUTE)
             },
             loadData = {
-                viewModel.getCurrentUser()
+                userId?.let {
+                    viewModel.fetchData(userId = it)
+                }
             },
             navigateToProject = { projectId ->
                 navController.navigate(DESTINATION_PROJECT_ROUTE.plus("/${projectId}/${uiState.userId}"))

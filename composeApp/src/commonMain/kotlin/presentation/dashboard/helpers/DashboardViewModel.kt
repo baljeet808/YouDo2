@@ -44,10 +44,7 @@ class DashboardViewModel(
     var uiState by mutableStateOf(DashboardUIState())
         private set
 
-    fun getCurrentUser(){
-        showLoading()
-        fetchUserId()
-    }
+
     fun attemptLogout(){
         showLoading()
         signOut()
@@ -63,14 +60,13 @@ class DashboardViewModel(
         }
     }
 
-    private fun fetchUserId() = viewModelScope.launch(Dispatchers.IO){
-        dataStoreRepository.userIdAsFlow().collect {
-            liveSyncCurrentUserFromFirebase(uid = it)
-            liveSyncAllProjectsFromFirebase(userId = it)
-            launch { getUserFromLocalDB(userId = it) }
-            launch { getAllLocalProjects() }
-            launch { hideLoading() }
-        }
+fun fetchData(userId : String) = viewModelScope.launch(Dispatchers.IO){
+        showLoading()
+        liveSyncCurrentUserFromFirebase(uid = userId)
+        liveSyncAllProjectsFromFirebase(userId = userId)
+        launch { getUserFromLocalDB(userId = userId) }
+        launch { getAllLocalProjects() }
+        launch { hideLoading() }
     }
 
 

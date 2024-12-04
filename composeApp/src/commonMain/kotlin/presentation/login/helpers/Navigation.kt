@@ -46,7 +46,7 @@ fun NavGraphBuilder.addLoginDestination(
         //take user to dashboard if login is successful
         LaunchedEffect(key1 = uiState.loginSuccessful) {
             if(uiState.loginSuccessful){
-                navController.navigate(DESTINATION_DASHBOARD_ROUTE){
+                navController.navigate(DESTINATION_DASHBOARD_ROUTE.plus("/${uiState.userId}")){
                     popUpTo(DESTINATION_LOGIN_ROUTE){
                         inclusive = true
                     }
