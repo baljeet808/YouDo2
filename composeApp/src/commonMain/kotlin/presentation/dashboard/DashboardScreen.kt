@@ -54,7 +54,7 @@ import presentation.dashboard.helpers.dashboardScreenStateConverter
 import presentation.drawer.NavigationDrawer
 import presentation.drawer.components.TopBar
 import presentation.onboarding.components.NextButton
-import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
+import presentation.shared.projectCardWithProfiles.ProjectCardForDashboard
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
@@ -224,11 +224,13 @@ fun DashboardScreen(
                             }
                             items(items = uiState.projects, key = { it.id }) { project ->
 
-                                ProjectCardWithProfiles(
+                                ProjectCardForDashboard(
                                     project = project,
                                     role = getRole(project= project.toProjectEntity(), userId = uiState.userId),
-                                    showProjectDetailInitially = true,
-                                    users = uiState.allProjectUsers.filter { user -> (project.viewerIds + project.collaboratorIds).contains(user.id) }
+                                    users = uiState.allProjectUsers.filter { user -> (project.viewerIds + project.collaboratorIds).contains(user.id) },
+                                    openProject = {
+                                        navigateToProject(project.id)
+                                    }
                                 )
                             }
                             item {

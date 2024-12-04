@@ -66,8 +66,7 @@ fun ProjectCardWithProfiles(
     onClickInvite: () -> Unit = {},
     showDialogBackgroundBlur : (showBlur : Boolean) -> Unit = {},
     role : EnumRoles = EnumRoles.Viewer,
-    taskCount : Int = 0,
-    showProjectDetailInitially : Boolean = false
+    showProjectDetailInitially : Boolean = false,
 ) {
 
     val showConfirmExitProjectDialog = remember {

@@ -137,7 +137,6 @@ fun ProjectView(
             showDialogBackgroundBlur = {
                 showBlur = it
             },
-            taskCount = uiState.tasks.size,
             role = getRole(project = uiState.project.toProjectEntity(), userId = uiState.userId),
             showProjectDetailInitially = uiState.showProjectDetail,
         )

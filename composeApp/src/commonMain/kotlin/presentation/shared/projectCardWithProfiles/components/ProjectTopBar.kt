@@ -1,5 +1,6 @@
 package presentation.shared.projectCardWithProfiles.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -63,33 +65,12 @@ fun ProjectTopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            /**
-             * Role
-             * **/
-            Row {
-                CoilImage(
-                    imageModel = { adminAvatar.ifEmpty { getRandomAvatar() } },
-                    imageOptions = ImageOptions(
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.Center,
-                    ),
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 5.dp)
-                        .width(imagesWidthAndHeight.dp)
-                        .height(imagesWidthAndHeight.dp)
-                        .clip(shape = RoundedCornerShape(20.dp))
-                )
-                Text(
-                    text = if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) "You are Admin" else adminName,
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 5.dp),
-                    color = LessTransparentWhiteColor,
-                    fontSize = 14.sp,
-                    fontFamily = AlataFontFamily(),
-                    letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
-                )
-            }
-
+            UserImageAndRoleInfo(
+                adminAvatar = adminAvatar,
+                adminName = adminName,
+                role = role,
+                imagesWidthAndHeight = imagesWidthAndHeight
+            )
 
             Spacer(modifier = Modifier.weight(.2f))
 
@@ -153,4 +134,76 @@ fun ProjectTopBar(
     }
 
 
+}
+
+@ExperimentalResourceApi
+@Composable
+fun UserImageAndRoleInfo(
+    adminAvatar : String = "",
+    adminName : String = "",
+    role : EnumRoles = EnumRoles.Viewer,
+    imagesWidthAndHeight: Int = 30
+){
+    Row {
+        CoilImage(
+            imageModel = { adminAvatar.ifEmpty { getRandomAvatar() } },
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center,
+            ),
+            modifier = Modifier
+                .padding(start = 10.dp, end = 5.dp)
+                .width(imagesWidthAndHeight.dp)
+                .height(imagesWidthAndHeight.dp)
+                .clip(shape = RoundedCornerShape(20.dp))
+        )
+        Text(
+            text = if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) "You are Admin" else adminName,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 5.dp),
+            color = LessTransparentWhiteColor,
+            fontSize = 14.sp,
+            fontFamily = AlataFontFamily(),
+            letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
+        )
+    }
+}
+
+@ExperimentalResourceApi
+@Composable
+fun UserImageAndRoleInfoColumn(
+    adminAvatar : String = "",
+    adminName : String = "",
+    role : EnumRoles = EnumRoles.Viewer,
+    imagesWidthAndHeight: Int = 30
+){
+    Row(  verticalAlignment = Alignment.CenterVertically) {
+        CoilImage(
+            imageModel = { adminAvatar.ifEmpty { getRandomAvatar() } },
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center,
+            ),
+            modifier = Modifier
+                .padding(start = 10.dp, end = 5.dp)
+                .width(imagesWidthAndHeight.dp)
+                .height(imagesWidthAndHeight.dp)
+                .clip(shape = RoundedCornerShape(20.dp))
+        )
+        Text(
+            text = if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) "You are Admin" else adminName,
+            modifier = Modifier
+                .background(
+                    color = Color.Black,
+                    shape = RoundedCornerShape(size = 10.dp)
+                )
+                .padding(start = 5.dp, end = 5.dp)
+            ,
+            color = LessTransparentWhiteColor,
+            fontSize = 10.sp,
+            fontFamily = AlataFontFamily(),
+            letterSpacing = TextUnit(value = 1f, TextUnitType.Sp),
+            textAlign = TextAlign.Center
+        )
+    }
 }
