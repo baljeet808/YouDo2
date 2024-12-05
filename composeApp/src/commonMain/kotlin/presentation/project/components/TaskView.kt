@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Icon
@@ -123,15 +122,6 @@ fun TaskView(
                 },
                 modifier = Modifier
                     .weight(if(usingForDemo){ 0.7f }else {0.9f})
-            )
-
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription ="Navigate to chat button",
-                tint = taskWithProject.project.color.getColor(),
-                modifier = Modifier
-                    .height(if(usingForDemo){ 20.dp }else {30.dp})
-                    .width(if(usingForDemo){ 20.dp }else {30.dp})
             )
         }
     }

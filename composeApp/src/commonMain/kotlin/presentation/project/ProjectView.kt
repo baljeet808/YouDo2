@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import common.EnumRoles
@@ -55,7 +56,6 @@ import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
 import presentation.theme.DoTooRed
-import presentation.theme.getLightThemeColor
 import presentation.theme.getTextColor
 
 @ExperimentalResourceApi
@@ -108,7 +108,7 @@ fun ProjectView(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = getLightThemeColor()
+                color = Color.Black
             )
             .blur(
                 radius = if (showBlur) {

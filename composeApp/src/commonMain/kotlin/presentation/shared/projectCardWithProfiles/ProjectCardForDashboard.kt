@@ -142,7 +142,7 @@ fun ProjectCardForDashboard(
                     .padding(5.dp)
                     .fillMaxWidth(),
                 fontFamily = AlataFontFamily(),
-                fontSize = 38.sp,
+                fontSize = 30.sp,
                 color = Color.White,
                 lineHeight = TextUnit(49f, TextUnitType.Sp)
             )

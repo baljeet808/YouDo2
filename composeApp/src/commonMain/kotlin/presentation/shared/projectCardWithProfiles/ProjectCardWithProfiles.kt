@@ -361,7 +361,7 @@ fun ProjectCardWithProfiles(
                         )
                         .fillMaxWidth(),
                     fontFamily = AlataFontFamily(),
-                    fontSize = 38.sp,
+                    fontSize = if(showProjectDetail) 28.sp else 20.sp,
                     color = Color.White,
                     lineHeight = TextUnit(49f, TextUnitType.Sp)
                 )
