@@ -72,9 +72,11 @@ class DashboardViewModel(
 
     fun fetchData(userId : String) = viewModelScope.launch(Dispatchers.IO){
         showLoading()
-        liveSyncCurrentUserFromFirebase(uid = userId)
-        getUserFromLocalDB(userId = userId)
-        liveSyncAllProjectsFromFirebase(userId = userId)
+        if(userId.isNotBlank()){
+            liveSyncCurrentUserFromFirebase(uid = userId)
+            getUserFromLocalDB(userId = userId)
+            liveSyncAllProjectsFromFirebase(userId = userId)
+        }
         getAllLocalProjects()
         launch { hideLoading() }
     }
@@ -166,16 +168,7 @@ class DashboardViewModel(
     }
 
     private fun updateUserIdsFromProjects(projects: List<Project>) {
-        val newUserIds = projects.flatMap { it.collaboratorIds + it.viewerIds }.toSet()
-        val currentIds = _userIds.value
-        val freshIds = (currentIds + newUserIds) - (currentIds - newUserIds)
-        println("TEST fresh ids: $freshIds")
-        if (_userIds.value != freshIds) {
-            println("TEST userIds updated")
-            _userIds.value = freshIds
-        } else {
-            println("TEST userIds not updated")
-        }
+        _userIds.value = projects.flatMap { it.collaboratorIds + it.viewerIds + it.ownerId }.toSet()
     }
 
     private fun observeUserIds() = viewModelScope.launch(Dispatchers.IO) {

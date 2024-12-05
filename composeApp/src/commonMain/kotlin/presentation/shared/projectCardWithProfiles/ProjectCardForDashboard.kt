@@ -37,8 +37,8 @@ import presentation.theme.NightTransparentWhiteColor
 @Composable
 fun ProjectCardForDashboard(
     project: Project,
-    users : List<User> = emptyList(),
-    openProject : () -> Unit = {}
+    users: List<User> = emptyList(),
+    openProject: () -> Unit = {}
 ) {
 
 
@@ -104,7 +104,7 @@ fun ProjectCardForDashboard(
             }
         })
 
-        if(project.description.isNotBlank()) {
+        if (project.description.isNotBlank()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,22 +150,33 @@ fun ProjectCardForDashboard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                UserImageAndRoleInfoColumn(
-                    adminAvatar = project.ownerAvatarUrl,
-                    adminName = project.ownerName,
-                    imagesWidthAndHeight = 24
-                )
+                users.firstOrNull { u -> u.id == project.ownerId }?.let { admin ->
+                    UserImageAndRoleInfoColumn(
+                        adminAvatar = admin.avatarUrl,
+                        adminName = admin.name,
+                        imagesWidthAndHeight = 24
+                    )
+                }
 
-                ProfilesLazyRow(
-                    profiles = users,
-                    onTapProfiles = {
-                        //TODO: show profiles card
-                    },
-                    visiblePictureCount = 3,
-                    imagesWidthAndHeight = 24,
-                    spaceBetween = 8,
-                    lightColor = DoTooYellow
-                )
+                Row(
+                    modifier = Modifier
+                        .background(
+                            color = Color.Black,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                ){
+                    ProfilesLazyRow(
+                        profiles = users,
+                        onTapProfiles = {
+                            //TODO: show profiles card
+                        },
+                        visiblePictureCount = 3,
+                        imagesWidthAndHeight = 18,
+                        spaceBetween = 8,
+                        lightColor = DoTooYellow
+                    )
+                }
+
 
                 Spacer(modifier = Modifier)
 
@@ -182,3 +193,4 @@ fun ProjectCardForDashboard(
         }
     }
 }
+

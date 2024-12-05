@@ -224,7 +224,7 @@ fun DashboardScreen(
 
                                 ProjectCardForDashboard(
                                     project = project,
-                                    users = uiState.allProjectUsers.filter { user -> (project.viewerIds + project.collaboratorIds).contains(user.id) },
+                                    users = uiState.allProjectUsers.filter { user -> (project.viewerIds + project.collaboratorIds + project.ownerId).contains(user.id) },
                                     openProject = {
                                         navigateToProject(project.id)
                                     }

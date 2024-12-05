@@ -44,7 +44,7 @@ fun ProfilesLazyRow(
     LazyRow(
         modifier = Modifier
             .clickable(onClick = onTapProfiles),
-        contentPadding = PaddingValues(all = 10.dp),
+        contentPadding = PaddingValues(all = 5.dp),
         horizontalArrangement = Arrangement.spacedBy(
             spaceBetween.dp,
             alignment = Alignment.CenterHorizontally
