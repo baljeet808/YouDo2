@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.EnumRoles
 import common.getColor
 import domain.models.Project
 import domain.models.User
@@ -39,7 +38,6 @@ import presentation.theme.NightTransparentWhiteColor
 fun ProjectCardForDashboard(
     project: Project,
     users : List<User> = emptyList(),
-    role : EnumRoles = EnumRoles.Viewer,
     openProject : () -> Unit = {}
 ) {
 
@@ -124,7 +122,7 @@ fun ProjectCardForDashboard(
                     color = LessTransparentWhiteColor,
                     fontSize = 16.sp,
                     fontFamily = AlataFontFamily(),
-                    letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
+                    letterSpacing = TextUnit(value = 1.5f, TextUnitType.Sp)
                 )
             }
         }
@@ -155,7 +153,6 @@ fun ProjectCardForDashboard(
                 UserImageAndRoleInfoColumn(
                     adminAvatar = project.ownerAvatarUrl,
                     adminName = project.ownerName,
-                    role = role,
                     imagesWidthAndHeight = 24
                 )
 

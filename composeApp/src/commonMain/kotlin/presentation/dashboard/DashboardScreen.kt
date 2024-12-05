@@ -41,9 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import common.EnumProjectColors
 import common.getColor
-import common.getRole
 import common.menuItems
-import data.local.mappers.toProjectEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
@@ -226,7 +224,6 @@ fun DashboardScreen(
 
                                 ProjectCardForDashboard(
                                     project = project,
-                                    role = getRole(project= project.toProjectEntity(), userId = uiState.userId),
                                     users = uiState.allProjectUsers.filter { user -> (project.viewerIds + project.collaboratorIds).contains(user.id) },
                                     openProject = {
                                         navigateToProject(project.id)

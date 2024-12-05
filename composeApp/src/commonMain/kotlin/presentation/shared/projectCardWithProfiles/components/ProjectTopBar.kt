@@ -174,7 +174,6 @@ fun UserImageAndRoleInfo(
 fun UserImageAndRoleInfoColumn(
     adminAvatar : String = "",
     adminName : String = "",
-    role : EnumRoles = EnumRoles.Viewer,
     imagesWidthAndHeight: Int = 30
 ){
     Row(  verticalAlignment = Alignment.CenterVertically) {
@@ -191,7 +190,7 @@ fun UserImageAndRoleInfoColumn(
                 .clip(shape = RoundedCornerShape(20.dp))
         )
         Text(
-            text = if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) "You are Admin" else adminName,
+            text = adminName,
             modifier = Modifier
                 .background(
                     color = Color.Black,
@@ -200,7 +199,7 @@ fun UserImageAndRoleInfoColumn(
                 .padding(start = 5.dp, end = 5.dp)
             ,
             color = LessTransparentWhiteColor,
-            fontSize = 10.sp,
+            fontSize = 12.sp,
             fontFamily = AlataFontFamily(),
             letterSpacing = TextUnit(value = 1f, TextUnitType.Sp),
             textAlign = TextAlign.Center

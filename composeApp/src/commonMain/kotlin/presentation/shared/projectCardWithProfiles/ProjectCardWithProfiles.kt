@@ -306,9 +306,9 @@ fun ProjectCardWithProfiles(
                             )
                             .padding(start = 5.dp, end = 5.dp),
                         color = LessTransparentWhiteColor,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = AlataFontFamily(),
-                        letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)
+                        letterSpacing = TextUnit(value = 1.5f, TextUnitType.Sp)
                     )
                 }
                 AnimatedVisibility(visible = showEditDescriptionBox) {
