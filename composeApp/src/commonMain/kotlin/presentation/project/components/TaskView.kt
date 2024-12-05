@@ -3,7 +3,6 @@ package presentation.project.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,9 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -33,8 +29,12 @@ import androidx.compose.ui.unit.sp
 import common.getColor
 import domain.models.TaskWithProject
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getDarkThemeColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.circle_24dp
+import youdo2.composeapp.generated.resources.task_alt_24dp
 
 @ExperimentalResourceApi
 @OptIn(ExperimentalFoundationApi::class)
@@ -90,13 +90,14 @@ fun TaskView(
                     .padding(0.dp),
             ) {
                 Icon(
+                    painter =
                     if (taskWithProject.task.done) {
-                        Icons.Filled.CheckCircle
+                        painterResource(resource = Res.drawable.task_alt_24dp)
                     } else {
-                        Icons.Outlined.CheckCircle
+                        painterResource(resource = Res.drawable.circle_24dp)
                     },
                     contentDescription = "Checked circular icon",
-                    tint = taskWithProject.project.color.getColor(),
+                    tint = if(taskWithProject.project.color == "black") { Color.White } else taskWithProject.project.color.getColor() ,
                     modifier = Modifier
                         .height(if(usingForDemo){ 20.dp }else {30.dp})
                         .width(if(usingForDemo){ 20.dp }else {30.dp})
@@ -106,11 +107,7 @@ fun TaskView(
 
             Text(
                 text = taskWithProject.task.title,
-                color = if (isSystemInDarkTheme()) {
-                    Color.White
-                } else {
-                    Color.Black
-                },
+                color = if(taskWithProject.task.done){ Color.Gray } else Color.White,
                 fontFamily = AlataFontFamily(),
                 fontSize = if(usingForDemo){ 13.sp }else {18.sp},
                 maxLines = 2,
