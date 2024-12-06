@@ -78,25 +78,8 @@ enum class EnumDashboardTasksTabs{
     Today,Tomorrow,Yesterday,Pending,AllOther
 }
 
-fun String.getColor(): Color {
-    return when(this){
-        EnumProjectColors.Green.name -> Color(0xFF006261)
-        EnumProjectColors.LightGreen.name -> Color(0xFFD0E9BC)
-        EnumProjectColors.Pink.name -> Color(0xFFFF69B4)
-        EnumProjectColors.Blue.name -> Color(0xff363CB5)
-        EnumProjectColors.Red.name -> Color(0xFFF53C4F)
-        EnumProjectColors.Yellow.name -> Color(0xFFFF8526)
-        EnumProjectColors.Brown.name -> Color(0xFFA52A2A)
-        EnumProjectColors.Black.name -> Color(0xFF302D2D)
-        EnumProjectColors.DarkBlack.name -> Color(0xFF0A0909)
-        EnumProjectColors.Cyan.name -> Color(0xFF8BDFFE)
-        EnumProjectColors.Indigo.name -> Color(0xFF4b0082)
-        EnumProjectColors.RoseRed.name -> Color(0xFFBF1363)
-        EnumProjectColors.Murrey.name -> Color(0xFF820D43)
-        else -> {
-            Color(0xFF302D2D)
-        }
-    }
+fun Long.getColor(): Color {
+    return Color(this)
 }
 
 fun EnumProjectColors.getColor(): Color {

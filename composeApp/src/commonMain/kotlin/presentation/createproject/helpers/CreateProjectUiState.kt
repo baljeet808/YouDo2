@@ -1,13 +1,11 @@
 package presentation.createproject.helpers
 
-import common.EnumProjectColors
-import common.getRandomColorEnum
 import domain.dto_helpers.DataError
 
 data class CreateProjectUiState (
     val projectName : String = "",
     val projectDescription : String = "",
-    val projectColor : EnumProjectColors =  getRandomColorEnum(),
+    val projectColor : Long =  0,
     val showColorOptions : Boolean = false,
     val showDescription : Boolean = false,
     val showSuggestion : Boolean = false,

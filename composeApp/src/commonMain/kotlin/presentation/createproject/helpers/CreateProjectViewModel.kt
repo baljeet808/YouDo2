@@ -123,9 +123,9 @@ class CreateProjectViewModel(
             name = uiState.projectName,
             description = uiState.projectDescription,
             collaboratorIds = "",
-            viewerIds = "listOf()",
+            viewerIds = "",
             update = "${uiState.userName.ifBlank { uiState.userEmail }} created new project named '${uiState.projectName}.'",
-            color = uiState.projectColor.name,
+            color = uiState.projectColor,
             updatedAt = getSampleDateInLong()
         )
         createProject(newProject)

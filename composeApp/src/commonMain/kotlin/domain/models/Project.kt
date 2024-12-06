@@ -14,7 +14,7 @@ data class Project(
     var collaboratorIds : List<String> = emptyList(),
     var viewerIds: List<String> = emptyList(),
     var update : String = "",
-    var color : String = "Pink",
+    var color : Long = 0L,
     var updatedAt : Long = 0L,
     var category : String = "",
     var photoUrl : String = "",

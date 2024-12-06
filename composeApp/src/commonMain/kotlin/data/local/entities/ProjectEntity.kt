@@ -15,7 +15,7 @@ data class ProjectEntity(
     var ownerName : String = "",
     var ownerAvatarUrl : String = "",
     var update : String = "",
-    var color : String = getRandomColor().name,
+    var color : Long = 0L,
     var collaboratorIds : String = "",
     var viewerIds: String = "",
     var updatedAt : Long = 0L,

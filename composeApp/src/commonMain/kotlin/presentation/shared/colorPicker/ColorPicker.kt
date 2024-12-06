@@ -28,12 +28,11 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.shared.colorPicker.helper.ColorPickerScreenEvent
 import presentation.shared.colorPicker.helper.ColorPickerViewModel
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ColorPicker(
     modifier: Modifier = Modifier,
     initiallySelectedColor : ColorPalette?,
-    onColorSelected : (ColorPalette?) -> Unit
+    onColorSelected : (ColorPalette) -> Unit
 ) {
 
     val viewModel = koinViewModel<ColorPickerViewModel>()
