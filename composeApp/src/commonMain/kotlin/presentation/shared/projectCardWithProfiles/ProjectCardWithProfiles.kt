@@ -251,18 +251,20 @@ fun ProjectCardWithProfiles(
         })
 
         AnimatedVisibility(visible = showProjectDetail) {
-            ProjectTopBar(
-                notificationsState = true,
-                onNotificationItemClicked = { /*TODO*/ },
-                onDeleteItemClicked = onItemDeleteClick,
-                onClickInvite = onClickInvite,
-                modifier = Modifier,
-                role = role,
-                adminId = project.ownerId,
-                adminName =  project.ownerName,
-                adminAvatar =  project.ownerAvatarUrl,
-                imagesWidthAndHeight = PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH
-            )
+            users.firstOrNull { u -> u.id == project.ownerId }?.let { admin ->
+                ProjectTopBar(
+                    notificationsState = true,
+                    onNotificationItemClicked = { /*TODO*/ },
+                    onDeleteItemClicked = onItemDeleteClick,
+                    onClickInvite = onClickInvite,
+                    modifier = Modifier,
+                    role = role,
+                    adminId = admin.id,
+                    adminName = admin.name,
+                    adminAvatar = admin.avatarUrl,
+                    imagesWidthAndHeight = PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH
+                )
+            }
         }
 
         AnimatedVisibility(visible = showProjectDetail) {
@@ -348,7 +350,7 @@ fun ProjectCardWithProfiles(
                         }
                     },
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(start = 5.dp, end = 5.dp, top = 5.dp)
                         .clickable(
                             onClick = {
                                 if(role == EnumRoles.ProAdmin || role == EnumRoles.Admin) {
@@ -363,7 +365,7 @@ fun ProjectCardWithProfiles(
                     fontFamily = AlataFontFamily(),
                     fontSize = if(showProjectDetail) 28.sp else 20.sp,
                     color = Color.White,
-                    lineHeight = TextUnit(49f, TextUnitType.Sp)
+                    lineHeight = TextUnit(if(showProjectDetail) 49f else 32f, TextUnitType.Sp)
                 )
             }
             AnimatedVisibility(visible = showEditTitleBox) {

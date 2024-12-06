@@ -72,7 +72,7 @@ fun EditOnFlyBox(
             label = {
                 Text(
                     text = label,
-                    color = Color.Black,
+                    color = Color.White,
                     fontSize = 13.sp,
                     fontFamily = AlataFontFamily(),
                     letterSpacing = TextUnit(value = 2f, TextUnitType.Sp)

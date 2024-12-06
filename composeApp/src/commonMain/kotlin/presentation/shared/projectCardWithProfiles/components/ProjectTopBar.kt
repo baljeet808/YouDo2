@@ -193,12 +193,12 @@ fun UserImageAndRoleInfoColumn(
             text = adminName,
             modifier = Modifier
                 .background(
-                    color = Color.Black,
+                    color = Color.White.copy(alpha = 0.3f),
                     shape = RoundedCornerShape(size = 10.dp)
                 )
                 .padding(start = 5.dp, end = 5.dp)
             ,
-            color = LessTransparentWhiteColor,
+            color = Color.White,
             fontSize = 12.sp,
             fontFamily = AlataFontFamily(),
             letterSpacing = TextUnit(value = 1f, TextUnitType.Sp),

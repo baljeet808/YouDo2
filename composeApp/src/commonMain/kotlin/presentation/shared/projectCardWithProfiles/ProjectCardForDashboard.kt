@@ -161,7 +161,7 @@ fun ProjectCardForDashboard(
                 Row(
                     modifier = Modifier
                         .background(
-                            color = Color.Black,
+                            color = Color.White.copy(alpha = 0.3f),
                             shape = RoundedCornerShape(10.dp)
                         ),
                 ){
