@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.getColor
-import common.getRandomColor
 import data.local.entities.MessageEntity
 import data.local.entities.UserEntity
 import domain.models.Project
@@ -160,7 +159,7 @@ fun ChatViewMainContent(
                         radius = 20.dp
                     )
                     .background(
-                        color = project?.color?.getColor()?: getRandomColor().getColor()
+                        color = project?.color?.getColor() ?: Color(0xff3F292B)
                     )
             ){
 

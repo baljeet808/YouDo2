@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import common.EnumProjectColors
 import common.getColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +35,7 @@ fun SearchBoxView(
 
     SearchBar(
         colors = SearchBarDefaults.colors(
-            containerColor = EnumProjectColors.DarkBlack.getColor()
+            containerColor = Color.Gray.copy(alpha = 0.3f),
         ),
         modifier =  Modifier
             .fillMaxWidth()

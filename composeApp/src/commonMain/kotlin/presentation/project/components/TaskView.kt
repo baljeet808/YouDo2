@@ -97,7 +97,7 @@ fun TaskView(
                         painterResource(resource = Res.drawable.circle_24dp)
                     },
                     contentDescription = "Checked circular icon",
-                    tint = if( taskWithProject.task.done) {if(taskWithProject.project.color == 4281402925) { Color.White } else taskWithProject.project.color.getColor() } else Color.Gray,
+                    tint = if( taskWithProject.task.done) {if(taskWithProject.project.color == 4281347373) { Color.White } else taskWithProject.project.color.getColor() } else Color.Gray,
                     modifier = Modifier
                         .height(if(usingForDemo){ 20.dp }else {30.dp})
                         .width(if(usingForDemo){ 20.dp }else {30.dp})

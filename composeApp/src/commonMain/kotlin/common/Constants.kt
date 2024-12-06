@@ -63,19 +63,19 @@ fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
             title = "Conquer Your \nChaos",
             res = Res.drawable.chat_illustration,
             description = ConstSecScreenDescription,
-            backgroundColor = EnumProjectColors.Blue.getColor()
+            backgroundColor = Color(0xff3F292B)
         ),
         OnBoardPagerContent(
             title = "Deadlines? \nHandled!",
             res = Res.drawable.set_reminders,
             description = ConstThirdScreenDescription,
-            backgroundColor = EnumProjectColors.Indigo.getColor()
+            backgroundColor = Color(0xff3F292B)
         ),
         OnBoardPagerContent(
             title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
             description = ConstFirstScreenDescription,
-            backgroundColor = EnumProjectColors.Murrey.getColor()
+            backgroundColor = Color(0xff3F292B)
         )
     )
 }

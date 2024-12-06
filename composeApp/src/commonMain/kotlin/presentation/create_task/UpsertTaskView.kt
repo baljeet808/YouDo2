@@ -63,7 +63,6 @@ import common.DueDates
 import common.EnumCreateTaskSheetType
 import common.formatNicelyWithoutYear
 import common.getColor
-import common.getRandomColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
 import kotlinx.coroutines.delay
@@ -337,7 +336,7 @@ fun UpsertTaskView(
                     Icon(
                         painter = painterResource(Res.drawable.baseline_topic_24),
                         contentDescription = "Button to set due date for this task.",
-                        tint = uiState.project?.color?.getColor()?: getRandomColor().getColor(),
+                        tint = uiState.project?.color?.getColor()?: Color(0xff3F292B),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -609,7 +608,7 @@ fun UpsertTaskView(
                         .shadow(elevation = 5.dp, shape = RoundedCornerShape(30.dp))
                         .background(
                             color = uiState.project?.color?.getColor()
-                                ?: getRandomColor().getColor(),
+                                ?: Color(0xff3F292B),
                             shape = RoundedCornerShape(30.dp)
                         )
                         .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)

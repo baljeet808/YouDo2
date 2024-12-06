@@ -82,9 +82,9 @@ fun CreateProjectView(
 
         ColorPicker(
             modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
-            initiallySelectedColor = null,
+            initiallySelectedColor = 4281402925,
             onColorSelected = { color ->
-                onScreenEvent(CreateProjectScreenEvent.ProjectColorChanged(color.colorLongValue))
+                onScreenEvent(CreateProjectScreenEvent.ProjectColorChanged(color))
             },
         )
 

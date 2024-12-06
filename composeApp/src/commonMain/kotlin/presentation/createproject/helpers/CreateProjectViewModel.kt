@@ -83,7 +83,10 @@ class CreateProjectViewModel(
             }
 
             is CreateProjectScreenEvent.ProjectColorChanged -> {
-                uiState = uiState.copy(projectColor = event.color)
+                uiState = uiState.copy(
+                    projectColor = event.color.colorLongValue,
+                    selectedColorName = event.color.paletteName
+                )
             }
 
             is CreateProjectScreenEvent.ToggleDescriptionVisibility -> {

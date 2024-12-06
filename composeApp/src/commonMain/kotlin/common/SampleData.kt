@@ -9,17 +9,6 @@ fun getRandomAvatar(): String {
     return avatars[randomInt]
 }
 
-fun getRandomColor(): EnumProjectColors {
-    val randomInt = Random.nextInt(from = 0, 9)
-    return EnumProjectColors.entries[randomInt]
-}
-
-
-fun getRandomColorEnum(): EnumProjectColors {
-    val randomInt = Random.nextInt(from = 0, 9)
-    return EnumProjectColors.entries[randomInt]
-}
-
 expect fun getRandomId(): String
 
 

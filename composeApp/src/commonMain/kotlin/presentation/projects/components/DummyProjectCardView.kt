@@ -34,7 +34,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.getColor
-import common.getRandomColor
 import data.local.relations.ProjectWithTasks
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.ReenieBeanieFontFamily
@@ -48,7 +47,7 @@ fun DummyProjectCardView(
     role: String,
     onItemClick: () -> Unit,
     modifier: Modifier,
-    backgroundColor: Color = getRandomColor().getColor(),
+    backgroundColor: Color = Color(0xff3F292B),
     textColor: Color = Color.White,
     leftAlign: Boolean
 ) {

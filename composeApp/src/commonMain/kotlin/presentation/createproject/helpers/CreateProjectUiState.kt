@@ -6,6 +6,7 @@ data class CreateProjectUiState (
     val projectName : String = "",
     val projectDescription : String = "",
     val projectColor : Long =  0,
+    val selectedColorName : String = "",
     val showColorOptions : Boolean = false,
     val showDescription : Boolean = false,
     val showSuggestion : Boolean = false,

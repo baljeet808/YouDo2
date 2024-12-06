@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.EnumProjectColors
 import common.avatars
 import common.getColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -58,7 +57,7 @@ fun CompleteProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = EnumProjectColors.Blue.getColor().copy(alpha = 0.5f)),
+            .background(color = Color.Blue.copy(alpha = 0.5f)),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

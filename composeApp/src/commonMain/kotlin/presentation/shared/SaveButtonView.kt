@@ -23,8 +23,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.EnumProjectColors
-import common.getColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getTextColor
@@ -37,7 +35,7 @@ fun SaveButtonView(
         .padding(20.dp),
     buttonModifier : Modifier = Modifier,
     label: String = "Save",
-    buttonThemeColor: Color = EnumProjectColors.Red.getColor(),
+    buttonThemeColor: Color = Color.Red,
     onClick: () -> Unit = {},
     alignment: Alignment = Alignment.BottomEnd,
     showIcon : Boolean = true,

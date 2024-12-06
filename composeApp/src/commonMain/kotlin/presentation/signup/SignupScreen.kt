@@ -28,7 +28,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.EnumProjectColors
 import common.getColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
@@ -48,9 +47,9 @@ fun SignupScreen(
     signUp: () -> Unit,
     navigateBackToLogin: () -> Unit,
 ) {
-    val themeColor = EnumProjectColors.Green.getColor()
+    val themeColor = Color.Magenta
     val contentColor = Color.White
-    val buttonsColor = EnumProjectColors.Pink.getColor()
+    val buttonsColor = Color.Blue
     val passwordFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
 

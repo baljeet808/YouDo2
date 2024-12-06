@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import common.getColor
-import common.getRandomColor
 import domain.models.Project
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -151,7 +150,7 @@ fun MessageBoxView(
                     )
                     .background(
                         color = if (message.isNotBlank()) {
-                            project?.color?.getColor() ?: getRandomColor().getColor()
+                            project?.color?.getColor() ?: Color(0xff3F292B)
                         } else {
                             Color.Gray
                         },

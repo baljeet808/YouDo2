@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import common.EnumProjectColors
 import common.getColor
 import common.getRandomLoadingMessage
 import kotlinx.coroutines.delay
@@ -50,7 +49,7 @@ fun LoadingDialog(
         }
 
         LoadingDialogContent(
-            backgroundColor = EnumProjectColors.Blue.getColor(),
+            backgroundColor = Color.Blue,
             dotNumber = currentDotIndex,
             message = loadingMessage
         )

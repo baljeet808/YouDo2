@@ -39,8 +39,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import common.EnumProjectColors
-import common.getColor
 import common.menuItems
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -241,7 +239,7 @@ fun DashboardScreen(
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     NextButton(
-                        backgroundColor = EnumProjectColors.Blue.getColor(),
+                        backgroundColor = Color.Blue,
                         label = "Add Project",
                         onClick = {
                             navigateToCreateProject()

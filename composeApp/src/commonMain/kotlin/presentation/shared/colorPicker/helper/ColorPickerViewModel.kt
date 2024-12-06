@@ -36,9 +36,8 @@ class ColorPickerViewModel(
         }
     }
 
-    fun getColorsFromFirebase(initiallySelectedColor : ColorPalette?) {
+    fun getColorsFromFirebase(initiallySelectedColor : Long?) {
         uiState = uiState.copy(
-            selectedColor = initiallySelectedColor,
             isLoading = true
         )
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,7 +49,11 @@ class ColorPickerViewModel(
                         }
                         updateColorsLocally(colors.map { it.toColorPaletteEntity() })
                         withContext(Dispatchers.Main){
-                            uiState = uiState.copy(colorList = colors, isLoading = false)
+                            uiState = uiState.copy(
+                                colorList = colors,
+                                isLoading = false,
+                                selectedColor = colors.find { it.colorLongValue == initiallySelectedColor }
+                            )
                         }
                     }
             } catch (e: Exception) {

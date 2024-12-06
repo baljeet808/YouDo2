@@ -40,7 +40,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import common.EnumRoles
 import common.getColor
-import common.getRandomColor
 import common.getRole
 import common.maxTitleCharsAllowed
 import data.local.mappers.toProjectEntity
@@ -287,7 +286,7 @@ fun ProjectView(
                     showBlur = false
                 },
                 themeColor = taskToEdit.value?.project?.color?.getColor()
-                    ?: getRandomColor().getColor(),
+                    ?: Color(0xff3F292B),
                 lines = 2
             )
 
