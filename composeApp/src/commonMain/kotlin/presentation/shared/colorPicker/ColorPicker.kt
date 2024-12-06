@@ -65,9 +65,9 @@ fun ColorPicker(
         Column {
             Text(
                 text = "Give it a color",
-                modifier = Modifier.align(Alignment.Start),
+                modifier = Modifier.align(Alignment.Start).padding(start = 20.dp),
                 fontFamily = AlataFontFamily(),
-                fontSize = 16.sp,
+                fontSize = 12.sp,
                 color = Color.White
             )
             LazyRow(
