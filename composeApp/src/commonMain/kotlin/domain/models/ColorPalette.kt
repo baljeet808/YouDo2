@@ -8,4 +8,5 @@ data class ColorPalette(
     var id : String = "",
     var paletteName : String = "",
     var colorLongValue : Long = 0,
+    var sortOrder : Int = 0
 )

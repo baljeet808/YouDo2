@@ -50,7 +50,7 @@ class ColorPickerViewModel(
                         updateColorsLocally(colors.map { it.toColorPaletteEntity() })
                         withContext(Dispatchers.Main){
                             uiState = uiState.copy(
-                                colorList = colors,
+                                colorList = colors.sortedBy { it.sortOrder },
                                 isLoading = false,
                                 selectedColor = colors.find { it.colorLongValue == initiallySelectedColor }
                             )

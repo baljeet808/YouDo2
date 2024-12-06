@@ -8,7 +8,8 @@ fun ColorPaletteEntity.toColorPalette() : ColorPalette {
     return ColorPalette(
         id = id,
         paletteName = paletteName,
-        colorLongValue = colorLongValue
+        colorLongValue = colorLongValue,
+        sortOrder = sortOrder
     )
 }
 
@@ -16,6 +17,7 @@ fun ColorPalette.toColorPaletteEntity() : ColorPaletteEntity {
     return ColorPaletteEntity(
         id = id,
         paletteName = paletteName,
-        colorLongValue = colorLongValue
+        colorLongValue = colorLongValue,
+        sortOrder = sortOrder
     )
 }

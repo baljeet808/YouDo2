@@ -10,4 +10,5 @@ data class ColorPaletteEntity(
     var id : String,
     var paletteName : String,
     var colorLongValue : Long,
+    var sortOrder : Int
 )
