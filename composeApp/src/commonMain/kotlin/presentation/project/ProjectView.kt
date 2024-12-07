@@ -3,6 +3,8 @@ package presentation.project
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -27,6 +29,8 @@ import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
@@ -59,6 +63,7 @@ import presentation.onboarding.components.NextButton
 import presentation.project.components.TaskView
 import presentation.project.helpers.ProjectScreenEvent
 import presentation.project.helpers.ProjectScreenState
+import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
@@ -110,6 +115,76 @@ fun ProjectView(
     val focusRequester = remember {
         FocusRequester()
     }
+
+
+    AnimatedVisibility(
+        visible = showViewerPermissionDialog.value,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
+        AlertDialogView(
+            onDismissRequest = {
+                showBlur = false
+                showViewerPermissionDialog.value = false
+            },
+            dialogTitle = "Permission Issue! 😣",
+            dialogText = "Sorry, only project owner can delete tasks.",
+            icon = Icons.Default.Lock,
+            showDismissButton = true,
+            showConfirmButton = false,
+        )
+    }
+
+    AnimatedVisibility(
+        visible = showDeleteConfirmationDialog.value,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight },
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    ) {
+        AlertDialogView(
+            onDismissRequest = {
+                showBlur = false
+                showDeleteConfirmationDialog.value = false
+            },
+            onConfirmation = {
+                showBlur = false
+                taskToDelete.value?.let{ task ->
+                    onEvent(ProjectScreenEvent.DeleteTask(task = task))
+                }
+                showDeleteConfirmationDialog.value = false
+            },
+            dialogTitle = "Are you sure?",
+            dialogText = "This will permanently delete this task.",
+            icon = Icons.Default.Delete,
+            showDismissButton = true,
+            showConfirmButton = true,
+        )
+    }
+
+
 
     Column(
         modifier = Modifier
@@ -172,7 +247,7 @@ fun ProjectView(
                 val state = rememberDismissState(
                     confirmStateChange = {
                         if (it == DismissValue.DismissedToStart) {
-                            if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
+                            if (true) {
                                 showBlur = true
                                 showViewerPermissionDialog.value = true
                             } else {

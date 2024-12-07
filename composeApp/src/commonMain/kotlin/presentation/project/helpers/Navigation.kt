@@ -11,7 +11,6 @@ import androidx.navigation.navArgument
 import domain.dto_helpers.DataError
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.project.ProjectView
 
 
@@ -77,8 +76,8 @@ fun NavGraphBuilder.addProjectViewDestination(
                     "create_task/${projectId}/${userId}"
                 )
             },
-
             onClickInvite = {
+
             },
             navigateToEditTask = {
             },

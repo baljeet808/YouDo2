@@ -5,8 +5,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.window.DialogProperties
+import common.COLOR_GRAPHITE_VALUE
 
 @Composable
 fun AlertDialogView(
@@ -19,8 +21,13 @@ fun AlertDialogView(
     dismissButtonText : String = "Dismiss",
     showConfirmButton : Boolean = true,
     showDismissButton : Boolean = true,
+    dismissOnClickOutside : Boolean = true
 ) {
     AlertDialog(
+        containerColor = Color(COLOR_GRAPHITE_VALUE),
+        iconContentColor = Color.White,
+        titleContentColor = Color.White,
+        textContentColor = Color.White,
         icon = {
             Icon(icon, contentDescription = "Example Icon")
         },
@@ -59,7 +66,7 @@ fun AlertDialogView(
         },
         properties = DialogProperties(
             dismissOnBackPress = true,
-            dismissOnClickOutside = false
+            dismissOnClickOutside = dismissOnClickOutside
         )
     )
 }
