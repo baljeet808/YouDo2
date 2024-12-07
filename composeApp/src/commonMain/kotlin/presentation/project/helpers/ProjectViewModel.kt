@@ -74,6 +74,8 @@ class ProjectViewModel(
             }
             is ProjectScreenEvent.DeleteTask -> {
                 deleteTaskOnServer(event.task, uiState.project)
+                val projectCopy = uiState.project.copy(numberOfTasks = --uiState.project.numberOfTasks)
+                updateProjectOnSever(projectCopy)
                 deleteTaskLocally(event.task.toTaskEntity())
             }
             is ProjectScreenEvent.UpdateProject -> {
