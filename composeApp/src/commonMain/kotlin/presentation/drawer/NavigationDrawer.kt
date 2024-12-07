@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.models.MenuItem
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.drawer.components.IconButtonView
 import presentation.drawer.components.MenuItemRow
-import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.LessTransparentWhiteColor
 import presentation.theme.NightTransparentWhiteColor
@@ -82,7 +82,7 @@ fun NavigationDrawer(
             ) {
                 CircularPictureViewWithProgress(
                     onClick = openProfile,
-                    progress = 0.75f,
+                    progress = 1f,
                     avatarUrl = avatarUrl
                 )
                 IconButtonView(

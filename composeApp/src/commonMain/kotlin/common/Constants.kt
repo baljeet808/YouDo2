@@ -1,15 +1,12 @@
 package common
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.Color
 import domain.models.MenuItem
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.DESTINATION_COMPLETE_PROFILE_ROUTE
-import presentation.projects.helpers.DESTINATION_PROJECTS_ROUTE
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.chat_illustration
 import youdo2.composeapp.generated.resources.set_reminders
@@ -31,7 +28,7 @@ val menuItems = arrayListOf(
         title = "Edit Profile",
         icon = Icons.Default.Edit,
         contentDescription = "Menu item to Edit profile screen"
-    ),
+    ),/*
     MenuItem(
         id = DESTINATION_PROJECTS_ROUTE,
         title = "Projects",
@@ -43,7 +40,7 @@ val menuItems = arrayListOf(
         title = "Settings",
         icon = Icons.Outlined.Settings,
         contentDescription = "Menu item to show settings"
-    )
+    )*/
 )
 
 
