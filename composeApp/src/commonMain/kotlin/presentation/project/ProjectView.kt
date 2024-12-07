@@ -98,7 +98,6 @@ fun ProjectView(
         mutableStateOf(false)
     }
 
-
     val taskToDelete = remember {
         mutableStateOf<Task?>(null)
     }
@@ -247,7 +246,7 @@ fun ProjectView(
                 val state = rememberDismissState(
                     confirmStateChange = {
                         if (it == DismissValue.DismissedToStart) {
-                            if (true) {
+                            if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
                                 showBlur = true
                                 showViewerPermissionDialog.value = true
                             } else {
@@ -263,6 +262,21 @@ fun ProjectView(
                         true
                     }
                 )
+
+                // Watch for dialog dismissal and reset swipe state
+                LaunchedEffect(showViewerPermissionDialog.value) {
+                    if (!showViewerPermissionDialog.value) {
+                        // Reset the swipe state when the dialog is dismissed
+                        state.reset()
+                    }
+                }
+                // Watch for dialog dismissal and reset swipe state
+                LaunchedEffect(showDeleteConfirmationDialog.value) {
+                    if (!showDeleteConfirmationDialog.value) {
+                        // Reset the swipe state when the dialog is dismissed
+                        state.reset()
+                    }
+                }
 
                 SwipeToDismiss(
                     modifier = Modifier.animateItemPlacement(),
