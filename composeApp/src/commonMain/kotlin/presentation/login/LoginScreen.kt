@@ -28,18 +28,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import common.LOGIN_SCREEN_BUTTONS_COLOR
 import common.LOGIN_SCREEN_COLOR
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
 import presentation.login.helpers.LoginUIState
 import presentation.onboarding.components.NextButton
-import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
+import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
-import presentation.theme.DotooPink
-import presentation.theme.NightTransparentWhiteColor
 
 @ExperimentalResourceApi
 @Composable
@@ -54,7 +53,7 @@ fun LoginScreen(
 
     val themeColor = LOGIN_SCREEN_COLOR
     val contentColor = Color.White
-    val buttonsColor = NightTransparentWhiteColor
+    val buttonsColor = LOGIN_SCREEN_BUTTONS_COLOR
     val passwordFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
 
@@ -163,7 +162,7 @@ fun LoginScreen(
                         login()
                     }
                 },
-                buttonThemeColor = DotooPink,
+                buttonThemeColor = buttonsColor,
                 alignment = Alignment.Center,
                 buttonModifier = Modifier
                     .fillMaxWidth()
@@ -177,7 +176,7 @@ fun LoginScreen(
             //policy text buttons
             PolicyLineView(
                 normalTextColor = contentColor,
-                clickableTextColor = DotooPink,
+                clickableTextColor = buttonsColor,
                 navigateToPolicy = { navigateToPolicy() },
                 navigateToTermOfUse = { navigateToPolicy() }
             )
