@@ -30,13 +30,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import common.COLOR_GRAPHITE_VALUE
 import common.avatars
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.createproject.components.NoBorderEditText
 import presentation.drawer.components.CircularPictureViewWithProgress
-import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
+import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.NightTransparentWhiteColor
@@ -56,7 +57,7 @@ fun CompleteProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.Blue.copy(alpha = 0.5f)),
+            .background(color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.5f)),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
