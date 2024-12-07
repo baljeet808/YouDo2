@@ -1,6 +1,7 @@
 package presentation.create_task.helpers
 
 import androidx.compose.ui.graphics.Color
+import common.COLOR_GRAPHITE_VALUE
 import common.DueDates
 import common.EnumPriorities
 import domain.dto_helpers.DataError
@@ -12,8 +13,9 @@ data class CreateTaskUiState(
     val priority: EnumPriorities = EnumPriorities.LOW,
     val dueDate: DueDates = DueDates.CUSTOM,
     val project: Project? = null,
-    val projectColor: Color =  Color(0xff3F292B),
+    val projectColor: Long =  COLOR_GRAPHITE_VALUE,
     val showDescription: Boolean = false,
+    val showSuggestion : Boolean = false,
     val userId: String = "",
     val userName: String = "",
     val userEmail: String = "",

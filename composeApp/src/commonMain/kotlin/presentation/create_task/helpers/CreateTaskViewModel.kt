@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import common.EnumRoles
+import common.SUGGESTION_ADD_DESCRIPTION
 import common.getRandomId
 import common.getRole
 import common.getSampleDateInLong
-import data.local.entities.TaskEntity
 import data.local.mappers.toProject
 import data.local.mappers.toProjectEntity
 import dev.gitlive.firebase.Firebase
@@ -17,12 +17,8 @@ import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
 import domain.models.Project
 import domain.models.Task
-import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.project_use_cases.GetProjectByIdAsFlowUseCase
-import domain.use_cases.project_use_cases.UpsertProjectUseCase
-import domain.use_cases.task_use_cases.UpsertTasksUseCase
 import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -33,9 +29,6 @@ import org.koin.core.component.KoinComponent
 
 class CreateTaskViewModel(
     private val getProjectByIdAsFlowUseCase: GetProjectByIdAsFlowUseCase,
-    private val dataStoreRepository: DataStoreRepository,
-    private val upsertTasksUseCase: UpsertTasksUseCase,
-    private val upsertProjectUseCase: UpsertProjectUseCase,
     private val getUserByIdAsFlowUseCase: GetUserByIdAsFlowUseCase,
 ) : ViewModel(), KoinComponent {
 
@@ -95,6 +88,20 @@ class CreateTaskViewModel(
             is CreateTaskScreenEvent.TaskPriorityChanged -> {
                 uiState = uiState.copy(
                     priority = event.priority
+                )
+            }
+
+            is CreateTaskScreenEvent.OnSuggestionClicked -> {
+                if(event.suggestion == SUGGESTION_ADD_DESCRIPTION){
+                    uiState = uiState.copy(
+                        showDescription = true,
+                        showSuggestion = false
+                    )
+                }
+            }
+            CreateTaskScreenEvent.ToggleSuggestion -> {
+                uiState = uiState.copy(
+                    showSuggestion = !uiState.showSuggestion
                 )
             }
         }
@@ -159,7 +166,7 @@ class CreateTaskViewModel(
         .collection("projects")
 
 
-    fun createTask() {
+    private fun createTask() {
         val newTask = Task(
             id = getRandomId(),
             title = uiState.taskName,
@@ -177,28 +184,11 @@ class CreateTaskViewModel(
 
     private fun createTask(task: Task) {
         uiState.project?.let { project ->
-            when (getRole(project.toProjectEntity(), uiState.userId)) {
-                EnumRoles.ProAdmin -> {
-                    updateTaskOnServer(task, project)
-                }
-
-                EnumRoles.Admin -> {
-                    updateTaskOnServer(task, project)
-                }
-
-                EnumRoles.Editor -> {
-                    updateTaskOnServer(task, project)
-                }
-
-                EnumRoles.Viewer -> {
-                    //Do nothing can't update anything
-                    //UI handles this by itself
-                }
-
-                EnumRoles.Blocked -> {
-                    //Do nothing can't update anything
-                    //UI handles this by itself
-                }
+            val role = getRole(project.toProjectEntity(), uiState.userId)
+            val projectCopy = project.copy(numberOfTasks = ++project.numberOfTasks)
+            if(role != EnumRoles.Blocked && role != EnumRoles.Viewer){
+                updateTaskOnServer(task, projectCopy)
+                updateProjectOnSever(projectCopy)
             }
         }
     }
@@ -211,9 +201,6 @@ class CreateTaskViewModel(
                     .collection("tasks")
                     .document(task.id)
                     .set(task)
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(success = true)
-                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 val isNameValid = uiState.taskName.isNotBlank()
@@ -229,44 +216,6 @@ class CreateTaskViewModel(
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(isLoading = false)
                 }
-            }
-        }
-
-    }
-
-    private fun updateTaskLocally(task: TaskEntity, project: Project) {
-        CoroutineScope(Dispatchers.IO).launch {
-            upsertTasksUseCase(listOf(task))
-            updateProject(project)
-        }
-    }
-
-
-    private fun updateProject(project: Project) {
-        val projectCopy = project.copy()
-        projectCopy.updatedAt = getSampleDateInLong()
-
-        when (getRole(project.toProjectEntity(), uiState.userId)) {
-            EnumRoles.ProAdmin -> {
-                updateProjectOnSever(project)
-            }
-
-            EnumRoles.Admin -> {
-                updateProjectLocally(project)
-            }
-
-            EnumRoles.Editor -> {
-                updateProjectOnSever(project)
-            }
-
-            EnumRoles.Viewer -> {
-                //Do nothing can't update anything
-                //UI handles this by itself
-            }
-
-            EnumRoles.Blocked -> {
-                //Do nothing can't update anything
-                //UI handles this by itself
             }
         }
     }
@@ -298,14 +247,5 @@ class CreateTaskViewModel(
                 }
             }
         }
-
     }
-
-    private fun updateProjectLocally(project: Project) {
-        CoroutineScope(Dispatchers.IO).launch {
-            upsertProjectUseCase(listOf(project.toProjectEntity()))
-        }
-    }
-
-
 }
