@@ -66,7 +66,8 @@ fun ProjectCardWithProfiles(
     onClickInvite: () -> Unit = {},
     showDialogBackgroundBlur : (showBlur : Boolean) -> Unit = {},
     role : EnumRoles = EnumRoles.Viewer,
-    showProjectDetailInitially : Boolean = false,
+    showProjectDetail : Boolean = false,
+    onDetailClicked : () -> Unit = {}
 ) {
 
     val showConfirmExitProjectDialog = remember {
@@ -79,10 +80,6 @@ fun ProjectCardWithProfiles(
 
     val showConfirmProjectDeletionDialog = remember {
         mutableStateOf(false)
-    }
-
-    var showProjectDetail by remember {
-        mutableStateOf(showProjectDetailInitially)
     }
 
     var showEditTitleBox by remember {
@@ -194,7 +191,7 @@ fun ProjectCardWithProfiles(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(top = 10.dp, bottom = 10.dp)
             .shadow(elevation = 5.dp, shape = RoundedCornerShape(20.dp))
             .clip(shape = RoundedCornerShape(20.dp))
             .background(color = project.color.getColor()),
@@ -403,7 +400,7 @@ fun ProjectCardWithProfiles(
                 )
 
                 TextButton(
-                    onClick = { showProjectDetail = showProjectDetail.not() },
+                    onClick = onDetailClicked,
                     modifier = Modifier.padding(end = 10.dp)
                 ) {
                     Text(
