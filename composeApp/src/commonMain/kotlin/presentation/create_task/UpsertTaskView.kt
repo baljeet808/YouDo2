@@ -191,7 +191,7 @@ fun UpsertTaskView(
             /**
              * Row for Due date and Project selection
              * **/
-            Row(
+            /*Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 20.dp, end = 20.dp),
@@ -274,9 +274,9 @@ fun UpsertTaskView(
             }
 
             Spacer(modifier = Modifier.height(20.dp))
+            */
 
-
-            Text(
+            /*Text(
                 text = "Due Date set to ".plus(
                     uiState.dueDate.getExactDate().formatNicelyWithoutYear()
                 ),
@@ -287,7 +287,7 @@ fun UpsertTaskView(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(start = 30.dp)
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))*/
 
             /**
              * Row for dotoo additional fields
