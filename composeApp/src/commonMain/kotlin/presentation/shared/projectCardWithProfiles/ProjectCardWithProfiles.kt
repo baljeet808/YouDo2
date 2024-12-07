@@ -47,6 +47,7 @@ import domain.models.Project
 import domain.models.User
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.ProfilesLazyRow
+import presentation.shared.colorPicker.ColorPicker
 import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.editboxs.EditOnFlyBox
@@ -90,7 +91,12 @@ fun ProjectCardWithProfiles(
     var showEditTitleBox by remember {
         mutableStateOf(false)
     }
+
     var showEditDescriptionBox by remember {
+        mutableStateOf(false)
+    }
+
+    var showColorPicker by remember {
         mutableStateOf(false)
     }
 
@@ -267,14 +273,32 @@ fun ProjectCardWithProfiles(
                         }
                     },
                     onClickInvite = onClickInvite,
+                    onClickColorPicker = {
+                        if (role == EnumRoles.ProAdmin || role == EnumRoles.Admin){
+                            showColorPicker = !showColorPicker
+                        }else{
+                            showViewerPermissionDialog.value = true
+                        }
+                    },
                     modifier = Modifier,
                     role = role,
-                    adminId = admin.id,
                     adminName = admin.name,
                     adminAvatar = admin.avatarUrl,
                     imagesWidthAndHeight = PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH
                 )
             }
+        }
+
+        AnimatedVisibility(visible = showColorPicker){
+            ColorPicker(
+                modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+                initiallySelectedColor = project.color,
+                onColorSelected = { color ->
+                    val projectCopy = project.copy(color = color.colorLongValue)
+                    updateProject(projectCopy)
+                    showColorPicker = false
+                },
+            )
         }
 
         AnimatedVisibility(visible = showProjectDetail) {
@@ -413,7 +437,12 @@ fun ProjectCardWithProfiles(
                 )
 
                 TextButton(
-                    onClick = onDetailClicked,
+                    onClick = {
+                        if(showColorPicker){
+                            showColorPicker = false
+                        }
+                        onDetailClicked()
+                    },
                     modifier = Modifier.padding(end = 10.dp)
                 ) {
                     Text(

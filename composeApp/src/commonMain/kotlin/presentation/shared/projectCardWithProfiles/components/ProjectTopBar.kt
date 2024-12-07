@@ -35,6 +35,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LessTransparentWhiteColor
 import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.baseline_palette_24
 import youdo2.composeapp.generated.resources.folder_delete_24dp
 import youdo2.composeapp.generated.resources.group_add_24dp
 import youdo2.composeapp.generated.resources.notifications_active_24dp
@@ -47,9 +48,9 @@ fun ProjectTopBar(
     onNotificationItemClicked: () -> Unit,
     onDeleteItemClicked: () -> Unit,
     onClickInvite: () -> Unit,
+    onClickColorPicker : () -> Unit = {},
     role : EnumRoles,
     modifier: Modifier,
-    adminId : String,
     adminName : String,
     adminAvatar : String,
     imagesWidthAndHeight: Int = 30,
@@ -81,6 +82,18 @@ fun ProjectTopBar(
              * Button to add more person to the project
              * **/
             if(role == EnumRoles.Admin || role == EnumRoles.ProAdmin) {
+                IconButton(
+                    onClick = onClickColorPicker,
+                    modifier = Modifier
+                        .weight(0.2f)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.baseline_palette_24),
+                        contentDescription = "Button to open color picker",
+                        tint = Color.White
+                    )
+                }
+
                 IconButton(
                     onClick = onClickInvite,
                     modifier = Modifier
