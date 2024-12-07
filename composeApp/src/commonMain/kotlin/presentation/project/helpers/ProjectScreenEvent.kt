@@ -10,5 +10,6 @@ sealed class ProjectScreenEvent {
     data class UpdateProject(val project : Project) : ProjectScreenEvent()
     data class UpdateTask(val task : Task) : ProjectScreenEvent()
     data class DeleteProject(val project : Project) : ProjectScreenEvent()
+    data class ExitProject(val project : Project) : ProjectScreenEvent()
     data object ToggleProjectDetail : ProjectScreenEvent()
 }

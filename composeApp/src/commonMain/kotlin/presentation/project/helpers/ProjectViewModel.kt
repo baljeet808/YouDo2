@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import common.EnumRoles
 import common.getRole
 import data.local.entities.TaskEntity
 import data.local.mappers.toProject
@@ -86,6 +87,24 @@ class ProjectViewModel(
             }
             is ProjectScreenEvent.ToggleProjectDetail -> {
                 uiState = uiState.copy(showProjectDetail = uiState.showProjectDetail.not())
+            }
+            is ProjectScreenEvent.ExitProject -> {
+                if(uiState.role == EnumRoles.Viewer){
+                    val viewersIds = uiState.project.viewerIds.toCollection(ArrayList())
+                    viewersIds.remove(uiState.userId)
+                    val projectCopy = uiState.project.copy(
+                        viewerIds = viewersIds.toList()
+                    )
+                    updateProjectOnSever(projectCopy)
+                }else if(uiState.role == EnumRoles.Editor){
+                    val editorsIds = uiState.project.collaboratorIds.toCollection(ArrayList())
+                    editorsIds.remove(uiState.userId)
+                    val projectCopy = uiState.project.copy(
+                        collaboratorIds = editorsIds.toList()
+                    )
+                    updateProjectOnSever(projectCopy)
+                }
+                uiState = uiState.copy(projectDeleted = true)
             }
         }
     }

@@ -74,7 +74,7 @@ fun ProjectView(
     onClickInvite: () -> Unit,
     navigateToEditTask: (task: Task) -> Unit,
     navigateToChat: () -> Unit,
-    onEvent: (ProjectScreenEvent) -> Unit = {},
+    onEvent: (ProjectScreenEvent) -> Unit = {}
 ) {
 
 
@@ -147,8 +147,11 @@ fun ProjectView(
                 ProjectCardWithProfiles(
                     project = uiState.project,
                     users = uiState.users,
-                    onItemDeleteClick = {
+                    onDeleteProjectClick = {
                         onEvent(ProjectScreenEvent.DeleteProject(uiState.project))
+                    },
+                    onExitProjectClick = {
+                        onEvent(ProjectScreenEvent.ExitProject(uiState.project))
                     },
                     updateProject = { project ->
                         onEvent(ProjectScreenEvent.UpdateProject(project))
@@ -269,64 +272,6 @@ fun ProjectView(
                 Spacer(modifier = Modifier.height(80.dp))
             }
         }
-
-/*
-            TasksLazyColumn(
-                tasks = uiState.tasks.map { task ->
-                    TaskWithProject(
-                        task = task,
-                        project = uiState.project
-                    )
-                }.toCollection(ArrayList()),
-                onToggleTask = { taskWithProject ->
-                    if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
-                        showBlur = true
-                        showViewerPermissionDialog.value = true
-                    } else {
-                        onEvent(ProjectScreenEvent.ToggleTask(taskWithProject.task))
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 0.dp),
-                onItemDelete = { taskWithProject ->
-                    if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
-                        showBlur = true
-                        showViewerPermissionDialog.value = true
-                    } else {
-                        if (true) {
-                            onEvent(ProjectScreenEvent.DeleteTask(taskWithProject.task))
-                        } else {
-                            taskToDelete.value = taskWithProject
-                            showBlur = true
-                            showDeleteConfirmationDialog.value = true
-                        }
-                    }
-                },
-                navigateToEditTask = { task ->
-                    if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
-                        showBlur = true
-                        showViewerPermissionDialog.value = true
-                    } else {
-                        navigateToEditTask(task)
-                    }
-                },
-                navigateToQuickEditTask = { task ->
-                    if (uiState.role == EnumRoles.Viewer || uiState.role == EnumRoles.Blocked) {
-                        showBlur = true
-                        showViewerPermissionDialog.value = true
-                    } else {
-                        taskToEdit.value = task
-                        keyBoardController?.show()
-                        showBlur = true
-                        focusScope.launch {
-                            delay(500)
-                            focusRequester.requestFocus()
-                        }
-                    }
-                }
-            )*/
-
     }
 
     AnimatedVisibility(
@@ -400,5 +345,4 @@ fun ProjectView(
     LaunchedEffect(key1 = Unit){
         fetchScreenData()
     }
-
 }

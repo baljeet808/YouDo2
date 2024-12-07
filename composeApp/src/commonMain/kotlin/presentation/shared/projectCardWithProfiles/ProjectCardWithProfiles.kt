@@ -61,7 +61,8 @@ import presentation.theme.NightTransparentWhiteColor
 fun ProjectCardWithProfiles(
     project: Project,
     users: List<User> = emptyList(),
-    onItemDeleteClick: () -> Unit = {},
+    onDeleteProjectClick: () -> Unit = {},
+    onExitProjectClick: () -> Unit = {},
     updateProject: (project : Project) -> Unit = {},
     onClickInvite: () -> Unit = {},
     showDialogBackgroundBlur : (showBlur : Boolean) -> Unit = {},
@@ -69,6 +70,10 @@ fun ProjectCardWithProfiles(
     showProjectDetail : Boolean = false,
     onDetailClicked : () -> Unit = {}
 ) {
+
+    val notificationsOnForThisProject = remember {
+        mutableStateOf(false)
+    }
 
     val showConfirmExitProjectDialog = remember {
         mutableStateOf(false)
@@ -144,7 +149,7 @@ fun ProjectCardWithProfiles(
                 showConfirmProjectDeletionDialog.value = false
             },
             onConfirmation = {
-                //viewModel.onEvent(ProjectCardWithProfilesEvent.OnDeleteProject)
+                onDeleteProjectClick()
                 showConfirmProjectDeletionDialog.value = false
             },
             dialogTitle = "Are you sure?",
@@ -177,7 +182,7 @@ fun ProjectCardWithProfiles(
                 showConfirmExitProjectDialog.value = false
             },
             onConfirmation = {
-                //viewModel.onEvent(ProjectCardWithProfilesEvent.OnExitProject)
+                onExitProjectClick()
                 showConfirmExitProjectDialog.value = false
             },
             dialogTitle = "Are you sure?",
@@ -250,9 +255,17 @@ fun ProjectCardWithProfiles(
         AnimatedVisibility(visible = showProjectDetail) {
             users.firstOrNull { u -> u.id == project.ownerId }?.let { admin ->
                 ProjectTopBar(
-                    notificationsState = true,
-                    onNotificationItemClicked = { /*TODO*/ },
-                    onDeleteItemClicked = onItemDeleteClick,
+                    notificationsState = notificationsOnForThisProject.value,
+                    onNotificationItemClicked = {
+                        notificationsOnForThisProject.value = notificationsOnForThisProject.value.not()
+                    },
+                    onDeleteItemClicked = {
+                        if (role == EnumRoles.ProAdmin || role == EnumRoles.Admin){
+                            showConfirmProjectDeletionDialog.value = true
+                        }else{
+                            showConfirmExitProjectDialog.value = true
+                        }
+                    },
                     onClickInvite = onClickInvite,
                     modifier = Modifier,
                     role = role,

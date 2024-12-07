@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,8 +31,14 @@ import com.skydoves.landscapist.coil3.CoilImage
 import common.EnumRoles
 import common.getRandomAvatar
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.LessTransparentWhiteColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.folder_delete_24dp
+import youdo2.composeapp.generated.resources.group_add_24dp
+import youdo2.composeapp.generated.resources.notifications_active_24dp
+import youdo2.composeapp.generated.resources.notifications_off_24dp
 
 @ExperimentalResourceApi
 @Composable
@@ -84,7 +87,7 @@ fun ProjectTopBar(
                         .weight(0.2f)
                 ) {
                     Icon(
-                        Icons.Outlined.Add,
+                        painter = painterResource(Res.drawable.group_add_24dp),
                         contentDescription = "Button to add more person to the project",
                         tint = Color.White
                     )
@@ -105,6 +108,23 @@ fun ProjectTopBar(
                         tint = Color.White
                     )
                 }
+            }else{
+                /**
+                 * Delete the project
+                 * **/
+                IconButton(
+                    onClick = {
+                        onDeleteItemClicked()
+                    },
+                    modifier = Modifier
+                        .weight(0.2f)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.folder_delete_24dp),
+                        contentDescription = "Button to Delete the project",
+                        tint = Color.White
+                    )
+                }
             }
 
             /**
@@ -118,11 +138,10 @@ fun ProjectTopBar(
                     .weight(0.2f)
             ) {
                 Icon(
-
-                    if (notificationsState){
-                        Icons.Default.KeyboardArrowDown
+                    painter =if (notificationsState){
+                         painterResource(Res.drawable.notifications_off_24dp)
                     }else{
-                        Icons.Default.KeyboardArrowUp
+                        painterResource(Res.drawable.notifications_active_24dp)
                     },
                     contentDescription = "Button to Delete the project",
                     tint = Color.White
