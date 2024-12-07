@@ -1,10 +1,10 @@
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.local.mappers.toMessageEntity
-import data.local.mappers.toProjectEntity
 import data.local.mappers.toTaskEntity
 import data.local.mappers.toUserEntity
 import dev.gitlive.firebase.Firebase
@@ -16,9 +16,6 @@ import domain.repository_interfaces.DataStoreRepository
 import domain.use_cases.message_use_cases.DeleteMessageUseCase
 import domain.use_cases.message_use_cases.GetAllMessagesByProjectIDUseCase
 import domain.use_cases.message_use_cases.UpsertMessagesUseCase
-import domain.use_cases.project_use_cases.DeleteProjectUseCase
-import domain.use_cases.project_use_cases.GetProjectsUseCase
-import domain.use_cases.project_use_cases.UpsertProjectUseCase
 import domain.use_cases.task_use_cases.DeleteTaskUseCase
 import domain.use_cases.task_use_cases.GetProjectTasksUseCase
 import domain.use_cases.task_use_cases.UpsertTasksUseCase
@@ -33,10 +30,7 @@ import org.koin.core.component.inject
 
 
 class AppViewModel(
-    private val upsertProjectUseCase: UpsertProjectUseCase,
-    private val getProjectsUseCase: GetProjectsUseCase,
     private val getProjectTasksUseCase: GetProjectTasksUseCase,
-    private val deleteProjectUseCase: DeleteProjectUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val upsertTasksUseCase: UpsertTasksUseCase,
     private val getAllMessagesByProjectIDUseCase: GetAllMessagesByProjectIDUseCase,
@@ -210,5 +204,5 @@ data class AppUIState(
     val isUserLoggedIn : Boolean = false,
     val hasOnboarded : Boolean = false,
     val userId : String = "",
-    val loading : Boolean = false,
+    val loading : Boolean = true,
 )

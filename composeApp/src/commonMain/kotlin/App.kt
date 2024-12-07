@@ -76,15 +76,6 @@ fun App(
 
 
 
-    val startDestination = if (userState.isUserLoggedIn) {
-        DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
-    } else {
-        if (userState.hasOnboarded) {
-            DESTINATION_ONBOARDING_ROUTE
-        } else {
-            DESTINATION_LOGIN_ROUTE
-        }
-    }
 
     MaterialTheme {
 
@@ -100,6 +91,18 @@ fun App(
                 LoadingDialog()
             }
             AnimatedVisibility(visible = userState.loading.not(), enter = fadeIn()) {
+
+                //we need to set the start destination, after the view model checked if user is logged in or not
+                // that's why it's
+                val startDestination = if (userState.isUserLoggedIn) {
+                    DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
+                } else {
+                    if (userState.hasOnboarded) {
+                        DESTINATION_ONBOARDING_ROUTE
+                    } else {
+                        DESTINATION_LOGIN_ROUTE
+                    }
+                }
                 NavHost(
                     navController = navController,
                     startDestination = startDestination,

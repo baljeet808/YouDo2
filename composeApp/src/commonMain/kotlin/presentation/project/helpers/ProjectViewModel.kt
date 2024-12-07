@@ -22,7 +22,6 @@ import domain.use_cases.project_use_cases.GetProjectByIdAsFlowUseCase
 import domain.use_cases.task_use_cases.DeleteTaskUseCase
 import domain.use_cases.task_use_cases.GetProjectTasksAsFlowUseCase
 import domain.use_cases.task_use_cases.UpsertTasksUseCase
-import domain.use_cases.user_use_cases.GetUsersByIdsAsFlowUseCase
 import domain.use_cases.user_use_cases.GetUsersByIdsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -149,7 +148,7 @@ class ProjectViewModel(
         try{
             getProjectTasksAsFlowUseCase(projectID).collect{ tasks ->
                 withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(tasks = tasks.map { it.toTask() })
+                    uiState = uiState.copy(tasks = tasks.map { it.toTask() }, showProjectDetail = tasks.count()<=5)
                 }
             }
         }catch (e: Exception) {
