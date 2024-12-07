@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.avatars
-import common.getColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.complete_profile.helpers.CompleteProfileUIState
 import presentation.createproject.components.NoBorderEditText
@@ -178,7 +177,7 @@ fun CompleteProfileScreen(
                         .fillMaxWidth()
                         .height(60.dp),
                     showIcon = false,
-                    fontSize = 18,
+                    fontSize = 18.sp,
                     enabled = uiState.enableSaveButton
                 )
             }

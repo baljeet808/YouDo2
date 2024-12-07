@@ -2,21 +2,28 @@ package presentation.createproject
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import common.COLOR_GRAPHITE_VALUE
+import common.CREATE_PROJECT_SUGGESTION_LIST
+import common.SUGGESTION_ADD_DESCRIPTION
 import common.getColor
 import common.maxDescriptionCharsAllowed
 import common.maxTitleCharsAllowed
@@ -27,9 +34,12 @@ import presentation.createproject.helpers.CreateProjectUiState
 import presentation.shared.dialogs.LoadingDialog
 import presentation.shared.SaveButtonView
 import presentation.shared.TopHeadingWithCloseButton
+import presentation.shared.ai.SuggestionButtonRow
 import presentation.shared.ai.SuggestionButtonsColumn
 import presentation.shared.colorPicker.ColorPicker
 import presentation.theme.getLightThemeColor
+import youdo2.composeapp.generated.resources.Res
+import youdo2.composeapp.generated.resources.task_alt_24dp
 
 @ExperimentalResourceApi
 @Composable
@@ -37,6 +47,7 @@ fun CreateProjectView(
     uiState: CreateProjectUiState = CreateProjectUiState(),
     navigateBack: () -> Unit = {},
     onScreenEvent: (CreateProjectScreenEvent) -> Unit = {},
+    setUpData: () -> Unit = {}
 ) {
 
     val keyBoardController = LocalSoftwareKeyboardController.current
@@ -82,7 +93,7 @@ fun CreateProjectView(
 
         ColorPicker(
             modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
-            initiallySelectedColor = 4281402925,
+            initiallySelectedColor = uiState.projectColor,
             onColorSelected = { color ->
                 onScreenEvent(CreateProjectScreenEvent.ProjectColorChanged(color))
             },
@@ -112,7 +123,7 @@ fun CreateProjectView(
         )
 
         AnimatedVisibility(visible = uiState.showSuggestion){
-           /* SuggestionButtonRow(
+            SuggestionButtonRow(
                 onActionButtonClicked = {
                     onScreenEvent(CreateProjectScreenEvent.ToggleDescriptionVisibility)
                     onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
@@ -121,18 +132,7 @@ fun CreateProjectView(
                     onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
                 },
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-                suggestionText = "Add Description"
-            )*/
-            SuggestionButtonsColumn(
-                onSuggestionClicked = {
-                    onScreenEvent(CreateProjectScreenEvent.ToggleDescriptionVisibility)
-                    onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
-                },
-                onSkipClick = {
-                    onScreenEvent(CreateProjectScreenEvent.ToggleSuggestion)
-                },
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-                suggestions = listOf("Add Description", "Add Category", "Add A Link", "Add Image")
+                suggestionText = SUGGESTION_ADD_DESCRIPTION
             )
         }
 
@@ -165,11 +165,18 @@ fun CreateProjectView(
                 onScreenEvent(CreateProjectScreenEvent.CreateProject)
             },
             buttonThemeColor = uiState.projectColor.getColor(),
-            enabled = uiState.enableSaveButton
+            enabled = uiState.enableSaveButton,
+            fontSize = 20.sp,
+            iconDrawableResource = Res.drawable.task_alt_24dp,
+            buttonModifier = Modifier
+                .border(
+                    width = 2.dp,
+                    shape = RoundedCornerShape(20.dp),
+                    color = Color.White
+                )
         )
     }
+    AnimatedVisibility (visible = uiState.isLoading){ LoadingDialog() }
+    LaunchedEffect(key1 = true) { setUpData() }
 
-    if (uiState.isLoading){
-        LoadingDialog()
-    }
 }

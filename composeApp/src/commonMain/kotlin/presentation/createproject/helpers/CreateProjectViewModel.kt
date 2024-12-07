@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import common.SUGGESTION_ADD_DESCRIPTION
+import common.SUGGESTION_SHOW_PREVIEW
 import common.getRandomId
 import common.getSampleDateInLong
 import data.local.entities.ProjectEntity
@@ -13,6 +15,7 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
 import domain.repository_interfaces.DataStoreRepository
+import domain.use_cases.user_use_cases.GetUserByIdUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -20,37 +23,22 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 
 class CreateProjectViewModel(
-    private val dataStoreRepository: DataStoreRepository
+    private val getUserByIdUseCase: GetUserByIdUseCase
 ) : ViewModel(), KoinComponent {
 
 
     var uiState by mutableStateOf(CreateProjectUiState())
         private set
 
-    init {
-        getUserDetails()
-    }
-
-    private fun getUserDetails() {
+    fun getUserDetails(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.userIdAsFlow().collect {
-                withContext(Dispatchers.Main) {
+            getUserByIdUseCase(userId = userId)?.let { user ->
+                withContext(Dispatchers.Main){
                     uiState = uiState.copy(
-                        userId = it
-                    )
-                }
-            }
-            dataStoreRepository.userNameAsFlow().collect {
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(
-                        userName = it
-                    )
-                }
-            }
-            dataStoreRepository.userEmailAsFlow().collect {
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(
-                        userEmail = it
+                        userId = user.id,
+                        userName = user.name,
+                        userEmail = user.email,
+                        userAvatarUrl = user.avatarUrl
                     )
                 }
             }
@@ -111,6 +99,20 @@ class CreateProjectViewModel(
             CreateProjectScreenEvent.ToggleSuggestion -> {
                 uiState = uiState.copy(showSuggestion = !uiState.showSuggestion)
             }
+
+            is CreateProjectScreenEvent.OnSuggestionClicked -> {
+                if(event.suggestion == SUGGESTION_ADD_DESCRIPTION){
+                    uiState = uiState.copy(
+                        showDescription = true,
+                        showSuggestion = false
+                    )
+                }else if(event.suggestion == SUGGESTION_SHOW_PREVIEW){
+                    uiState = uiState.copy(
+                        showPreview = true,
+                        showSuggestion = false,
+                    )
+                }
+            }
         }
     }
 
@@ -124,12 +126,15 @@ class CreateProjectViewModel(
             id = getRandomId(),
             ownerId = uiState.userId,
             name = uiState.projectName,
+            ownerName = uiState.userName,
+            ownerAvatarUrl = uiState.userAvatarUrl,
             description = uiState.projectDescription,
             collaboratorIds = "",
             viewerIds = "",
             update = "${uiState.userName.ifBlank { uiState.userEmail }} created new project named '${uiState.projectName}.'",
             color = uiState.projectColor,
-            updatedAt = getSampleDateInLong()
+            updatedAt = getSampleDateInLong(),
+            numberOfTasks = 0
         )
         createProject(newProject)
     }

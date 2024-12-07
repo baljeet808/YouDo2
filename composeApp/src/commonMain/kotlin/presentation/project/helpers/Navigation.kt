@@ -19,7 +19,6 @@ const val DESTINATION_PROJECT_ROUTE = "project"
 const val DESTINATION_PROJECT_ROUTE_RELATIVE_PATH = "/{projectId}/{userId}"
 
 @ExperimentalResourceApi
-@OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.addProjectViewDestination(
     navController: NavController,
     showErrorAlertDialog : (error : DataError.Network?) -> Unit = {},

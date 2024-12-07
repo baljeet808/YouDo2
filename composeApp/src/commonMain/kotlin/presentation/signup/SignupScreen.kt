@@ -163,7 +163,7 @@ fun SignupScreen(
                     .fillMaxWidth()
                     .height(60.dp),
                 showIcon = false,
-                fontSize = 18,
+                fontSize = 18.sp,
                 labelColor = contentColor,
                 enabled = uiState.enableSignupButton
             )

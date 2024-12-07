@@ -9,5 +9,6 @@ sealed class CreateProjectScreenEvent {
     data object ToggleDescriptionVisibility : CreateProjectScreenEvent()
     data object ToggleColorOptions : CreateProjectScreenEvent()
     data object CreateProject : CreateProjectScreenEvent()
+    data class OnSuggestionClicked(val suggestion : String) : CreateProjectScreenEvent()
     data object ToggleSuggestion : CreateProjectScreenEvent()
 }

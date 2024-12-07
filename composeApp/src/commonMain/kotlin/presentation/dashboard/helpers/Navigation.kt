@@ -79,7 +79,7 @@ fun NavGraphBuilder.addDashboardDestination(
                 navController.navigate(DESTINATION_COMPLETE_PROFILE_ROUTE.plus("/${uiState.userId}/${uiState.userEmail}/${false}"))
             },
             navigateToCreateProject = {
-                navController.navigate(DESTINATION_CREATE_PROJECT_ROUTE)
+                navController.navigate(DESTINATION_CREATE_PROJECT_ROUTE.plus("/${uiState.userId}"))
             },
             loadData = {
                 userId?.let {

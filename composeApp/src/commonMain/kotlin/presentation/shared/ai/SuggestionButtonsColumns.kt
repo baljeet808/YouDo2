@@ -3,6 +3,7 @@ package presentation.shared.ai
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,11 +66,6 @@ fun SuggestionButtonsColumn(
     val iconOnlyWidth = 40.dp
     val animatedWidth by animateDpAsState(targetValue = if (expanded) 0.dp else iconOnlyWidth)
 
-    LaunchedEffect(Unit) {
-        delay(1500)
-        expanded = true
-    }
-
     Column(
         modifier = modifier
             .then(if (expanded) Modifier.fillMaxWidth() else Modifier.width(animatedWidth))
@@ -79,7 +75,10 @@ fun SuggestionButtonsColumn(
         horizontalAlignment = Alignment.Start
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .clickable {
+                    expanded = !expanded
+                },
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ){

@@ -1,6 +1,7 @@
 package presentation.shared.colorPicker
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,8 +10,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,7 +66,7 @@ fun ColorPicker(
             CircularProgressIndicator(modifier = Modifier.size(24.dp))
         }
     }else{
-        Column {
+        Column(modifier = Modifier.height(120.dp)) {
             Text(
                 text = "Give it a color",
                 modifier = Modifier.align(Alignment.Start).padding(start = 20.dp),
@@ -96,23 +100,36 @@ fun ColorPicker(
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ColorSquare(color: ColorPalette, isSelected: Boolean, onClick: () -> Unit) {
-    Column {
+    // Smooth animation for size change
+    val animatedSize by animateDpAsState(targetValue = if (isSelected) 46.dp else 36.dp)
+
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .width(48.dp)
+    ) {
+
         Box(
             modifier = Modifier
-                .size( if(isSelected) 40.dp else 30.dp)
-                .background(color = Color(color.colorLongValue), shape = RoundedCornerShape(8.dp))
-                .border(
-                    width = if (isSelected) 0.dp else 2.dp,
-                    color = if (isSelected) Color.Black else Color.White,
+                .size( animatedSize )
+                .background(
+                    color = Color(color.colorLongValue),
                     shape = RoundedCornerShape(8.dp)
                 )
-                .clickable { onClick() },
+                .border(
+                    width = 2.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
             // You can add an icon or indicator here if needed for selected state
             if (isSelected) {
                 Icon(
-                    Icons.Default.Check,
+                    imageVector = Icons.Default.Check,
                     contentDescription = "Selected",
                     tint = Color.White,
                 )
@@ -124,7 +141,7 @@ fun ColorSquare(color: ColorPalette, isSelected: Boolean, onClick: () -> Unit) {
                 modifier = Modifier.align(Alignment.CenterHorizontally)
                     .padding(top = 4.dp),
                 fontFamily = AlataFontFamily(),
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 color = Color.White
             )
         }

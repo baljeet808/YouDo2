@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.shared.fonts.AlataFontFamily
 import presentation.theme.getTextColor
 
@@ -39,10 +41,11 @@ fun SaveButtonView(
     onClick: () -> Unit = {},
     alignment: Alignment = Alignment.BottomEnd,
     showIcon : Boolean = true,
-    icon : ImageVector = Icons.Default.Add,
-    fontSize : Int = 24,
+    icon : ImageVector? = null,
+    iconDrawableResource : DrawableResource? = null,
+    fontSize : TextUnit = 24.sp,
     enabled : Boolean = true,
-    labelColor : Color = getTextColor()
+    labelColor : Color = getTextColor(),
 ) {
     Box(
         modifier = containerModifier,
@@ -50,36 +53,50 @@ fun SaveButtonView(
     ) {
 
         Row(
-            modifier = buttonModifier
-                .background(
+            modifier = buttonModifier.then(
+                Modifier.background(
                     color = buttonThemeColor.copy(alpha = if(enabled) 1f else 0.5f),
                     shape = RoundedCornerShape(20.dp)
                 )
-                .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-                .clickable(
-                    onClick = {
-                        onClick()
-                    }
-                ),
+                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                    .clickable(
+                        onClick = {
+                            onClick()
+                        }
+                    )
+            ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = label,
                 textAlign = TextAlign.Center,
-                style = TextStyle(
-                    color = labelColor,
-                    fontSize = fontSize.sp,
-                    fontFamily = AlataFontFamily()
-                )
+                fontFamily = AlataFontFamily(),
+                color = labelColor,
+                fontSize = fontSize
             )
             if(showIcon){
                 Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    icon,
-                    contentDescription = "Button Icon",
-                    tint = Color.White
-                )
+                icon?.let {
+                    Icon(
+                        icon,
+                        contentDescription = "Button Icon",
+                        tint = Color.White
+                    )
+                }?: iconDrawableResource?.let {
+                    Icon(
+                        painterResource(it),
+                        contentDescription = "Button Icon",
+                        tint = Color.White
+                    )
+                }?: run {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Button Icon",
+                        tint = Color.White
+                    )
+                }
+
             }
         }
     }
