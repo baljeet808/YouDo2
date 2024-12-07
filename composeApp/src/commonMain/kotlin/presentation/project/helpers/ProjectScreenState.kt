@@ -9,10 +9,7 @@ import domain.models.User
 data class ProjectScreenState(
     val isLoading : Boolean = false,
     val error: DataError.Network? = null,
-    val userName : String = "",
     val userId : String = "",
-    val userEmail : String = "",
-    val userAvatarUrl : String = "",
     val project : Project = Project(),
     val tasks : List<Task> = emptyList(),
     val users : List<User> = emptyList(),

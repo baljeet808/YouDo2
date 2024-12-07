@@ -12,7 +12,6 @@ import data.local.mappers.toProjectEntity
 import data.local.mappers.toTask
 import data.local.mappers.toTaskEntity
 import data.local.mappers.toUser
-import data.local.mappers.toUserEntity
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
@@ -20,13 +19,11 @@ import domain.models.Project
 import domain.models.Task
 import domain.use_cases.project_use_cases.DeleteProjectUseCase
 import domain.use_cases.project_use_cases.GetProjectByIdAsFlowUseCase
-import domain.use_cases.project_use_cases.UpsertProjectUseCase
 import domain.use_cases.task_use_cases.DeleteTaskUseCase
 import domain.use_cases.task_use_cases.GetProjectTasksAsFlowUseCase
 import domain.use_cases.task_use_cases.UpsertTasksUseCase
-import domain.use_cases.user_use_cases.GetUserByIdAsFlowUseCase
-import domain.use_cases.user_use_cases.GetUsersUseCase
-import domain.use_cases.user_use_cases.UpsertUserUseCase
+import domain.use_cases.user_use_cases.GetUsersByIdsAsFlowUseCase
+import domain.use_cases.user_use_cases.GetUsersByIdsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -38,11 +35,8 @@ class ProjectViewModel(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val deleteDoToosUseCase: DeleteTaskUseCase,
     private val getProjectByIdAsFlowUseCase: GetProjectByIdAsFlowUseCase,
-    private val getUsersUseCase: GetUsersUseCase,
-    private val getUserByIdAsFlowUseCase: GetUserByIdAsFlowUseCase,
     private val getProjectTasksAsFlowUseCase: GetProjectTasksAsFlowUseCase,
-    private val upsertProjectUseCase: UpsertProjectUseCase,
-    private val upsertUserUseCase: UpsertUserUseCase,
+    private val getUsersByIdsUseCase: GetUsersByIdsUseCase
 ) : ViewModel(), KoinComponent {
 
     var uiState by mutableStateOf(ProjectScreenState())
@@ -52,9 +46,13 @@ class ProjectViewModel(
         .collection("projects")
 
 
-    private suspend fun showLoading() {
+    private suspend fun showLoading(userId: String) {
         withContext(Dispatchers.Main){
-            uiState = uiState.copy(isLoading = true, error = null)
+            uiState = uiState.copy(
+                isLoading = true,
+                error = null,
+                userId = userId
+            )
         }
     }
 
@@ -94,71 +92,19 @@ class ProjectViewModel(
     }
 
     fun fetchScreenData(projectID: String, userId: String) = viewModelScope.launch(Dispatchers.IO) {
-        launch { showLoading() }
-        launch { fetchCurrentUser(uid = userId) }
-        launch { syncProjectWithFirebase(projectID = projectID) }
+        launch { showLoading(userId = userId) }
         launch { syncTasksForProject(projectID = projectID) }
         launch { getProjectById(projectID = projectID) }
         launch { getProjectTasks(projectID = projectID) }
         launch { hideLoading() }
     }
 
-    private suspend fun syncProjectWithFirebase(projectID: String) {
-        try {
-            projectsReference
-                .document(projectID)
-                .snapshots.collect { documentSnapshot ->
-                    val project = documentSnapshot.data<Project>()
-                    updateProjectLocally(project)
-                    getUserProfiles(project)
-                }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
-            }
-        }
-    }
-
-    private suspend fun updateProjectLocally(project: Project) {
-        upsertProjectUseCase(listOf(project.toProjectEntity()))
-    }
-
     private suspend fun getUserProfiles(project: Project) {
         try{
-            //extract ids of users collaborating on this project
-            //along with the project owner
             val userIds = project.viewerIds + project.collaboratorIds + project.ownerId
-
-            //fetch all users from database
-            val localUsers = getUsersUseCase()
-
-            //filter the users that are already in the local database
-            val usersFoundFromLocalDB = localUsers.filter { user ->
-                userIds.contains(user.id)
-            }
-            //show the users which are in local database first
+            val users = getUsersByIdsUseCase(ids = userIds)
             withContext(Dispatchers.Main) {
-                uiState = uiState.copy(users = usersFoundFromLocalDB.map { it.toUser() })
-            }
-
-            //filter the users that are not in the local database
-            val usersIdsNotInLocalDb = userIds.filter { id ->
-                localUsers.none { user ->
-                    user.id == id
-                }
-            }
-
-            //fetch the users from firebase which are not in the local database
-            usersIdsNotInLocalDb.forEach { userId ->
-                val userSnapShot = Firebase.firestore.collection("users")
-                    .document(userId)
-                    .get()
-                val user = userSnapShot.data<domain.models.User>()
-                upsertUserUseCase(listOf(user.toUserEntity()))
-                //keep adding the users one by one to the uiState
-                withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(users = usersFoundFromLocalDB.map { it.toUser() }.plus(user))
-                }
+                uiState = uiState.copy(users = users.map { it.toUser() })
             }
         }
         catch (e: Exception) {
@@ -177,43 +123,12 @@ class ProjectViewModel(
                     val tasks = tasksQuerySnapshot.documents.map { documentSnapshot ->
                         documentSnapshot.data<Task>()
                     }
-                    updateTasksLocally(tasks = tasks)
+                    upsertDoToosUseCase(tasks.map { it.toTaskEntity() })
                 }
         }catch (e : Exception){
             e.printStackTrace()
         }
     }
-
-
-    private suspend fun updateTasksLocally(tasks: List<Task>) {
-        upsertDoToosUseCase(tasks.map { it.toTaskEntity() })
-    }
-
-    private suspend fun fetchCurrentUser(uid: String) {
-        try {
-            getUserByIdAsFlowUseCase(uid).collect { user ->
-                user?.let {
-                    withContext(Dispatchers.Main) {
-                        uiState = uiState.copy(
-                            userId = user.id,
-                            userName = user.name,
-                            userEmail = user.email,
-                            userAvatarUrl = user.avatarUrl,
-                        )
-                    }
-                }?: kotlin.run {
-                    withContext(Dispatchers.Main) {
-                        uiState = uiState.copy(isLoading = false, error = DataError.Network.NOT_FOUND)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                uiState = uiState.copy(isLoading = false, error = DataError.Network.ALL_OTHER)
-            }
-        }
-    }
-
 
     private suspend fun getProjectById(projectID: String) {
         try {
@@ -221,6 +136,7 @@ class ProjectViewModel(
                 withContext(Dispatchers.Main) {
                     uiState = uiState.copy(project = project.toProject(), role = getRole(project = project, userId = uiState.userId))
                 }
+                getUserProfiles(project.toProject())
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
