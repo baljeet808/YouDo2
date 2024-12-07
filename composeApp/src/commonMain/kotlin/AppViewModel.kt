@@ -52,14 +52,24 @@ class AppViewModel(
         private set
 
     init {
+        userState = userState.copy(loading = true)
+        checkOnboardingStatus()
         checkUserLoggedInStatus()
     }
 
     private fun checkOnboardingStatus(){
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.hasOnboardedAsFlow().collect{
-                withContext(Dispatchers.Main) {
-                    userState = userState.copy(hasOnboarded = it, resultFound = true)
+            dataStoreRepository.hasOnboardedAsFlow().collect{ hasOnBoarded ->
+                if(hasOnBoarded){
+                    checkUserLoggedInStatus()
+                }else{
+                    withContext(Dispatchers.Main) {
+                        userState = userState.copy(
+                            hasOnboarded = false,
+                            isUserLoggedIn = false,
+                            loading = false
+                        )
+                    }
                 }
             }
         }
@@ -70,13 +80,21 @@ class AppViewModel(
             dataStoreRepository.isUserLoggedInAsFlow().collect {
                 if(it){
                     withContext(Dispatchers.Main) {
-                        userState = userState.copy(isUserLoggedIn = true, resultFound = true)
+                        userState = userState.copy(
+                            hasOnboarded = true,
+                            isUserLoggedIn = true,
+                            loading = false
+                        )
                     }
                     fetchUserId()
                 }else{
                    //checkOnboardingStatus()
                     withContext(Dispatchers.Main) {
-                        userState = userState.copy(isUserLoggedIn = false, resultFound = true)
+                        userState = userState.copy(
+                            hasOnboarded = true,
+                            isUserLoggedIn = false,
+                            loading = false
+                        )
                     }
                 }
             }
@@ -191,6 +209,6 @@ class AppViewModel(
 data class AppUIState(
     val isUserLoggedIn : Boolean = false,
     val hasOnboarded : Boolean = false,
-    val resultFound : Boolean = false,
-    val userId : String = ""
+    val userId : String = "",
+    val loading : Boolean = false,
 )

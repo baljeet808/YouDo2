@@ -1,5 +1,6 @@
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -36,14 +37,12 @@ import presentation.project.helpers.addProjectViewDestination
 import presentation.projects.helpers.addProjectsViewDestination
 import presentation.shared.BackgroundCircles
 import presentation.shared.dialogs.AlertDialogView
+import presentation.shared.dialogs.LoadingDialog
 import presentation.signup.helpers.addSignupDestination
-import presentation.splash.DESTINATION_SPLASH_ROUTE
-import presentation.splash.addSplashDestination
 import presentation.theme.getNightDarkColor
 import presentation.theme.getNightLightColor
 
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 @Preview
 @ExperimentalResourceApi
@@ -78,23 +77,14 @@ fun App(
 
 
 
-    val startDestination = if (userState.isUserLoggedIn) {
-        DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
+    val startDestination = if (userState.hasOnboarded) {
+        DESTINATION_ONBOARDING_ROUTE
     } else {
-        if(userState.resultFound){
-            DESTINATION_ONBOARDING_ROUTE
-        }else{
-            DESTINATION_SPLASH_ROUTE
-        }
-        /*if (userState.hasOnboarded) {
-            DESTINATION_LOGIN_ROUTE
+        if (userState.isUserLoggedIn) {
+            DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
         } else {
-            if(userState.resultFound){
-                DESTINATION_ONBOARDING_ROUTE
-            }else{
-                DESTINATION_SPLASH_ROUTE
-            }
-        }*/
+            DESTINATION_LOGIN_ROUTE
+        }
     }
 
     MaterialTheme {
@@ -106,110 +96,115 @@ fun App(
                 )
         ) {
             BackgroundCircles(navController = navController)
-            NavHost(
-                navController = navController,
-                startDestination = startDestination,
-                enterTransition = {
-                    fadeIn(
-                        animationSpec = tween(navAnimationDuration)
-                    ) +
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(navAnimationDuration)
-                            )
-                },
-                exitTransition = {
-                    fadeOut(
-                        animationSpec = tween(navAnimationDuration)
-                    ) + slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(navAnimationDuration)
+
+            AnimatedVisibility(visible = userState.loading, enter = fadeIn(),exit = fadeOut()) {
+                LoadingDialog()
+            }
+            AnimatedVisibility(visible = userState.loading.not(), enter = fadeIn()) {
+                NavHost(
+                    navController = navController,
+                    startDestination = startDestination,
+                    enterTransition = {
+                        fadeIn(
+                            animationSpec = tween(navAnimationDuration)
+                        ) +
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(navAnimationDuration)
+                                )
+                    },
+                    exitTransition = {
+                        fadeOut(
+                            animationSpec = tween(navAnimationDuration)
+                        ) + slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(navAnimationDuration)
+                        )
+                    },
+                    popEnterTransition = {
+                        fadeIn(animationSpec = tween(navAnimationDuration)) + slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(navAnimationDuration)
+                        )
+                    },
+                    popExitTransition = {
+                        fadeOut(animationSpec = tween(navAnimationDuration)) + slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(navAnimationDuration)
+                        )
+                    }
+                ){
+                    addLoginDestination(
+                        navController = navController,
+                        showErrorAlertDialog = { error ->
+                            retryApiCall.value = false
+                            if (error != null) {
+                                errorType.value = error
+                                openAlertDialog.value = true
+                            } else {
+                                openAlertDialog.value = false
+                            }
+                        },
+                        retryApiCall = retryApiCall
                     )
-                },
-                popEnterTransition = {
-                    fadeIn(animationSpec = tween(navAnimationDuration)) + slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(navAnimationDuration)
+                    addOnboardingDestination(navController = navController)
+                    addSignupDestination(
+                        navController = navController,
+                        showErrorAlertDialog = { error ->
+                            retryApiCall.value = false
+                            if (error != null) {
+                                errorType.value = error
+                                openAlertDialog.value = true
+                            } else {
+                                openAlertDialog.value = false
+                            }
+                        },
+                        retryApiCall = retryApiCall
                     )
-                },
-                popExitTransition = {
-                    fadeOut(animationSpec = tween(navAnimationDuration)) + slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(navAnimationDuration)
+                    addDashboardDestination(
+                        navController = navController,
+                        showErrorAlertDialog = { error ->
+                            retryApiCall.value = false
+                            if (error != null) {
+                                errorType.value = error
+                                openAlertDialog.value = true
+                            } else {
+                                openAlertDialog.value = false
+                            }
+                        },
+                        retryApiCall = retryApiCall
                     )
+                    addCompleteProfileDestination(
+                        navController = navController,
+                        showErrorAlertDialog = { error ->
+                            retryApiCall.value = false
+                            if (error != null) {
+                                errorType.value = error
+                                openAlertDialog.value = true
+                            } else {
+                                openAlertDialog.value = false
+                            }
+                        },
+                        retryApiCall = retryApiCall
+                    )
+                    addProjectsViewDestination(navController = navController)
+                    addCreateProjectViewDestination(navController = navController)
+                    addCreateTaskViewDestination(navController = navController)
+                    addProjectViewDestination(
+                        navController = navController,
+                        showErrorAlertDialog = { error ->
+                            retryApiCall.value = false
+                            if (error != null) {
+                                errorType.value = error
+                                openAlertDialog.value = true
+                            } else {
+                                openAlertDialog.value = false
+                            }
+                        },
+                        retryApiCall = retryApiCall
+                    )
+                    addChatViewDestination(navController = navController)
                 }
-            ){
-                addSplashDestination()
-                addLoginDestination(
-                    navController = navController,
-                    showErrorAlertDialog = { error ->
-                        retryApiCall.value = false
-                        if (error != null) {
-                            errorType.value = error
-                            openAlertDialog.value = true
-                        } else {
-                            openAlertDialog.value = false
-                        }
-                    },
-                    retryApiCall = retryApiCall
-                )
-                addOnboardingDestination(navController = navController)
-                addSignupDestination(
-                    navController = navController,
-                    showErrorAlertDialog = { error ->
-                        retryApiCall.value = false
-                        if (error != null) {
-                            errorType.value = error
-                            openAlertDialog.value = true
-                        } else {
-                            openAlertDialog.value = false
-                        }
-                    },
-                    retryApiCall = retryApiCall
-                )
-                addDashboardDestination(
-                    navController = navController,
-                    showErrorAlertDialog = { error ->
-                        retryApiCall.value = false
-                        if (error != null) {
-                            errorType.value = error
-                            openAlertDialog.value = true
-                        } else {
-                            openAlertDialog.value = false
-                        }
-                    },
-                    retryApiCall = retryApiCall
-                )
-                addCompleteProfileDestination(
-                    navController = navController,
-                    showErrorAlertDialog = { error ->
-                        retryApiCall.value = false
-                        if (error != null) {
-                            errorType.value = error
-                            openAlertDialog.value = true
-                        } else {
-                            openAlertDialog.value = false
-                        }
-                    },
-                    retryApiCall = retryApiCall
-                )
-                addProjectsViewDestination(navController = navController)
-                addCreateProjectViewDestination(navController = navController)
-                addCreateTaskViewDestination(navController = navController)
-                addProjectViewDestination(
-                    navController = navController,
-                    showErrorAlertDialog = { error ->
-                        retryApiCall.value = false
-                        if (error != null) {
-                            errorType.value = error
-                            openAlertDialog.value = true
-                        } else {
-                            openAlertDialog.value = false
-                        }
-                    },
-                    retryApiCall = retryApiCall
-                )
-                addChatViewDestination(navController = navController)
             }
         }
     }

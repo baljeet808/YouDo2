@@ -19,7 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import common.getColor
+import common.COLOR_Blue_VALUE
+import common.COLOR_NIGHT_BLACK_VALUE
 import common.getRandomLoadingMessage
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -34,7 +35,7 @@ fun LoadingDialog(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = Color.Black.copy(alpha = 0.7f)
+                color = Color(COLOR_NIGHT_BLACK_VALUE).copy(alpha = 0.7f)
             ),
         contentAlignment = Alignment.Center
     ){
@@ -49,7 +50,7 @@ fun LoadingDialog(
         }
 
         LoadingDialogContent(
-            backgroundColor = Color.Blue,
+            backgroundColor = Color(COLOR_Blue_VALUE),
             dotNumber = currentDotIndex,
             message = loadingMessage
         )
