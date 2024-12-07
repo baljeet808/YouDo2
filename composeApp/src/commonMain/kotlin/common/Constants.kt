@@ -63,19 +63,19 @@ fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
             title = "Conquer Your \nChaos",
             res = Res.drawable.chat_illustration,
             description = ConstSecScreenDescription,
-            backgroundColor = Color(COLOR_BLUE_VALUE)
+            backgroundColor = ONBOARDING_SCREEN_COLOR
         ),
         OnBoardPagerContent(
             title = "Deadlines? \nHandled!",
             res = Res.drawable.set_reminders,
             description = ConstThirdScreenDescription,
-            backgroundColor = Color(COLOR_BLUE_VALUE)
+            backgroundColor = ONBOARDING_SCREEN_COLOR
         ),
         OnBoardPagerContent(
             title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
             description = ConstFirstScreenDescription,
-            backgroundColor = Color(COLOR_BLUE_VALUE)
+            backgroundColor = ONBOARDING_SCREEN_COLOR
         )
     )
 }
@@ -141,6 +141,13 @@ const val COLOR_PINK_VALUE = 4294928820
 const val COLOR_INDIGO_VALUE = 4283105410
 const val COLOR_GRAPHITE_VALUE = 4281347373
 
+val ONBOARDING_SCREEN_COLOR = Color(COLOR_NIGHT_BLACK_VALUE)
+
+val LOGIN_SCREEN_COLOR = Color(COLOR_NIGHT_BLACK_VALUE)
+val LOGIN_SCREEN_BUTTONS_COLOR = Color(COLOR_NIGHT_BLACK_VALUE)
+
+val SIGNUP_SCREEN_COLOR = Color(COLOR_NIGHT_BLACK_VALUE)
+val SIGNUP_SCREEN_BUTTONS_COLOR = Color(COLOR_NIGHT_BLACK_VALUE)
 
 const val SUGGESTION_ADD_DESCRIPTION = "Add Description"
 const val SUGGESTION_SHOW_PREVIEW = "Show Preview"

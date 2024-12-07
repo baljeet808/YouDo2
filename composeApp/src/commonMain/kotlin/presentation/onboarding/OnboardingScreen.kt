@@ -100,7 +100,7 @@ fun OnboardingScreen(
             )
 
             NextButton(
-                backgroundColor = list[(pagerState.currentPage + 1) % 3].backgroundColor,
+                backgroundColor = NightTransparentWhiteColor,
                 contentColor = Color.White,
                 onClick = {
                     when (pagerState.currentPage) {

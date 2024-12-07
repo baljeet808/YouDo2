@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.COLOR_BLUE_VALUE
+import common.LOGIN_SCREEN_COLOR
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
@@ -39,6 +39,7 @@ import presentation.shared.SaveButtonView
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
 import presentation.theme.DotooPink
+import presentation.theme.NightTransparentWhiteColor
 
 @ExperimentalResourceApi
 @Composable
@@ -51,9 +52,9 @@ fun LoginScreen(
     login: () -> Unit,
 ) {
 
-    val themeColor = Color(COLOR_BLUE_VALUE)
+    val themeColor = LOGIN_SCREEN_COLOR
     val contentColor = Color.White
-    val signupThemeColor = Color(COLOR_BLUE_VALUE)
+    val buttonsColor = NightTransparentWhiteColor
     val passwordFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
 
@@ -162,7 +163,7 @@ fun LoginScreen(
                         login()
                     }
                 },
-                buttonThemeColor = signupThemeColor,
+                buttonThemeColor = DotooPink,
                 alignment = Alignment.Center,
                 buttonModifier = Modifier
                     .fillMaxWidth()
@@ -207,7 +208,7 @@ fun LoginScreen(
             )
             NextButton(
                 label = "Signup",
-                backgroundColor = signupThemeColor,
+                backgroundColor = buttonsColor,
                 onClick = {
                     navigateToSignup()
                 },
