@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import common.COLOR_BLUE_VALUE
 import common.getColor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
@@ -47,16 +48,16 @@ fun SignupScreen(
     signUp: () -> Unit,
     navigateBackToLogin: () -> Unit,
 ) {
-    val themeColor = Color.Magenta
+    val themeColor = Color(COLOR_BLUE_VALUE)
     val contentColor = Color.White
-    val buttonsColor = Color.Blue
+    val buttonsColor = Color(COLOR_BLUE_VALUE)
     val passwordFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = themeColor.copy(alpha = 0.4f))
+            .background(color = themeColor.copy(alpha = 0.7f))
             .padding(20.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally

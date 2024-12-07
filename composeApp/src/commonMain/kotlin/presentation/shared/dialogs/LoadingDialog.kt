@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import common.COLOR_Blue_VALUE
+import common.COLOR_BLUE_VALUE
 import common.COLOR_NIGHT_BLACK_VALUE
 import common.getRandomLoadingMessage
 import kotlinx.coroutines.delay
@@ -50,7 +50,7 @@ fun LoadingDialog(
         }
 
         LoadingDialogContent(
-            backgroundColor = Color(COLOR_Blue_VALUE),
+            backgroundColor = Color(COLOR_BLUE_VALUE),
             dotNumber = currentDotIndex,
             message = loadingMessage
         )

@@ -63,19 +63,19 @@ fun getOnboardingPagerContentList () : List<OnBoardPagerContent>{
             title = "Conquer Your \nChaos",
             res = Res.drawable.chat_illustration,
             description = ConstSecScreenDescription,
-            backgroundColor = Color(0xff3F292B)
+            backgroundColor = Color(COLOR_BLUE_VALUE)
         ),
         OnBoardPagerContent(
             title = "Deadlines? \nHandled!",
             res = Res.drawable.set_reminders,
             description = ConstThirdScreenDescription,
-            backgroundColor = Color(0xff3F292B)
+            backgroundColor = Color(COLOR_BLUE_VALUE)
         ),
         OnBoardPagerContent(
             title = "All Your Stuff,\nEverywhere",
             res = Res.drawable.todo_illustration,
             description = ConstFirstScreenDescription,
-            backgroundColor = Color(0xff3F292B)
+            backgroundColor = Color(COLOR_BLUE_VALUE)
         )
     )
 }
@@ -136,7 +136,7 @@ val loadingMessages = listOf(
 const val PROJECT_USERS_PROFILE_IMAGE_HEIGHT_AND_WIDTH = 30
 
 const val COLOR_NIGHT_BLACK_VALUE = 4278847753
-const val COLOR_Blue_VALUE = 4281744565
+const val COLOR_BLUE_VALUE = 4281744565
 const val COLOR_PINK_VALUE = 4294928820
 const val COLOR_INDIGO_VALUE = 4283105410
 const val COLOR_GRAPHITE_VALUE = 4281347373

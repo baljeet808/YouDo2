@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import common.getColor
+import common.COLOR_BLUE_VALUE
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.createproject.components.NoBorderEditText
 import presentation.login.components.PolicyLineView
@@ -51,9 +51,9 @@ fun LoginScreen(
     login: () -> Unit,
 ) {
 
-    val themeColor = Color.Blue
+    val themeColor = Color(COLOR_BLUE_VALUE)
     val contentColor = Color.White
-    val signupThemeColor = Color.Magenta
+    val signupThemeColor = Color(COLOR_BLUE_VALUE)
     val passwordFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
 
