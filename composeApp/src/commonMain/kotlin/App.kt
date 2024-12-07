@@ -22,7 +22,6 @@ import domain.dto_helpers.DataError
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.chat.addChatViewDestination
 import presentation.complete_profile.helpers.addCompleteProfileDestination
 import presentation.create_task.addCreateTaskViewDestination
@@ -77,11 +76,11 @@ fun App(
 
 
 
-    val startDestination = if (userState.hasOnboarded) {
-        DESTINATION_ONBOARDING_ROUTE
+    val startDestination = if (userState.isUserLoggedIn) {
+        DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
     } else {
-        if (userState.isUserLoggedIn) {
-            DESTINATION_DASHBOARD_ROUTE.plus("/${userState.userId}")
+        if (userState.hasOnboarded) {
+            DESTINATION_ONBOARDING_ROUTE
         } else {
             DESTINATION_LOGIN_ROUTE
         }

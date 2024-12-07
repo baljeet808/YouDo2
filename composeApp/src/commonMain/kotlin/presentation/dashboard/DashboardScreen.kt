@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import common.COLOR_APP_THEME_PURPLE_VALUE
 import common.menuItems
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -239,7 +240,7 @@ fun DashboardScreen(
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     NextButton(
-                        backgroundColor = Color.Blue,
+                        backgroundColor = Color(COLOR_APP_THEME_PURPLE_VALUE),
                         label = "Add Project",
                         onClick = {
                             navigateToCreateProject()

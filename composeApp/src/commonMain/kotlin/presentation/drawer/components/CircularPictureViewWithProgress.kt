@@ -24,10 +24,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
+import common.COLOR_APP_THEME_PURPLE_VALUE
 import common.getRandomAvatar
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.theme.NightDotooBrightPink
 import youdo2.composeapp.generated.resources.Res
 import youdo2.composeapp.generated.resources.app_icon
 
@@ -111,7 +111,7 @@ fun  CircularPictureViewWithProgress(
                 modifier = Modifier
                     .progressSemantics()
                     .size(size.dp),
-                color = NightDotooBrightPink,
+                color = Color(COLOR_APP_THEME_PURPLE_VALUE),
                 trackColor = Color.Transparent,
                 strokeWidth = (size/25).dp
             )
