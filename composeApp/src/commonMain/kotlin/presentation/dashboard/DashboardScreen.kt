@@ -121,6 +121,7 @@ fun DashboardScreen(
                     userEmail = uiState.userEmail,
                     userName = uiState.userName,
                     avatarUrl = uiState.userAvatarUrl,
+                    sharingCode = uiState.sharingCode,
                     menuItems = menuItems,
                     onMenuItemClick = { item ->
                         when (item.id) {

@@ -10,5 +10,6 @@ data class User(
     var email :String = "SomeEmail@YouDoToo.com",
     var joined : Long = Clock.System.now().toEpochMilliseconds(),
     var avatarUrl: String = "",
-    var firebaseToken : String = ""
+    var firebaseToken : String = "",
+    var sharingCode : String = "",
 )

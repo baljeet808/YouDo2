@@ -10,7 +10,8 @@ fun User.toUserEntity() : UserEntity {
         name = name,
         email = email,
         joined = joined,
-        avatarUrl = avatarUrl
+        avatarUrl = avatarUrl,
+        sharingCcode = sharingCode
     )
 }
 
@@ -21,6 +22,7 @@ fun UserEntity.toUser(): User{
         name = name,
         email = email,
         joined = joined,
-        avatarUrl = avatarUrl
+        avatarUrl = avatarUrl,
+        sharingCode = sharingCcode
     )
 }

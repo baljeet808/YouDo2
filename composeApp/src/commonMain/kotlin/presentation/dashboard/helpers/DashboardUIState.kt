@@ -12,6 +12,7 @@ data class DashboardUIState(
     val userId : String = "",
     val userEmail : String = "",
     val userAvatarUrl : String = "",
+    val sharingCode : String = "",
     val isLoggedOut : Boolean = false,
     val projects : List<Project> = emptyList(),
     val currentUser : User = User(),

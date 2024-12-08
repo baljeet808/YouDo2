@@ -12,5 +12,6 @@ data class UserEntity(
     var email :String,
     var joined : Long,
     var avatarUrl: String = "",
-    var firebaseToken : String = ""
+    var firebaseToken : String = "",
+    var sharingCcode : String = ""
 )

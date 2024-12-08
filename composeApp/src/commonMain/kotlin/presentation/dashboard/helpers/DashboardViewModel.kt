@@ -108,7 +108,8 @@ class DashboardViewModel(
                         userName = userEntity.name,
                         userEmail = userEntity.email,
                         userAvatarUrl = userEntity.avatarUrl,
-                        currentUser = userEntity.toUser()
+                        currentUser = userEntity.toUser(),
+                        sharingCode = userEntity.sharingCcode
                     )
                 }
             }

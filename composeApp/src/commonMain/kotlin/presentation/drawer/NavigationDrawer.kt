@@ -35,6 +35,7 @@ import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.drawer.components.IconButtonView
 import presentation.drawer.components.MenuItemRow
 import presentation.shared.fonts.RobotoFontFamily
+import presentation.shared.shareCodeGenerator.ShareCodeGenerator
 import presentation.theme.LessTransparentWhiteColor
 import presentation.theme.NightTransparentWhiteColor
 import presentation.theme.getNightDarkColor
@@ -46,6 +47,7 @@ fun NavigationDrawer(
     userEmail: String = "",
     userName: String = "",
     avatarUrl: String = "",
+    sharingCode : String = "",
     menuItems: List<MenuItem>,
     onMenuItemClick: (MenuItem) -> Unit,
     closeDrawer: () -> Unit,
@@ -129,6 +131,7 @@ fun NavigationDrawer(
             Spacer(modifier = Modifier.height(30.dp))
 
 
+            ShareCodeGenerator()
 
             /**
              * Lazy column for Menu items
