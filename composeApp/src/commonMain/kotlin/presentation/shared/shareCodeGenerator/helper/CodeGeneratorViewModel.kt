@@ -30,9 +30,6 @@ class CodeGeneratorViewModel(
             code = user.sharingCode
         )
     }
-    private fun generateRandomSixDigitNumber(): Int {
-        return (100000..999999).random()
-    }
 
     fun generateNewCode(userId: String)  {
         uiState = uiState.copy(
@@ -61,6 +58,22 @@ class CodeGeneratorViewModel(
                         code = newCode
                     )
                 }
+            }
+        }
+    }
+
+    fun copyText() {
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main){
+                uiState = uiState.copy(
+                    isCopying = true
+                )
+            }
+            delay(1000)
+            withContext(Dispatchers.Main){
+                uiState = uiState.copy(
+                    isCopying = false
+                )
             }
         }
     }

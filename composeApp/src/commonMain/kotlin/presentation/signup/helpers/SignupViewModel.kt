@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
+import presentation.shared.shareCodeGenerator.helper.generateRandomSixDigitNumber
 
 class SignupViewModel(
     private val signupUseCase: SignupUseCase,
@@ -91,7 +92,8 @@ class SignupViewModel(
             name = firebaseUser.displayName ?: "",
             email = firebaseUser.email ?: "",
             joined = Clock.System.now().epochSeconds,
-            avatarUrl = firebaseUser.photoURL ?: getRandomAvatar()
+            avatarUrl = firebaseUser.photoURL ?: getRandomAvatar(),
+            sharingCode = generateRandomSixDigitNumber().toString()
         )
         try {
             Firebase.firestore

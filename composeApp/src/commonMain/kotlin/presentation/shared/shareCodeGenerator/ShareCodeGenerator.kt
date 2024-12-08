@@ -17,8 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.COLOR_APP_THEME_PURPLE_VALUE
@@ -40,6 +44,8 @@ fun ShareCodeGenerator(
     user: User
 ) {
 
+    val clipboardManager = LocalClipboardManager.current
+
     val viewModel = koinViewModel<CodeGeneratorViewModel>()
 
     viewModel.setInitialCode(user = user)
@@ -49,7 +55,6 @@ fun ShareCodeGenerator(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp)
             .background(
                 color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
@@ -71,7 +76,21 @@ fun ShareCodeGenerator(
                 fontWeight = FontWeight.ExtraBold,
                 color = LessTransparentWhiteColor
             )
-
+           /*
+            IconButton(
+                onClick = {
+                    viewModel.copyText()
+                    clipboardManager.setText(AnnotatedString(uiState.code))
+                },
+                modifier = Modifier.size(20.dp)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.content_copy_24dp),
+                    contentDescription = "Button to copy share code",
+                    tint = LessTransparentWhiteColor,
+                )
+            }
+*/
             IconButton(
                 onClick = {
                     viewModel.generateNewCode(userId = user.id)
@@ -86,41 +105,54 @@ fun ShareCodeGenerator(
             }
 
         }
-        AnimatedVisibility(visible = uiState.isLoading){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .clickable {
+                    viewModel.copyText()
+                    clipboardManager.setText(AnnotatedString(uiState.code))
+                }
+                .background(
+                    color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(10.dp)
+                ),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ){
             Text(
-                text = "Regenerating code...",
+                text = uiState.code,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .clickable {
-                        //copy the code to clipboard
-                    }
-                    .background(
-                        color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(10.dp)
-                    ).padding(5.dp),
+                    .padding(5.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
+                fontFamily = AlataFontFamily(),
+                fontWeight = FontWeight.ExtraBold,
+                color = LessTransparentWhiteColor,
+                letterSpacing = TextUnit(value = 1.5f, type = TextUnitType.Sp)
+            )
+        }
+        AnimatedVisibility(visible = uiState.isCopying){
+            Text(
+                text = "Copied ✅",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp,
                 fontFamily = AlataFontFamily(),
                 fontWeight = FontWeight.ExtraBold,
                 color = LessTransparentWhiteColor
             )
         }
-        AnimatedVisibility(visible = uiState.isLoading.not()){
+        AnimatedVisibility(visible = uiState.isLoading){
             Text(
-                text = uiState.code,
+                text = "Refreshing",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
-                    .clickable {
-                        //copy the code to clipboard
-                    }
-                    .background(
-                        color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(10.dp)
-                    ).padding(5.dp),
+                    .padding(5.dp),
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp,
+                fontSize = 12.sp,
                 fontFamily = AlataFontFamily(),
                 fontWeight = FontWeight.ExtraBold,
                 color = LessTransparentWhiteColor

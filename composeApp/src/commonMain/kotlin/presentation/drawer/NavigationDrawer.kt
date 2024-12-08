@@ -126,12 +126,13 @@ fun NavigationDrawer(
                 fontWeight = FontWeight.ExtraBold,
                 color = LessTransparentWhiteColor
             )
-            Spacer(modifier = Modifier.height(30.dp))
-
+            Spacer(modifier = Modifier.height(20.dp))
 
             ShareCodeGenerator(
                 user = user
             )
+
+            Spacer(modifier = Modifier.height(30.dp))
 
             /**
              * Lazy column for Menu items
