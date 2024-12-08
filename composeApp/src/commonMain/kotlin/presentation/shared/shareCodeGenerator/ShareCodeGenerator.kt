@@ -1,9 +1,9 @@
 package presentation.shared.shareCodeGenerator
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,13 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import common.COLOR_APP_THEME_PURPLE_VALUE
 import common.COLOR_GRAPHITE_VALUE
+import domain.models.User
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-import presentation.shared.colorPicker.helper.ColorPickerViewModel
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.fonts.RobotoFontFamily
-import presentation.shared.shareCodeGenerator.helper.CodeGeneratorUIState
 import presentation.shared.shareCodeGenerator.helper.CodeGeneratorViewModel
 import presentation.theme.LessTransparentWhiteColor
 import youdo2.composeapp.generated.resources.Res
@@ -38,12 +37,12 @@ import youdo2.composeapp.generated.resources.sync_24dp
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ShareCodeGenerator(
-    sharingCode : String = ""
+    user: User
 ) {
 
     val viewModel = koinViewModel<CodeGeneratorViewModel>()
 
-    viewModel.setInitialCode(code = sharingCode)
+    viewModel.setInitialCode(user = user)
 
     val uiState = viewModel.uiState
 
@@ -75,7 +74,7 @@ fun ShareCodeGenerator(
 
             IconButton(
                 onClick = {
-
+                    viewModel.generateNewCode(userId = user.id)
                 },
                 modifier = Modifier.size(20.dp)
             ) {
@@ -87,23 +86,45 @@ fun ShareCodeGenerator(
             }
 
         }
-        Text(
-            text = uiState.code,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .clickable {
-                    //copy the code to clipboard
-                }
-                .background(
-                    color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(10.dp)
-                ).padding(5.dp),
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontFamily = AlataFontFamily(),
-            fontWeight = FontWeight.ExtraBold,
-            color = LessTransparentWhiteColor
-        )
+        AnimatedVisibility(visible = uiState.isLoading){
+            Text(
+                text = "Regenerating code...",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .clickable {
+                        //copy the code to clipboard
+                    }
+                    .background(
+                        color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(10.dp)
+                    ).padding(5.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                fontFamily = AlataFontFamily(),
+                fontWeight = FontWeight.ExtraBold,
+                color = LessTransparentWhiteColor
+            )
+        }
+        AnimatedVisibility(visible = uiState.isLoading.not()){
+            Text(
+                text = uiState.code,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .clickable {
+                        //copy the code to clipboard
+                    }
+                    .background(
+                        color = Color(COLOR_GRAPHITE_VALUE).copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(10.dp)
+                    ).padding(5.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                fontFamily = AlataFontFamily(),
+                fontWeight = FontWeight.ExtraBold,
+                color = LessTransparentWhiteColor
+            )
+        }
     }
 }

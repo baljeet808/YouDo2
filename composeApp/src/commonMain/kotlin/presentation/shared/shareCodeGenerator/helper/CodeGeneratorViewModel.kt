@@ -9,9 +9,11 @@ import data.local.mappers.toUser
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import domain.dto_helpers.DataError
+import domain.models.User
 import domain.use_cases.user_use_cases.GetUserByIdUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -23,31 +25,27 @@ class CodeGeneratorViewModel(
     var uiState by mutableStateOf(CodeGeneratorUIState())
         private set
 
-    fun onEvent(event : CodeGeneratorScreenEvent) {
-        when(event) {
-            is CodeGeneratorScreenEvent.RegenerateCode -> {
-                generateNewCode(userId = event.userId)
-            }
-        }
-    }
-
-
-    fun setInitialCode(code : String) {
+    fun setInitialCode(user: User) {
         uiState = uiState.copy(
-            code = code
+            code = user.sharingCode
         )
     }
     private fun generateRandomSixDigitNumber(): Int {
         return (100000..999999).random()
     }
 
-    private fun generateNewCode(userId: String)  {
+    fun generateNewCode(userId: String)  {
+        uiState = uiState.copy(
+            isLoading = true
+        )
         viewModelScope.launch(Dispatchers.IO){
+            println("TEST : generateNewCode: $userId")
             val newCode = generateRandomSixDigitNumber().toString()
+            println("TEST : new code = $newCode")
             try {
                 getUserByIdUseCase(userId)?.let { user ->
                     user.sharingCcode = newCode
-                    Firebase.firestore.collection("user")
+                    Firebase.firestore.collection("users")
                         .document(userId).set(user.toUser())
                 }
             } catch (e: Exception) {
@@ -56,6 +54,7 @@ class CodeGeneratorViewModel(
                     uiState = uiState.copy(error = DataError.Network.NO_INTERNET, isLoading = false)
                 }
             } finally {
+                delay(1000)
                 withContext(Dispatchers.Main){
                     uiState = uiState.copy(
                         isLoading = false,

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.models.MenuItem
+import domain.models.User
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.drawer.components.CircularPictureViewWithProgress
 import presentation.drawer.components.IconButtonView
@@ -44,10 +45,7 @@ import presentation.theme.getNightLightColor
 @ExperimentalResourceApi
 @Composable
 fun NavigationDrawer(
-    userEmail: String = "",
-    userName: String = "",
-    avatarUrl: String = "",
-    sharingCode : String = "",
+    user: User,
     menuItems: List<MenuItem>,
     onMenuItemClick: (MenuItem) -> Unit,
     closeDrawer: () -> Unit,
@@ -85,7 +83,7 @@ fun NavigationDrawer(
                 CircularPictureViewWithProgress(
                     onClick = openProfile,
                     progress = 1f,
-                    avatarUrl = avatarUrl
+                    avatarUrl = user.avatarUrl
                 )
                 IconButtonView(
                     onClick = {
@@ -98,7 +96,7 @@ fun NavigationDrawer(
             /**
              * Breaking user name into separate lines
              * **/
-            val userNameMultiline = userName.split(" ", limit = 3).joinToString("\n")
+            val userNameMultiline = user.name.split(" ", limit = 3).joinToString("\n")
             /**
              * Showing user name
              * **/
@@ -119,7 +117,7 @@ fun NavigationDrawer(
              * Showing user email
              * **/
             Text(
-                text = userEmail,
+                text = user.email,
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Start,
@@ -131,7 +129,9 @@ fun NavigationDrawer(
             Spacer(modifier = Modifier.height(30.dp))
 
 
-            ShareCodeGenerator()
+            ShareCodeGenerator(
+                user = user
+            )
 
             /**
              * Lazy column for Menu items

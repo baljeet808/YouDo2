@@ -118,10 +118,7 @@ fun DashboardScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 NavigationDrawer(
-                    userEmail = uiState.userEmail,
-                    userName = uiState.userName,
-                    avatarUrl = uiState.userAvatarUrl,
-                    sharingCode = uiState.sharingCode,
+                    user = uiState.currentUser,
                     menuItems = menuItems,
                     onMenuItemClick = { item ->
                         when (item.id) {
