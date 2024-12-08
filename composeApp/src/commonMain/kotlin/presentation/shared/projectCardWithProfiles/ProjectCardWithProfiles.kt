@@ -49,7 +49,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.shared.ProfilesLazyRow
 import presentation.shared.colorPicker.ColorPicker
 import presentation.shared.dialogs.AlertDialogView
-import presentation.shared.dialogs.AppCustomDialog
 import presentation.shared.editboxs.EditOnFlyBox
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.projectCardWithProfiles.components.ProjectTopBar
@@ -117,19 +116,16 @@ fun ProjectCardWithProfiles(
             )
         )
     ) {
-        AppCustomDialog(
-            onDismiss = {
+        AlertDialogView(
+            onDismissRequest = {
+                showDialogBackgroundBlur(false)
                 showViewerPermissionDialog.value = false
             },
-            onConfirm = {
-                showViewerPermissionDialog.value = false
-            },
-            title = "Permission Issue! 😣",
-            description = "Sorry, only project owner can edit project details.",
-            topRowIcon = Icons.Default.Lock,
-            onChecked = {  },
-            showCheckbox = false,
-            modifier = Modifier
+            dialogTitle = "Permission Issue! 😣",
+            dialogText = "Sorry, only project owner can edit project details.",
+            icon = Icons.Default.Lock,
+            showDismissButton = true,
+            showConfirmButton = false,
         )
     }
 
@@ -158,7 +154,7 @@ fun ProjectCardWithProfiles(
                 onDeleteProjectClick()
                 showConfirmProjectDeletionDialog.value = false
             },
-            dialogTitle = "Are you sure?",
+            dialogTitle = "Delete Project?",
             dialogText = "This will permanently delete the project.",
             icon = Icons.Default.Delete,
             showDismissButton = true,
@@ -191,8 +187,8 @@ fun ProjectCardWithProfiles(
                 onExitProjectClick()
                 showConfirmExitProjectDialog.value = false
             },
-            dialogTitle = "Are you sure?",
-            dialogText = "Project will be no longer accessible and visible to you.",
+            dialogTitle = "Leave Project?",
+            dialogText = "Project will no longer be accessible to you.",
             icon = Icons.Default.Warning,
             showDismissButton = true,
             showConfirmButton = true,

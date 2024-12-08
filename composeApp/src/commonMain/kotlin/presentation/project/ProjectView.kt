@@ -63,6 +63,7 @@ import presentation.onboarding.components.NextButton
 import presentation.project.components.TaskView
 import presentation.project.helpers.ProjectScreenEvent
 import presentation.project.helpers.ProjectScreenState
+import presentation.shared.addUsersCard.UsersPicker
 import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
@@ -76,7 +77,6 @@ fun ProjectView(
     fetchScreenData: () -> Unit = {},
     uiState: ProjectScreenState,
     navigateToCreateTask: () -> Unit = {},
-    onClickInvite: () -> Unit,
     navigateToEditTask: (task: Task) -> Unit,
     navigateToChat: () -> Unit,
     onEvent: (ProjectScreenEvent) -> Unit = {}
@@ -93,6 +93,10 @@ fun ProjectView(
     }
 */
 
+
+    var showUsersManagerBox by remember {
+        mutableStateOf(false)
+    }
 
     var showBlur by remember {
         mutableStateOf(false)
@@ -202,6 +206,13 @@ fun ProjectView(
         horizontalAlignment = Alignment.End
     ) {
 
+        AnimatedVisibility(visible = showUsersManagerBox){
+            UsersPicker(
+                project = uiState.project,
+                userId = uiState.userId,
+                users = uiState.users
+            )
+        }
 
             /**
              * List of tasks form this project
@@ -230,7 +241,9 @@ fun ProjectView(
                     updateProject = { project ->
                         onEvent(ProjectScreenEvent.UpdateProject(project))
                     },
-                    onClickInvite = onClickInvite,
+                    onClickInvite = {
+                        showUsersManagerBox = !showUsersManagerBox
+                    },
                     showDialogBackgroundBlur = {
                         showBlur = it
                     },

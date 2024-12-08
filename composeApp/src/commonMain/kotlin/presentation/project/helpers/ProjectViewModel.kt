@@ -167,7 +167,7 @@ class ProjectViewModel(
         try{
             getProjectTasksAsFlowUseCase(projectID).collect{ tasks ->
                 withContext(Dispatchers.Main) {
-                    uiState = uiState.copy(tasks = tasks.map { it.toTask() }, showProjectDetail = tasks.count()<=5)
+                    uiState = uiState.copy(tasks = tasks.map { it.toTask() })
                 }
             }
         }catch (e: Exception) {

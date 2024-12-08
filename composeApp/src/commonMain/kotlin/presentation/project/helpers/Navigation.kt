@@ -76,9 +76,6 @@ fun NavGraphBuilder.addProjectViewDestination(
                     "create_task/${projectId}/${userId}"
                 )
             },
-            onClickInvite = {
-
-            },
             navigateToEditTask = {
             },
             navigateToChat = {
