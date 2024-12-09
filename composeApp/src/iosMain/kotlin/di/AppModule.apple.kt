@@ -18,6 +18,7 @@ import presentation.project.helpers.ProjectViewModel
 import presentation.projects.helpers.ProjectsViewModel
 import presentation.shared.colorPicker.helper.ColorPickerViewModel
 import presentation.shared.shareCodeGenerator.helper.CodeGeneratorViewModel
+import presentation.shared.userManager.helper.ProjectUsersManagerViewModel
 import presentation.signup.helpers.SignupViewModel
 
 
@@ -36,5 +37,6 @@ actual val platformModule= module {
     singleOf(::ChatViewModel)
     singleOf(::ColorPickerViewModel)
     singleOf(::CodeGeneratorViewModel)
+    singleOf(::ProjectUsersManagerViewModel)
     single<DataStore<Preferences>>{ createDataStore() }
 }

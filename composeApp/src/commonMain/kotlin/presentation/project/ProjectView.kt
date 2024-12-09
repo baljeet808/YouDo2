@@ -63,11 +63,11 @@ import presentation.onboarding.components.NextButton
 import presentation.project.components.TaskView
 import presentation.project.helpers.ProjectScreenEvent
 import presentation.project.helpers.ProjectScreenState
-import presentation.shared.addUsersCard.UsersPicker
 import presentation.shared.dialogs.AlertDialogView
 import presentation.shared.editboxs.EditOnFlyBoxRound
 import presentation.shared.fonts.AlataFontFamily
 import presentation.shared.projectCardWithProfiles.ProjectCardWithProfiles
+import presentation.shared.userManager.ProjectUsersManager
 import presentation.theme.LightAppBarIconsColor
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -207,10 +207,11 @@ fun ProjectView(
     ) {
 
         AnimatedVisibility(visible = showUsersManagerBox){
-            UsersPicker(
+            ProjectUsersManager(
                 project = uiState.project,
-                userId = uiState.userId,
-                users = uiState.users
+                onClose = {
+                    showUsersManagerBox = !showUsersManagerBox
+                }
             )
         }
 

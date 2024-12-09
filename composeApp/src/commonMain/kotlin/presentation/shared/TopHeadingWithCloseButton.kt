@@ -28,7 +28,8 @@ import presentation.theme.getTextColor
 fun TopHeadingWithCloseButton(
     onClose : () -> Unit = {},
     heading : String,
-    modifier: Modifier
+    modifier: Modifier,
+    smallerText : Boolean = false
 ) {
     /**
      * Row for top close button
@@ -36,7 +37,7 @@ fun TopHeadingWithCloseButton(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp, bottom = 5.dp),
+            .padding(top = 10.dp, start = if(smallerText) 10.dp else 20.dp, end = if(smallerText) 10.dp else 20.dp, bottom = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -44,30 +45,31 @@ fun TopHeadingWithCloseButton(
 
         Text(
             text = heading,
-            modifier = Modifier
-                .weight(1f),
+            modifier = Modifier,
             fontFamily = AlataFontFamily(),
-            fontSize = 20.sp,
+            fontSize = if(smallerText) 14.sp else 20.sp,
             color = getTextColor()
         )
 
         IconButton(
             onClick = onClose,
             modifier = Modifier
-                .padding(end = 5.dp)
-                .height(30.dp)
-                .width(30.dp)
+                .padding(10.dp)
+                .width(if(smallerText) 20.dp else 30.dp)
+                .height(if(smallerText) 20.dp else 30.dp)
                 .border(
                     width = 2.dp,
                     color = Color.White,
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(if(smallerText) 10.dp else 20.dp)
                 )
         ) {
             Icon(
                 Icons.Default.Close,
                 contentDescription = "Button to close side drawer.",
                 tint = Color.White,
-                modifier = Modifier.width(20.dp).height(20.dp)
+                modifier = Modifier
+                    .width(if(smallerText) 15.dp else 20.dp)
+                    .height(if(smallerText) 15.dp else 20.dp)
             )
         }
     }

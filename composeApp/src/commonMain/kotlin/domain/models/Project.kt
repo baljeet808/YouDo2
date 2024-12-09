@@ -22,3 +22,12 @@ data class Project(
     var projectLikeIds : List<String> = emptyList(),
     var numberOfTasks : Int = 0,
 )
+
+
+fun Project.getAllIds () : List<String> {
+    return collaboratorIds + viewerIds + ownerId
+}
+
+fun Project.getAllCollaboratorsIds () : List<String> {
+    return collaboratorIds + viewerIds
+}
