@@ -47,7 +47,7 @@ class AppViewModel(
 
     init {
         userState = userState.copy(loading = true)
-        checkOnboardingStatus()
+        //checkOnboardingStatus()
         checkUserLoggedInStatus()
     }
 
@@ -82,7 +82,7 @@ class AppViewModel(
                     }
                     fetchUserId()
                 }else{
-                   //checkOnboardingStatus()
+                   checkOnboardingStatus()
                     withContext(Dispatchers.Main) {
                         userState = userState.copy(
                             hasOnboarded = true,
