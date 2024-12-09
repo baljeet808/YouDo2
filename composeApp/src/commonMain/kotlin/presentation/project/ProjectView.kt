@@ -27,8 +27,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Delete
@@ -79,7 +82,8 @@ fun ProjectView(
     navigateToCreateTask: () -> Unit = {},
     navigateToEditTask: (task: Task) -> Unit,
     navigateToChat: () -> Unit,
-    onEvent: (ProjectScreenEvent) -> Unit = {}
+    onEvent: (ProjectScreenEvent) -> Unit = {},
+    navigateBack : () -> Unit ={}
 ) {
 
 
@@ -205,6 +209,23 @@ fun ProjectView(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.End
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(20.dp).clickable { navigateBack() },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ){
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "back button icon",
+                tint = Color.White
+            )
+            Text(
+                text = "Back",
+                color = Color.White,
+                fontFamily = AlataFontFamily(),
+                fontSize = 14.sp
+            )
+        }
 
         AnimatedVisibility(visible = showUsersManagerBox){
             ProjectUsersManager(

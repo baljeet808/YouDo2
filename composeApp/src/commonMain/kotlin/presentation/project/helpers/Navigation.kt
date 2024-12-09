@@ -85,6 +85,9 @@ fun NavGraphBuilder.addProjectViewDestination(
             },
             onEvent = {
                 viewModel.onEvent(it)
+            },
+            navigateBack = {
+                navController.popBackStack()
             }
         )
 
